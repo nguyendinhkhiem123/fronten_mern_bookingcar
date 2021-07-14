@@ -1,0 +1,150 @@
+
+.ant-layout-content{
+    padding: 0 50px;
+}
+
+@media screen and (max-width : 576px) {
+   
+    .ant-layout-content{
+        padding: 0;
+    }
+    .step__body--body{
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+}
+
+
+.step_two{
+    margin: 40px 0 80px 0;
+}
+
+.step_two--footer{
+    display: flex;
+    justify-content: space-between;
+}
+
+.step__info{
+    width: 100%;
+    border : 1px solid #ebedee;
+    padding : 16px;
+    border-radius: 4px;
+    background-color: #f8f9f9;
+}
+.step__info--header{
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    margin-top: 16px;
+}
+.header__date{
+   color : #1890ff
+}   
+.info__title{
+    font-size: 15px;
+    font-weight: 400;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #141414;
+    margin-top: 20px;
+}
+
+
+
+.step__body{
+    width: 100%;
+    border : 1px solid #ebedee;
+    padding : 16px;
+    border-radius: 4px;
+    background-color: #f8f9f9;
+    display: flex;
+    flex-direction: column;
+    justify-content : space-between
+}
+
+.step__body--header{
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    margin-top: 16px;
+    color : #1890ff
+}
+
+.step__body--body{
+    display: flex;
+    justify-content: space-around;
+}
+
+.body__build{
+    border : 1px solid #ebedee;
+    padding: 16px;
+    width: 300px;
+}
+.body__number{
+    text-align: center;
+}
+.body__number--status{
+    width: 100%;
+    height: 60px;
+    border : 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+
+}
+
+.null.body__number--status{
+    background-color: #eff9ff;
+}
+.active.body__number--status{
+    background-color: #c0c6cc;
+    cursor: not-allowed;
+}
+.chose.body__number--status{
+    background-color: #fdede8;
+    
+}
+
+.step__body--status{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.status{
+    width: 20px;
+    height: 20px;
+    border : 1px solid #ccc;
+    border-radius: 3px;
+    display: block;
+    margin-right: 5px;
+}
+
+.null.status{
+    background-color: #eff9ff;
+}
+.active.status{
+    background-color: #c0c6cc;
+}
+.chose.status{
+    background-color: #fdede8;
+   
+}
+
+.step__body--footer{
+    display: flex;
+    justify-content: space-between;
+}
+

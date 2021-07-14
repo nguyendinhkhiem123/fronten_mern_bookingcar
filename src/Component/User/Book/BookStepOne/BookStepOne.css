@@ -1,0 +1,41 @@
+
+.info{
+    margin-top: 40px;
+    width: 100%;
+    border : 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.infomation__header{
+    padding : 8px 0 8px 60px;
+    font-size: 20px;
+    font-weight: 700px;
+    color: #fff;
+    background-color: #1890ff;
+}
+
+.infomation__body{
+    padding : 8px 0 8px 16px;
+}
+
+.body__title{
+    font-size: 15px;
+    font-weight: 600;
+    color: #1890ff;
+}
+
+.body__detail{
+    font-size: 15px;
+    color: #637280;
+    line-height: 8px;
+}
+
+.text_detail{
+    font-weight: 600;
+    color: #141414;
+}
+.body__note{
+    font-size: 14px;
+    font-style: italic;
+    color: #637280;
+}

@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage'
 import isAdmin from './isAdminReducer';
 import token from './Token'
 import currentUser from './currentUser';
+import route from './route';
 // const persistConfig = {
 //     key: 'root',
 //     storage,
@@ -14,7 +15,8 @@ import currentUser from './currentUser';
 const reducer =combineReducers({
     isAdmin,
     token,
-    currentUser
+    currentUser,
+    route
 })
 // const persistedReducer = persistReducer(persistConfig, reducer) 
 
@@ -24,7 +26,7 @@ const reducer =combineReducers({
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['isAdmin', 'token'] //
+    whitelist: ['isAdmin', 'token','route'] //
 }
    
 const persistedReducer = persistReducer(persistConfig, reducer)

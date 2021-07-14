@@ -9,8 +9,9 @@ import Popular from '../Popular/Popular';
 import Slider from '../Slider/Slider';
 import { getAllRoute } from '../../../Api/Route/index';
 import { openNotificationErorr } from '../../Notfication/index';
-import ListBody from 'antd/lib/transfer/ListBody';
 import { useHistory } from 'react-router-dom';
+import { addRoute } from '../../../Reducer/route'
+import { useDispatch, useSelector } from 'react-redux';
 const {  Content } = Layout;
 
 
@@ -21,8 +22,8 @@ function Home(props) {
     const [ valueEnd , setValueEnd] = useState(false);
     const [ textStart , setTextStart ] = useState('');
     const [ textEnd , setTextEnd] = useState('');
-    const [ route , setRoute] = useState([]);
-   
+    const route =  useSelector(state => state.route)
+    const dispatch = useDispatch();
     const currentDate = new Date();
     let day = currentDate.getDate();
     let month =  currentDate.getMonth() + 1;
@@ -106,7 +107,7 @@ function Home(props) {
     const fetchAllRoute = async()=>{
           try{
               const res = await getAllRoute();
-              setRoute(res.data.body);
+              dispatch(addRoute(res.data.body));
               console.log(res);
           }catch(err){
               console.log(err);
