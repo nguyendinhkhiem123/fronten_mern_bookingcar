@@ -130,14 +130,17 @@ function BookStepOne(props) {
         } 
         else{
           history.push({
-            pathname: '/chon-ghe',
+            pathname: '/chon-gio',
             search: '?step=2',
             state: { 
               noidi :  textStart,
               noiden : textEnd,
               thogianbatdau : fullDateStart,
               thoigianve : fullDateEnd,
-              loai :  valueRadio
+              loai :  valueRadio,
+              quangduong : itemRoute[0].quangduong,
+              thoigian :  itemRoute[0].thoigian,
+              giave : itemRoute[0].giave
             }
           })
           console.log(textStart , textEnd , fullDateStart , fullDateEnd);
@@ -279,7 +282,7 @@ function BookStepOne(props) {
                 <div className="infomation__body">
                     <p className="body__title">{ itemRoute.length === 1? `${itemRoute[0].noidi} ⇒ ${itemRoute[0].noiden}` : 'Không xác định'}</p>
                     <p className="body__detail">Khoảng cách :  <span className="text_detail">{ itemRoute.length === 1 ? `${itemRoute[0].quangduong} km` : 'Không xác định'}</span></p>
-                    <p className="body__detail">Thời gian :  <span className="text_detail">{ ((itemRoute.length === 1)&&(itemRoute[0].thoigian))? `${itemRoute.thoigian} giờ` : 'Không xác định'}</span></p>
+                    <p className="body__detail">Thời gian :  <span className="text_detail">{ ((itemRoute.length === 1)&&(itemRoute[0].thoigian))? `${itemRoute[0].thoigian} giờ` : 'Không xác định'}</span></p>
                     <p className="body__detail">Giá vé :  <span className="text_detail">{ itemRoute.length === 1 ? `${formatMoney(itemRoute[0].giave.toString())} đ` : 'Không xác định'}</span></p>
                     <p className="body__note">
 

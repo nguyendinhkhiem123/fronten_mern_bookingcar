@@ -83,7 +83,8 @@ function Home(props) {
       console.log(e.target.value);
     }
     const onChangeStart = (e) =>{
-      setFullDateStart(e.target.value)
+      setFullDateStart(e.target.value);
+      console.log(typeof e.target.value);
     }
     const onChangeEnd = (e) =>{
       setFullDateEnd(e.target.value)
@@ -119,14 +120,17 @@ function Home(props) {
         } 
         else{
           history.push({
-            pathname: '/chon-ghe',
+            pathname: '/chon-gio',
             search: '?step=2',
             state: { 
               noidi :  textStart,
               noiden : textEnd,
               thogianbatdau : fullDateStart,
               thoigianve : fullDateEnd,
-              loai :  valueRadio
+              loai :  valueRadio,
+              quangduong : itemRoute[0].quangduong,
+              thoigian :  itemRoute[0].thoigian,
+              giave : itemRoute[0].giave
             }
           })
           console.log(textStart , textEnd , fullDateStart , fullDateEnd);
@@ -152,7 +156,13 @@ function Home(props) {
     const listRouteFilterStart = route.filter((value ,index)=>{
       return value.noidi.toLowerCase().indexOf(textStart.toLowerCase()) !== -1;  
     });
-    
+    const itemRoute = route.filter((value ,index)=>{
+      return (
+          (value.noidi.toLowerCase().indexOf(textStart.toLowerCase()) !== -1)
+          &&
+           (value.noiden.toLowerCase().indexOf(textEnd.toLowerCase()) !== -1)
+      )
+  })
     return (
         <div>
           <div className="home__banner">

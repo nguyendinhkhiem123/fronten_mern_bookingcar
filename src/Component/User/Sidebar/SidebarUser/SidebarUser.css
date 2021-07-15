@@ -74,6 +74,9 @@
     .item--user{
         padding: 2px 24px;
     }
+    .ant-image{
+        width: 120px !important;
+    }
 }
 
 .user__active--link{

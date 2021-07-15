@@ -28,15 +28,15 @@ function Process(props) {
                 </div>
                 <div className={isActive ===1 ? "process__item active" :"process__item"}>
                         <span className="process__header">2</span>
-                        <p className={isActive === 1 ? "process__desc" : 'hidden process__desc' }>Chọn ghế</p>
+                        <p className={isActive === 1 ? "process__desc" : 'hidden process__desc' }>Chọn giờ</p>
                 </div>
                 <div className={isActive ===2 ? "process__item active" :"process__item"}>
                         <span className="process__header">3</span>
-                        <p className={isActive === 2 ? "process__desc" : 'hidden process__desc' }>Thanh toán</p>
+                        <p className={isActive === 2 ? "process__desc" : 'hidden process__desc' }>Chọn ghế</p>
                 </div>
                 <div className={isActive ===3 ? "process__item active" :"process__item"}>
                          <span className="process__header">4</span>
-                        <p className={isActive === 3 ? "process__desc" : 'hidden process__desc' }>Kết quả</p>
+                        <p className={isActive === 3 ? "process__desc" : 'hidden process__desc' }>Thanh toán</p>
                 </div>
                 <div className="process_load" ></div>
             </div>
