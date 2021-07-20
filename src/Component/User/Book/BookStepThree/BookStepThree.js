@@ -4,15 +4,19 @@ import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Layout , Button , Row , Col ,Select } from 'antd';
 import { RightOutlined ,LeftOutlined } from '@ant-design/icons'
-
+import * as ApiTicket from '../../../../Api/Ticket/index';
 import '../BookStepTwo/BookStepTwo.css';
+// import '../BookStepThree/BookStepThree.css';
 import Process from '../../Process/Process';
 import {openNotificationErorr} from '../../../Notfication/index';
+import useLoading from '../../../HookLoading/HookLoading';
 const { Option } = Select;
 const {  Content } = Layout;
 function BookStepThree(props) {
     const location = useLocation();
     const history = useHistory();
+    const token = useSelector(state => state.token);
+    const [Loading , Hidden , Display] =  useLoading();
     const state = location.state;
     console.log(state);
     const [ oneTicket , setOneTicket ] = useState([]);
@@ -21,23 +25,61 @@ function BookStepThree(props) {
     const [ twoNumberTicket , setTwoNumberTicket ] = useState(0);
     const [ numOneCar , setNumOneCar] = useState([]);
     const [ numTwoCar , setNumTwoCar] = useState([]);
+    const [ oneListBuildOne, setOneListBuildOne ] = useState([]);
+    const [ oneListBuildTwo, setOneListBuildTwo ] = useState([]);
+    const [ twoListBuildOne, setTwoListBuildOne ] = useState([]);
+    const [ twoListBuildTwo, setTwoListBuildTwo ] = useState([]);
+   
     useEffect(()=>{
+
+        if(!token){
+            openNotificationErorr('Thất bại' , "Vui lòng đăng nhập" ,3);
+            history.push('/signin');
+        }
         if(!state){     
             openNotificationErorr('Thất bại' , 'Vui lòng chọn đi theo trình tự' ,3);
             history.push('/');
         }
         else{
-            if(state.loai === 1){
-                setOneTicket(state.danhsachvedi);
-                setOneNumberTicket(state.sovedi);
-            }
-            else{
-                setTwoTicket(state.danhsachveve);
-                setTwoNumberTicket(state.soveve);
-            }
+            fectchAllTicket();
         }
     },[])
     
+    const fectchAllTicket = async()=>{
+        try{
+            Display();
+            setOneNumberTicket(state.sovedi);
+
+            let resOne = await ApiTicket.getTicketTrip({trip : state.chuyendi._id});
+            console.log(resOne);
+        
+            if(resOne.data.success){
+                const tempOne = [...resOne.data.body]
+                
+                setOneTicket(resOne.data.body);
+                setOneListBuildOne(tempOne.splice(0,20))
+                setOneListBuildTwo(tempOne.splice(0,20))
+            }
+         
+
+            if(state.loai === 2){
+               
+                setTwoNumberTicket(state.soveve);
+                let resTwo = await ApiTicket.getTicketTrip({trip : state.chuyenve._id});
+                console.log(resTwo);
+                if(resTwo.data.success){
+                    const tempTwo = [...resTwo.data.body]
+                    setTwoTicket(resTwo.data.body);
+                    setTwoListBuildOne(tempTwo.splice(0,20))
+                    setTwoListBuildTwo(tempTwo.splice(0,20))
+                }
+            }  
+            Hidden();
+        }
+        catch(err){
+
+        }
+    }
     const formatMoney=(n) =>{
         return n.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }   
@@ -94,8 +136,8 @@ function BookStepThree(props) {
             })
             const domCarTwo = document.querySelectorAll('.body__number--status')
 
-            domCarTwo[20+values-1].classList.remove('chose');
-            domCarTwo[20+values-1].classList.add('null');
+            domCarTwo[40+values-1].classList.remove('chose');
+            domCarTwo[40+values-1].classList.add('null');
             setNumTwoCar(filterNum);
         }
         else{
@@ -106,8 +148,8 @@ function BookStepThree(props) {
             else{
                 const domCarTwo = document.querySelectorAll('.body__number--status');
                 numTwoCarTemp.push(values);
-                domCarTwo[20+values-1].classList.remove('null');
-                domCarTwo[20+values-1].classList.add('chose');
+                domCarTwo[40+values-1].classList.remove('null');
+                domCarTwo[40+values-1].classList.add('chose');
                 setNumTwoCar(numTwoCarTemp)
             }
         }
@@ -122,7 +164,7 @@ function BookStepThree(props) {
         })
     }
 
-    const onClickNext= ()=>{
+    const onClickNext= async()=>{
         if(numOneCar.length === 0 ){
             openNotificationErorr('Thất bại' , `Hãy chọn số ghế !` ,3)
             return;
@@ -131,14 +173,101 @@ function BookStepThree(props) {
             openNotificationErorr('Thất bại' , `Hãy chọn số ghế !` ,3)
             return;
         }
+        
+        try{
+            Display();
+            let bodyOne ={
+                chuyendi : state.chuyendi._id ,
+                soghedi : numOneCar
+            }
+            let resOne = await ApiTicket.CheckNumberCar(bodyOne);
+
+            let resTwo = null
+            if(state.loai === 2){
+                let bodyTwo = {
+                    chuyendi : state.chuyenve._id ,
+                    soghedi : numTwoCar
+                }
+                resTwo = await ApiTicket.CheckNumberCar(bodyTwo);
+            }
+
+            if(state.loai == 1){
+                if(resOne.data.success){
+                   
+
+                    let bodyOneResult ={
+                        chuyendi : state.chuyendi._id ,
+                        soghedi : numOneCar,
+                        trangthai : "PENDING"
+                    }
+                    let updateResult = await ApiTicket.UpdateStatusTicket(bodyOneResult)
+                    Hidden();
+                    if(updateResult.data.success){
+                        history.push({
+                            pathname: "/xac-nhan",
+                            search : "?step=4",
+                            state : {
+                                ...state,
+                                soghedi : numOneCar
+                                
+                            }
+                        })
+                    }   
+
+                }
+                else{
+                    Hidden();
+                    openNotificationErorr("Thất bại" , resOne.data.message ,3);
+                }
+            }
+            else{
+                if(resOne.data.success &&  resTwo.data.success ){
+                    let bodyOneResult ={
+                        chuyendi : state.chuyendi._id ,
+                        soghedi : numOneCar,
+                        trangthai : "PENDING"
+                    }
+                    let updateResultOne = await ApiTicket.UpdateStatusTicket(bodyOneResult)
+
+
+                    let bodyTwoResult ={
+                        chuyendi : state.chuyenve._id ,
+                        soghedi : numTwoCar,
+                        trangthai : "PENDING"
+                    }
+                    let updateResultTwo = await ApiTicket.UpdateStatusTicket(bodyTwoResult)
+
+                    Hidden();
+                    if(updateResultOne.data.success && updateResultTwo.data.success){
+                        history.push({
+                            pathname: "/xac-nhan",
+                            search : "?step=4",
+                            state : {
+                                ...state,
+                                soghedi : numOneCar,
+                                sogheve : numTwoCar
+                            }
+                        })
+                    }   
+                 }
+                 else{
+                     Hidden();
+                     openNotificationErorr("Thất bại" , resOne.data.message + " HOẶC " + resTwo.data.message ,3);
+                 }
+            }
+        }catch{
+            openNotificationErorr("Thất bại" , "Lỗi hệ thống" ,3);
+        }
     }
+
+ 
     return (
         <div>
             <Content>
                 <div className="site-layout-content" style={{overflowX:'hidden'}}>
                     <Process isActive={2}></Process>
                     <div className="step_two">
-                           <div className="step_two--conatiner">
+                           <div className="step_two--container">
                                     <div class="step__body">
                                         <div className="step__body--header"><p>Sơ đồ ghế đi</p></div>
                                         <div className="step__body--body">
@@ -146,13 +275,23 @@ function BookStepThree(props) {
                                                 <p className="step__info--header">TẦNG 1</p>
                                                 <Row gutter={[8,8]}>
                                                     {
-                                                        oneTicket.length > 0 ?
-                                                        oneTicket.map((value,index)=>{
+                                                        oneListBuildOne.length > 0 ?
+                                                        oneListBuildOne.map((value,index)=>{
                                                             return (
                                                                 <Col span={6}>
                                                                     <div class="body__number">{value.soghe}</div>
-                                                                    <div class={`body__number--status ${value.thoigiandat === null? "null" : "active"}`}
-                                                                        onClick={value.thoigiandat === null ? e=>onClickOneNumber(value.soghe) : null}
+                                                                    <div class={`body__number--status 
+                                                                         ${
+                                                                            value.trangthaighe === "ACTIVE" && "null"
+                                                                        }
+                                                                        ${
+                                                                            value.trangthaighe === "COMPLETE" && "active"
+                                                                        }
+                                                                        ${
+                                                                            value.trangthaighe === "PENDING" && 'pen'
+                                                                        }
+                                                                    `}
+                                                                        onClick={value.trangthaighe === "ACTIVE" ? e=>onClickOneNumber(value.soghe) : null}
                                                                     ></div>
                                                                 </Col>
                                                             )
@@ -164,6 +303,30 @@ function BookStepThree(props) {
                                             <div className="body__build">
                                             <p className="step__info--header">TẦNG 2</p>
                                                 <Row gutter={[8,8]}>
+                                                {
+                                                        oneListBuildTwo.length > 0 ?
+                                                        oneListBuildTwo.map((value,index)=>{
+                                                            return (
+                                                                <Col span={6}>
+                                                                    <div class="body__number">{value.soghe}</div>
+                                                                    <div class={`body__number--status 
+                                                                          ${
+                                                                            value.trangthaighe === "ACTIVE" && "null"
+                                                                        }
+                                                                        ${
+                                                                            value.trangthaighe === "COMPLETE" && "active"
+                                                                        }
+                                                                        ${
+                                                                            value.trangthaighe === "PENDING" && 'pen'
+                                                                        }
+                                                                    `}
+                                                                        onClick={value.trangthaighe === "ACTIVE" ? e=>onClickOneNumber(value.soghe) : null}
+                                                                    ></div>
+                                                                </Col>
+                                                            )
+                                                        })
+                                                        : null
+                                                    }
                                                 </Row>
                                             </div>
                                         </div>
@@ -177,7 +340,11 @@ function BookStepThree(props) {
                                                 <div>Đang chọn</div>
                                             </div>
                                             <div style={{display:'flex' , alignItems:'center'}}>
-                                                <span class="status active"></span>
+                                                <div class="status pen"></div>
+                                                <div>Đang thanh toán</div>
+                                            </div>
+                                            <div style={{display:'flex' , alignItems:'center'}}>
+                                                <div class="status active"></div>
                                                 <div>Đã đặt</div>
                                             </div>
                                         </div>
@@ -193,12 +360,12 @@ function BookStepThree(props) {
                                                 </div>
                                                 <div className="info__title">
                                                     Tổng tiền : 
-                                                    <div style={{marginTop:'10px' , textAlign:'left' , fontWeight : '700' , color:'#1890ff'}}>{ state?  formatMoney((state.sovedi*state.giave).toString())  : '0đ'}</div>
+                                                    <div style={{marginTop:'10px' , textAlign:'left' , fontWeight : '700' , color:'#1890ff'}}>{ state?  formatMoney((state.sovedi*state.chuyendi.giave).toString())+'đ' : '0đ'}</div>
                                                 </div>
                                         </div>
                                     </div>
                             </div> 
-                            {   (!state) ?
+                            {   (state && state.loai == 2) ?
                                  <div className="step_two--conatiner">
                                         <div class="step__body">
                                             <div className="step__body--header"><p>Sơ đồ ghế về</p></div>
@@ -207,13 +374,23 @@ function BookStepThree(props) {
                                                     <p className="step__info--header">TẦNG 1</p>
                                                     <Row gutter={[8,8]}>
                                                     {
-                                                       twoTicket.length > 0 ?
-                                                       twoTicket.map((value,index)=>{
+                                                       twoListBuildOne.length > 0 ?
+                                                       twoListBuildOne.map((value,index)=>{
                                                             return (
                                                                 <Col span={6}>
                                                                     <div class="body__number">{value.soghe}</div>
-                                                                    <div class={`body__number--status ${value.thoigiandat === null? "null" : "active"}`}
-                                                                        onClick={value.thoigiandat === null ? e=>onClickTwoNumber(value.soghe) : null}
+                                                                    <div class={`body__number--status 
+                                                                        ${
+                                                                            value.trangthaighe === "ACTIVE" && "null"
+                                                                        }
+                                                                        ${
+                                                                            value.trangthaighe === "COMPLETE" && "active"
+                                                                        }
+                                                                        ${
+                                                                            value.trangthaighe === "PENDING" && 'pen'
+                                                                        }
+                                                                    `}
+                                                                        onClick={value.trangthaighe === "ACTIVE" ? e=>onClickTwoNumber(value.soghe) : null}
                                                                     ></div>
                                                                 </Col>
                                                             )
@@ -225,7 +402,30 @@ function BookStepThree(props) {
                                                 <div className="body__build">
                                                 <p className="step__info--header">TẦNG 2</p>
                                                     <Row gutter={[8,8]}>
-                                                    
+                                                    {
+                                                       twoListBuildTwo.length > 0 ?
+                                                       twoListBuildTwo.map((value,index)=>{
+                                                            return (
+                                                                <Col span={6}>
+                                                                    <div class="body__number">{value.soghe}</div>
+                                                                    <div class={`body__number--status 
+                                                                          ${
+                                                                            value.trangthaighe === "ACTIVE" && "null"
+                                                                        }
+                                                                        ${
+                                                                            value.trangthaighe === "COMPLETE" && "active"
+                                                                        }
+                                                                        ${
+                                                                            value.trangthaighe === "PENDING" && 'pen'
+                                                                        }
+                                                                    `}
+                                                                        onClick={value.trangthaighe === "ACTIVE" ? e=>onClickTwoNumber(value.soghe) : null}
+                                                                    ></div>
+                                                                </Col>
+                                                            )
+                                                        })
+                                                        : null
+                                                    }
                                                     </Row>
                                                 </div>
                                             </div>
@@ -239,6 +439,10 @@ function BookStepThree(props) {
                                                     <div>Đang chọn</div>
                                                 </div>
                                                 <div style={{display:'flex' , alignItems:'center'}}>
+                                                <span class="status pen"></span>
+                                                <div>Đang thanh toán</div>
+                                                  </div>
+                                                <div style={{display:'flex' , alignItems:'center'}}>
                                                     <span class="status active"></span>
                                                     <div>Đã đặt</div>
                                                 </div>
@@ -246,8 +450,8 @@ function BookStepThree(props) {
                                             <div className="step__body--footer">
                                                     <div className="info__title">
                                                         Ghế đã chọn : { 
-                                                            numOneCar.length > 0 ?
-                                                            numOneCar.map((value , index)=>{
+                                                            numTwoCar.length > 0 ?
+                                                            numTwoCar.map((value , index)=>{
                                                                 return value +" , ";
                                                             }) :
                                                             'Chưa chọn'
@@ -255,7 +459,9 @@ function BookStepThree(props) {
                                                     </div>
                                                     <div className="info__title">
                                                         Tổng tiền
-                                                        <div style={{marginTop:'10px' , textAlign:'left' , fontWeight : '700' , color:'#1890ff'}}>500đ</div>
+                                                        <div style={{marginTop:'10px' , textAlign:'left' , fontWeight : '700' , color:'#1890ff'}}>
+                                                            { (state && state.soveve)?  formatMoney((state.soveve*state.chuyenve.giave).toString())+'đ' : '0đ'}
+                                                        </div>
                                                     </div>
                                             </div>
                                         </div>
@@ -274,7 +480,8 @@ function BookStepThree(props) {
                                 {<RightOutlined />}
                         </Button>
                     </div>
-                </div>              
+                </div>      
+                {Loading}        
             </Content>
         </div>
     );

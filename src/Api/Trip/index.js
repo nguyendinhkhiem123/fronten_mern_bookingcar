@@ -1,13 +1,12 @@
 import AxiosClient from '../../Axios/ClientAxios';
 
 
-export const getOneTrip = (body)=>{
-    return AxiosClient.get("trip/getonetrip" , { params:  body  }
+export const getHourTrip = (body)=>{
+    return AxiosClient.get("trip/gethourstrip" , { params:  body  }
     )
 };
 
-export const getTwoTrip = (body)=>{
-    return AxiosClient.get("trip/gettwotrip" , { params:  body  }
+export const getTicketHourTrip = (body)=>{
+    return AxiosClient.get("trip/gettickerhourtrip" , { params:  body  }
     )
-};
-
+}

@@ -62,7 +62,7 @@ function Headers(props) {
         {
             title : 'Lịch sử mua vé',
             icon : <HistoryOutlined />,
-            slug : '/muave'
+            slug : '/lich-su'
             
         },
         {
@@ -225,7 +225,7 @@ function Headers(props) {
     }
     console.log(currentUser , modalForm);
     const dropDown = (
-        <List className="header__list"
+        <List className="header__list" 
         header={currentUser.hovaten}
         style={{textAlign: 'center'}}
         itemLayout="horizontal"

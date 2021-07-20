@@ -22,7 +22,7 @@
     flex-wrap: wrap;
 }
 .step_two--container{
-    width: 550px;
+    width: 700px;
     padding : 16px
 }
 .step_two--footer{
@@ -121,7 +121,10 @@
     background-color: #fdede8;
     
 }
-
+.pen.body__number--status{
+    background: brown;
+    cursor: not-allowed;
+}
 .step__body--status{
     margin-top: 20px;
     display: flex;
@@ -145,10 +148,12 @@
     background-color: #c0c6cc;
 }
 .chose.status{
-    background-color: #fdede8;
-   
+    background-color: #fdede8; 
 }
 
+.pen.status{
+    background-color: #1890ff; 
+}
 .step__body--footer{
     display: flex;
     justify-content: space-between;

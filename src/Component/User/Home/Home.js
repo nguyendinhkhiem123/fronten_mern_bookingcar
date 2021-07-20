@@ -12,6 +12,7 @@ import { openNotificationErorr } from '../../Notfication/index';
 import { useHistory } from 'react-router-dom';
 import { addRoute } from '../../../Reducer/route'
 import { useDispatch, useSelector } from 'react-redux';
+import Carousel from '../../Carousel/Carousel';
 const {  Content } = Layout;
 
 
@@ -130,7 +131,7 @@ function Home(props) {
               loai :  valueRadio,
               quangduong : itemRoute[0].quangduong,
               thoigian :  itemRoute[0].thoigian,
-              giave : itemRoute[0].giave
+              // giave : itemRoute[0].giave
             }
           })
           console.log(textStart , textEnd , fullDateStart , fullDateEnd);
@@ -276,6 +277,7 @@ function Home(props) {
                       </Row>
                       <Button type="primary" shape="round" icon={<FileSearchOutlined />} size='large'  className="btn__search" onClick={onSubmit}>Tìm chuyến xe</Button>
                 </div>
+               <Carousel></Carousel>
                <Popular listRoute={route}/>
             </div>
           </Content>

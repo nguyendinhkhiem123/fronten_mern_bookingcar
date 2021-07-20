@@ -35,7 +35,7 @@ function SidebarUser(props) {
         {
             title : 'Lịch sử mua vé',
             icon : <HistoryOutlined />,
-            link : '/menu'
+            link : '/lich-su'
             
         },
         {

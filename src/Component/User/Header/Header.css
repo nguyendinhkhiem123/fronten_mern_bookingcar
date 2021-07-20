@@ -21,7 +21,7 @@
     transition: all linear 0.1s;
 }
 .header__avatar:hover{
-    opacity: 0.9;
+   background-color: #0982f3;
 }
 
 .header__list{
@@ -36,6 +36,9 @@
     background-color: #fff;
     z-index: 10;
 
+}
+.header__list:hover{
+    z-index: 50 !important;
 }
 @keyframes fadeIn {
     from{
@@ -57,6 +60,8 @@
     width: 100%;
     transition: all ease-out .3s;
     font-size: 16px;
+    position: relative;
+    z-index: 10;
 }
 
 .header__el:hover{

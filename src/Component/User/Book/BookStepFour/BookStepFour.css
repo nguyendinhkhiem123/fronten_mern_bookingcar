@@ -1,0 +1,15 @@
+.ant-layout-content{
+    padding: 0 50px;
+}
+
+@media screen and (max-width : 576px) {
+   
+    .ant-layout-content{
+        padding: 0;
+    }
+    .step__body--body{
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+}
+

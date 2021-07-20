@@ -1,0 +1,131 @@
+.ant-layout-content{
+    padding: 0 50px;
+}
+
+@media screen and (max-width : 576px) {
+   
+    .ant-layout-content{
+        padding: 0;
+    }
+}
+
+.conatiner__history{
+    margin-top : 40px;
+    max-width: 1200px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.history__title{
+    color : #1890ff;
+}
+
+.container__table{
+    width: 100%;
+    overflow-y : hidden;
+    overflow-x: scroll;
+}
+.container__table::-webkit-scrollbar{
+    width: 10px;
+ }
+.container__table::-webkit-scrollbar-thumb{
+   border-radius: 3px;
+   background-color: #1890ff;
+   
+ }
+.table__head{
+    width: 100%;
+    height: 48px;
+    border: 1px solid #d5d5d5;
+    background-color: #f6f6f6;
+    border-radius: 3px;
+}
+th {
+    height: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #141414;
+    padding-left: 20px;
+    text-align: center;
+}
+.table__mave{
+    width: 200px;
+}
+
+.table__date{
+    width: 150px;
+}
+
+.table__number{
+    width: 50px;
+}
+
+.table__di{
+    width: 150px;
+}
+
+.table__den{
+    width: 150px;
+}
+.table__ngaydi{
+    width: 150px;
+}
+.table__giokhoihanh{
+    width: 100px;
+}
+
+.table__status{
+    width: 100px;
+}
+
+td {
+    height: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    padding-left: 20px;
+    text-align: center;
+}
+.table__head--body{
+    width: 100%;
+    height: 48px;
+    background-color: #f6f6f6;
+    border-radius: 3px;
+}
+.table__head--body.active{
+    background-color:#d6dee8 ;
+}
+.table__content{
+    width: 1200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    max-height: 800px;
+    border : 1px solid #d5d5d5
+}
+
+.table__content::-webkit-scrollbar{
+    width: 10px;
+ }
+.table__content::-webkit-scrollbar-thumb{
+   border-radius: 3px;
+   background-color: #1890ff;
+ }
+
+ .box{
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     height: 30px;
+     width: 80px;
+     background-color: #fff;
+     border-radius: 3px;
+     border: #d5d5d5 1px solid ;
+     color: #1890ff;
+     cursor: pointer;
+ }
+
+.box:hover{
+    background-color:#1890ff ;
+    color : #fff
+}

@@ -39,10 +39,10 @@ function Popular(props) {
                                                 <ClockCircleOutlined />
                                                 <span>8h</span>
                                                 </div>
-                                                <div className="item__price">
+                                                {/* <div className="item__price">
                                                 <MinusSquareOutlined /> 
                                                 <span>{formatMoney(value.giave.toString())}đ</span>       
-                                                </div>
+                                                </div> */}
                                         </div>
                                 </div>
                         </div>

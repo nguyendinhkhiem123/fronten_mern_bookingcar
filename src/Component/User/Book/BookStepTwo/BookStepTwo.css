@@ -21,8 +21,8 @@
     justify-content: space-around;
     flex-wrap: wrap;
 }
-.step_two--container{
-    width: 550px;
+.step_two--container{ 
+    width: 700px;
     padding : 16px
 }
 .step_two--footer{
@@ -121,7 +121,10 @@
     background-color: #fdede8;
     
 }
-
+.pen.body__number--status{
+    background-color: #1890ff;
+    cursor: not-allowed;
+}
 .step__body--status{
     margin-top: 20px;
     display: flex;
@@ -148,6 +151,10 @@
     background-color: #fdede8;
    
 }
+.pen.status{
+    background-color: #1890ff;
+   
+}
 
 .step__body--footer{
     display: flex;
@@ -156,4 +163,9 @@
 
 .mt-10{
     margin-top: 10px;
+}
+
+.info__title{
+    font-size: 16px;
+    font-weight: 300;
 }

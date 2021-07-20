@@ -14,7 +14,7 @@ const {  Content } = Layout;
 
 
 function BookStepOne(props) {
-
+    const token = useSelector(state => state.token);
     const [ valueRadio , setValueRadio ]  = useState(1);
     const [ valueStart , setValueStart ] = useState(false);
     const [ valueEnd , setValueEnd] = useState(false);
@@ -115,18 +115,15 @@ function BookStepOne(props) {
       }
       return newArr
     }
-    // const fetchAllRoute = async()=>{
-    //       try{
-    //           const res = await getAllRoute();
-    //           dispatch(addRoute(res.data.body));
-    //           console.log(res);
-    //       }catch(err){
-    //           console.log(err);
-    //       }
-    // }
     const onSubmit = ()=>{
+        if(!token){
+          openNotificationErorr('Thất bại' , 'Vui lòng đăng nhập !' ,3)
+          history.push("/signin");
+          return;
+        }
+
         if(textStart === '' || textEnd === '' ||  !fullDateStart || !fullDateEnd ){
-            openNotificationErorr('Thất bại' , 'Vui lòng nhập đầy đủ thông tin');
+            openNotificationErorr('Thất bại' , 'Vui lòng nhập đầy đủ thông tin', 3);
         } 
         else{
           history.push({
@@ -140,7 +137,7 @@ function BookStepOne(props) {
               loai :  valueRadio,
               quangduong : itemRoute[0].quangduong,
               thoigian :  itemRoute[0].thoigian,
-              giave : itemRoute[0].giave
+              // giave : itemRoute[0].giave
             }
           })
           console.log(textStart , textEnd , fullDateStart , fullDateEnd);
@@ -283,12 +280,9 @@ function BookStepOne(props) {
                     <p className="body__title">{ itemRoute.length === 1? `${itemRoute[0].noidi} ⇒ ${itemRoute[0].noiden}` : 'Không xác định'}</p>
                     <p className="body__detail">Khoảng cách :  <span className="text_detail">{ itemRoute.length === 1 ? `${itemRoute[0].quangduong} km` : 'Không xác định'}</span></p>
                     <p className="body__detail">Thời gian :  <span className="text_detail">{ ((itemRoute.length === 1)&&(itemRoute[0].thoigian))? `${itemRoute[0].thoigian} giờ` : 'Không xác định'}</span></p>
-                    <p className="body__detail">Giá vé :  <span className="text_detail">{ itemRoute.length === 1 ? `${formatMoney(itemRoute[0].giave.toString())} đ` : 'Không xác định'}</span></p>
+                    {/* <p className="body__detail">Giá vé :  <span className="text_detail">{ itemRoute.length === 1 ? `${formatMoney(itemRoute[0].giave.toString())} đ` : 'Không xác định'}</span></p> */}
                     <p className="body__note">
-
-
                             * Lưu ý: thời gian đón và trung chuyển xe có thể thay đổi phụ thuộc vào mật độ giao thông tại từng thời điểm. Kính mong quý hành khách thông cảm!
-  
                     </p>
                 </div>
               </div>
