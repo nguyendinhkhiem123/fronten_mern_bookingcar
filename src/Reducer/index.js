@@ -8,6 +8,7 @@ import token from './Token'
 import currentUser from './currentUser';
 import route from './route';
 import listTicket from './ticketUser'
+import car from './car'
 // const persistConfig = {
 //     key: 'root',
 //     storage,
@@ -18,7 +19,8 @@ const reducer =combineReducers({
     token,
     currentUser,
     route,
-    listTicket
+    listTicket,
+    car
 })
 // const persistedReducer = persistReducer(persistConfig, reducer) 
 
@@ -28,7 +30,7 @@ const reducer =combineReducers({
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['isAdmin', 'token','route','currentUser'] //
+    whitelist: ['isAdmin', 'token','route','currentUser','car','route'] //
 }
    
 const persistedReducer = persistReducer(persistConfig, reducer)

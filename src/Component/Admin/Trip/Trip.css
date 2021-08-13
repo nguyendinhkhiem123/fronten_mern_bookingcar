@@ -1,0 +1,146 @@
+.ant-layout-content{
+    padding: 0 50px;
+}
+
+@media screen and (max-width : 576px) {
+   
+    .ant-layout-content{
+        padding: 0;
+    }
+}
+
+
+.route__container{
+    max-width: 1200px;
+    margin: 40px auto 0 auto;
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    
+}
+.route__container::-webkit-scrollbar{
+    width: 10px;
+ }
+ .route__container::-webkit-scrollbar-thumb{
+   border-radius: 3px;
+   background-color: #ef5222;;
+ }
+
+.route__header{
+    display: flex;
+    justify-content: space-between;
+}
+.route__search{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    border : 1px solid #ccc;
+    padding : 0 8px
+}
+.form__input{
+    flex: 1;
+    width: 100%;
+    outline: none;
+    border : none;
+    background-color: #fff;
+    font-size: 20px;
+}
+.class__icon{
+    padding-left: 8px;
+    font-size: 20px;
+}
+
+.route__body{
+    margin-top: 40px;
+    width: 1200px;
+}
+
+.tr__head{
+    width: 100%;
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid #d5d5d5;
+    background-color: #f6f6f6;
+}
+.tr__head.active{
+    background: #f3ccc0;
+}
+th{
+    height: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #141414;
+    padding-left: 20px;
+    text-align: center;
+}
+td{
+    height: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #141414;
+    padding-left: 20px;
+    text-align: center;
+}
+
+.table__body{
+    height: 680xp;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.table__body::-webkit-scrollbar{
+    width: 10px;
+ }
+ .table__body::-webkit-scrollbar-thumb{
+   border-radius: 3px;
+   background-color: #ef5222;;
+ }
+
+.box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 80px;
+    background-color: #fff;
+    border-radius: 3px;
+    border: #d5d5d5 1px solid ;
+    color: #00613d;
+    cursor: pointer;
+}
+
+.box:hover{
+   background-color:#ef5222; ;
+   color : #fff
+}
+
+
+.t__date{
+    width : 200px;
+}
+.t__hour{
+    width: 80px;
+}
+.t__price{
+    width: 100px;
+}
+.t__route{
+    width: 100px;
+}
+
+.t__start{
+    width: 110px;
+}
+.t__car{
+    width: 100px;
+}
+.t__numberticket{
+    width: 100px;
+}
+@media screen and (max-width : 576px) {
+    .form__input{
+        font-size : 14px
+    }
+}
+.route__link{
+    color: #00613d;;;
+}

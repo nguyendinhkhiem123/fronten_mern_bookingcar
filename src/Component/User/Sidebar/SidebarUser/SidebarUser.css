@@ -63,7 +63,7 @@
     color: #fff !important;
 }
 .list--user:hover{
-    background-color: #8aabca;
+    background-color: #ee6d45;
 }
 
 .list-user{
@@ -80,7 +80,7 @@
 }
 
 .user__active--link{
-    background-color: #8aabca;
+    background-color: #ee6d45;
    
 
 }

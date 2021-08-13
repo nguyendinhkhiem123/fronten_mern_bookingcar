@@ -29,6 +29,7 @@ function FormModal(props) {
       };
       const onFinish = async(value) => {
         try{
+              console.log(value);
               Display();
               let res =null;
               

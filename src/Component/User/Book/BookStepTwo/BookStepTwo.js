@@ -15,7 +15,7 @@ const {  Content } = Layout;
 function BookStepTwo(props) {
     const location = useLocation();
     const history = useHistory();
-
+    const token = useSelector(state => state.token);
     const [ Loading , Hidden , Display] = useLoading(); 
     const [ listHourOne , setListHourOne] = useState([]);
     const [ hourOne , setHourOne]  = useState(0);
@@ -82,7 +82,10 @@ function BookStepTwo(props) {
   
     console.log(state);
     useEffect(()=>{
-      
+        if(!token){
+            openNotificationErorr('Thất bại' , "Vui lòng đăng nhập " ,3);
+            history.push('/signin');
+        } 
         if(!state){
             openNotificationErorr('Thất bại' , "Vui lòng chọn địa điểm" ,3);
             history.push('/');
@@ -239,138 +242,133 @@ function BookStepTwo(props) {
                     <div className="step_two">
                                 <div class="step_two--container">
                                     <div className="step__info">
-                                        <div className="step__info--header">
-        
-                                                <p className="header__date">{state == 2 ? "Lượt đi "+state.thogianbatdau : state.thogianbatdau }</p>
-                                                <p className="header__route">{state ? `${state.noidi} ⇒ ${state.noiden}` : 'Không xác định'}</p>
-                                        </div>
-                                        <div className="step__info--body">
-                                                <div className="mt-10">
-                                                    Giờ khởi hành :
-                                                    <Select value={hourOne} onChange={onChangeHourOne} style={{ width: '100%' , marginTop : '10px' }}>
-                                                        {
-                                                            listHourOne.length > 0 ?
-                                                            listHourOne.map((value,index)=>{
-                                                                return (
-                                                                    <Option key={index} value=
-                                                                    {value}>{value} giờ</Option>
-                                                                )
-                                                            })
-                                                            :
-                                                            null     
-                                                        }
-                                                    </Select>
+                                      <div className="header__title">Loại vé : {state.loai === 2 ? "Khứ hồi"  : "Một chiều"}</div>
+                                        <div className="info">
+                                            <div className="step__info--header">
+                                                    <p className="header__date">{state.loai == 2 ? "Lượt đi "+state.thogianbatdau : state.thogianbatdau }</p>
+                                                    <p className="header__route">{state ? `${state.noidi} ⇒ ${state.noiden}` : 'Không xác định'}</p>
+                                            </div>
+                                                <div className="step__info--body">
+                                                        <div className="mt-10">
+                                                            <span class="title__option">Giờ khởi hành :</span>
+                                                            <Select value={hourOne} onChange={onChangeHourOne} style={{ width: '100%' , marginTop : '10px' }}>
+                                                                {
+                                                                    listHourOne.length > 0 ?
+                                                                    listHourOne.map((value,index)=>{
+                                                                        return (
+                                                                            <Option key={index} value=
+                                                                            {value}>{value} giờ</Option>
+                                                                        )
+                                                                    })
+                                                                    :
+                                                                    null     
+                                                                }
+                                                            </Select>
+                                                        </div>
+                                                        <div className="mt-10">
+                                                            <span class="title__option">Biển số xe :</span>
+                                                            <Select value={oneTrip ? oneTrip.car.biensoxe : null} style={{ width: '100%' , marginTop : '10px' }}>
+                                                                <Option value={oneTrip ? oneTrip.car.biensoxe : null}> {oneTrip ? oneTrip.car.biensoxe : "Không xác định"} </Option>
+                                                            </Select>
+                                                        </div>
+                                                        <div className="mt-10">
+                                                            <span class="title__option">Số vé đặt :</span>
+                                                            <InputNumber 
+                                                                min={1} 
+                                                                max={numberTicketOne} 
+                                                                value={numberTicketOneEnbale}
+                                                                onChange={onChangeTicketOne} 
+                                                                style={{width : '100%'}}
+                                                            />
+                                                        </div>
+                                                        <div style={{display : 'flex' , justifyContent:"space-between"}}>
+                                                            <div>
+                                                                    <p className="info__title">
+                                                                    Số lượng còn lại vé : {numberTicketOne > 0? numberTicketOne+" vé ": 'Không xác định'}
+                                                                </p>
+                                                                <p className="info__title">
+                                                                    Quãng đường : {(state && state.quangduong) ? `${state.quangduong} km` : 'Không xác định'}
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                    <p class="info__title">
+                                                                    Hành trình : {(state && state.thoigian) ? `${state.thoigian}h` : 'Không xác định'}
+                                                                </p>
+                                                                <p class="info__title">
+                                                                    Giá vé: {(oneTrip) ? formatMoney(oneTrip.giave.toString())+"đ/vé" : 'Không xác định'}
+                                                                </p>
+                                                            </div>
+                                                        </div>  
                                                 </div>
-                                                <div className="mt-10">
-                                                    Biển số xe :
-                                                    <Select value={oneTrip ? oneTrip.car.biensoxe : null} style={{ width: '100%' , marginTop : '10px' }}>
-                                                         <Option value={oneTrip ? oneTrip.car.biensoxe : null}> {oneTrip ? oneTrip.car.biensoxe : "Không xác định"} </Option>
-                                                    </Select>
-                                                </div>
-                                                <div className="mt-10">
-                                                    <p>Số vé đặt :</p>
-                                                    <InputNumber 
-                                                        min={1} 
-                                                        max={numberTicketOne} 
-                                                        value={numberTicketOneEnbale}
-                                                        onChange={onChangeTicketOne} 
-                                                        style={{width : '100%'}}
-                                                    />
-                                                </div>
-                                                <div style={{display : 'flex' , justifyContent:"space-between"}}>
-                                                    <div>
-                                                            <p className="info__title">
-                                                            Số lượng còn lại vé : {numberTicketOne > 0? numberTicketOne+" vé ": 'Không xác định'}
-                                                        </p>
-                                                        <p className="info__title">
-                                                            Quãng đường : {(state && state.quangduong) ? `${state.quangduong} km` : 'Không xác định'}
-                                                        </p>
+                                        </div>  
+                                        {
+                                            (state.loai == 2) ? 
+                                            <div className="info">
+                                              
+                                                <div className="step__info--header">
+                                                            <p className="header__date">{state.loai == 2 ? "Lượt về "+state.thoigianve : state.thoigianve }</p>
+                                                            <p className="header__route">{state ? `${state.noiden} ⇒ ${state.noidi}` : 'Không xác định'}</p>
                                                     </div>
-                                                    <div>
-                                                            <p class="info__title">
-                                                            Thời gian đến : {(state && state.thoigian) ? `${state.thoigian}h` : 'Không xác định'}
-                                                        </p>
-                                                        <p class="info__title">
-                                                            Giá vé: {(oneTrip) ? formatMoney(oneTrip.giave.toString())+"đ/vé" : 'Không xác định'}
-                                                        </p>
-                                                    </div>
+                                                <div className="step__info--body">
+                                                        <div className="mt-10">
+                                                        <span class="title__option">Giờ khởi hành :</span>
+                                                            <Select value={hourTwo} onChange={onChangeHourTwo} style={{ width: '100%' , marginTop : '10px' }}>
+                                                            {
+                                                                listHourTwo.length > 0 ?
+                                                                    listHourTwo.map((value,index)=>{
+                                                                        return (
+                                                                            <Option key={index} value=
+                                                                            {value}>{value} giờ</Option>
+                                                                        )
+                                                                    })
+                                                                    :
+                                                                    null    
+                                                                    } 
+                                                            </Select>
+                                                        </div>
+                                                        <div className="mt-10">
+                                                        <span class="title__option">Biển số xe :</span>
+                                                        <Select value={ twoTrip ? twoTrip.car.biensoxe : null} style={{ width: '100%' , marginTop : '10px' }}>
+                                                            <Option value={ twoTrip ? twoTrip.car.biensoxe : null}> {twoTrip  ? twoTrip.car.biensoxe : "Không xác định"} </Option>
+                                                        </Select>
+                                                        </div>
+                                                        <div className="mt-10">
+                                                        <span class="title__option">Số vé đặt :</span>
+                                                        <InputNumber min={1} max={numberTicketTwo} value={numberTicketTwoEnbale} onChange={onChangeTicketTwo} style={{width : '100%'}}/>
+                                                        </div>
+                                                        
+                                                        <div style={{display : 'flex' , justifyContent : 'space-between'}}>
+                                                            <div>
+                                                                    <p className="info__title">
+                                                                    Số lượng còn lại vé : {(numberTicketTwo) ? numberTicketTwo+ " vé" : 'Không xác định'}
+                                                                    </p>
+                                                                    <p className="info__title">
+                                                                    Quãng đường : {(state && state.quangduong) ? `${state.quangduong} km` : 'Không xác định'}
+
+                                                                    </p>
+                                                            </div>
+                                                            <div>
+                                                                    <p class="info__title">
+                                                                    Thời gian đến : {(state && state.thoigian) ? `${state.thoigian}h` : 'Không xác định'}
+                                                                    </p>
+                                                                    <p class="info__title">
+                                                                    Giá vé: {(twoTrip) ? formatMoney(twoTrip.giave.toString())+"đ/vé": 'Không xác định'}
+                                                                    </p>
+                                                            </div>
+                                                        </div>
                                                 </div>
-                                               
-                                               
-                                        </div>
+                                         </div>  : null
+                                        }
                                     </div>
                                 </div>
-                                {   (state && state.loai === 2 ) ?
-                                <div class="step_two--container">
-                                        <div className="step__info">
-                                            <div className="step__info--header">
-                                                    <p className="header__date">{state == 2 ? "Lượt về "+state.thogianve : state.thogianbatdau }</p>
-                                                    <p className="header__route">{state ? `${state.noiden} ⇒ ${state.noidi}` : 'Không xác định'}</p>
-                                            </div>
-                                            <div className="step__info--body">
-                                                     <div className="mt-10">
-                                                     Giờ khởi hành :
-                                                        <Select value={hourTwo} onChange={onChangeHourTwo} style={{ width: '100%' , marginTop : '10px' }}>
-                                                           {
-                                                            listHourTwo.length > 0 ?
-                                                                listHourTwo.map((value,index)=>{
-                                                                    return (
-                                                                        <Option key={index} value=
-                                                                        {value}>{value} giờ</Option>
-                                                                    )
-                                                                })
-                                                                :
-                                                                null    
-                                                                 } 
-                                                        </Select>
-                                                     </div>
-                                                    <div className="mt-10">
-                                                    Biển số xe :
-                                                    <Select value={ twoTrip ? twoTrip.car.biensoxe : null} style={{ width: '100%' , marginTop : '10px' }}>
-                                                         <Option value={ twoTrip ? twoTrip.car.biensoxe : null}> {twoTrip  ? twoTrip.car.biensoxe : "Không xác định"} </Option>
-                                                    </Select>
-                                                    </div>
-                                                     <div className="mt-10">
-                                                    <p>Số vé đặt :</p>
-                                                     <InputNumber min={1} max={numberTicketTwo} value={numberTicketTwoEnbale} onChange={onChangeTicketTwo} style={{width : '100%'}}/>
-                                                      </div>
-                                                    
-                                                     <div style={{display : 'flex' , justifyContent : 'space-between'}}>
-                                                         <div>
-                                                                <p className="info__title">
-                                                                Số lượng còn lại vé : {(numberTicketTwo) ? numberTicketTwo+ " vé" : 'Không xác định'}
-                                                                </p>
-                                                                <p className="info__title">
-                                                                Quãng đường : {(state && state.quangduong) ? `${state.quangduong} km` : 'Không xác định'}
-
-                                                                </p>
-                                                         </div>
-                                                         <div>
-                                                                <p class="info__title">
-                                                                Thời gian đến : {(state && state.thoigian) ? `${state.thoigian}h` : 'Không xác định'}
-                                                                </p>
-                                                                <p class="info__title">
-                                                                Giá vé: {(twoTrip) ? formatMoney(twoTrip.giave.toString())+"đ/vé": 'Không xác định'}
-                                                                </p>
-                                                         </div>
-                                                     </div>
-                                                    
-                                                   
-                                            </div>
-                                        </div>
-                                  
-                                </div>
-                                : 
-                                null        
-                            }
                            
                     </div>
                     <div className="step_two--footer">
                         <Button type="default" size="large" onClick={onClickPrev} >
                             {<LeftOutlined />}
-                            QUAY LẠI
+                            QUAY LẠI    
                         </Button>
-                        <Button type="primary" size="large" onClick={onClickNext} >
+                        <Button type="primary" className="btn__next" size="large" onClick={onClickNext} >
                                 TIẾP TỤC
                                 {<RightOutlined />}
                         </Button>

@@ -18,10 +18,10 @@
 .step_two{
     display: flex;
     margin: 40px 0 80px 0;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
 }
-.step_two--container{
+.step_two--container{ 
     width: 700px;
     padding : 16px
 }
@@ -49,7 +49,7 @@
     margin-top: 16px;
 }
 .header__date{
-   color : #1890ff
+   color : #00603d;
 }   
 .info__title{
     font-size: 15px;
@@ -62,7 +62,9 @@
     margin-top: 20px;
 }
 
-
+.header__route{
+    color : #f15a24;
+}
 
 .step__body{
     width: 100%;
@@ -114,17 +116,18 @@
     background-color: #eff9ff;
 }
 .active.body__number--status{
-    background-color: #c0c6cc;
+    background-color: #f15a24;
     cursor: not-allowed;
 }
 .chose.body__number--status{
-    background-color: #fdede8;
+    background-color: #1890ff;
     
 }
 .pen.body__number--status{
-    background: brown;
+    background: #00603d;
     cursor: not-allowed;
 }
+
 .step__body--status{
     margin-top: 20px;
     display: flex;
@@ -145,16 +148,41 @@
     background-color: #eff9ff;
 }
 .active.status{
-    background-color: #c0c6cc;
+    background-color: #f15a24
 }
 .chose.status{
-    background-color: #fdede8; 
+    background-color: #1890ff; 
 }
 
 .pen.status{
-    background-color: #1890ff; 
+    background-color:  #00603d;
 }
 .step__body--footer{
     display: flex;
     justify-content: space-between;
+}
+
+.mt-10{
+    margin-top: 10px;
+}
+
+.info__title{
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.btn__next{
+    background-color: #00603d !important; 
+    border-color: #00603d !important;
+}
+
+.btn__next:hover{
+    background-color: #fff !important; 
+    border-color: #075f3f !important ;
+    color : #00603d
+}
+
+.book__title{
+    color : #f15a24;
+    font-size: 24px;
 }

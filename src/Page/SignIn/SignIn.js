@@ -3,7 +3,7 @@ import { Form, Input, Button, Modal} from "antd";
 // import axios from '../../axios/index';
 import { useHistory  , Link} from "react-router-dom";
 import '../SignIn/SignIn.css';
-import Logo from '../../img/logo.png';
+import Logo from '../../img/futas.jpeg';
 import { FacebookFilled , GooglePlusOutlined , UserOutlined ,LockOutlined } from '@ant-design/icons';
 import * as ApiAuthencation from '../../Api/Authencation/index';
 import useLoading from '../../Component/HookLoading/HookLoading';
@@ -35,15 +35,16 @@ function SignIn(props) {
                   
                   localStorage.setItem('accessToken' , res.data.body.tokenAccess);
                   localStorage.setItem('refreshToken' , res.data.body.tokenRefresh); 
-                  openNotificationSuccess('Thành công',res.data.message, 3)
-                  if(res.data.body.vaitro === 'user') {
+                  openNotificationSuccess('Thành công',res.data.message, 3);
+                  
+                  console.log(res);
+                  if(res.data.body.vaitro === 0) {
                      history.replace('/');
                      dispatch(ActionToken.addToken());
                   }
                   else{
-                    history.replace('/admin');
+                    history.replace('/admin/tuyen-duong');
                     dispatch(ActionToken.addToken());
-                  //  console.log(ActionIsAdmin.isAdmin(null));
                     dispatch(ActionIsAdmin.isAdmin());
                   }
               }
@@ -72,18 +73,21 @@ function SignIn(props) {
         try{
   
             Display();
+            hiddenModal();
             const res = await ApiUser.forgotPassword(value);
             Hidden();
+            console.log(res);
             if(res.data.success){
-                hiddenModal();
+             
                 openNotificationSuccess('Thành công',res.data.message, 3)
             }
             else{
+                hiddenModal();
+                Hidden();
               openNotificationErorr('Thất bại', res.data.message , 3);
             }
       }catch(err){
           Hidden();
-          
           openNotificationErorr('Thất bại', 'Lỗi hệ thống' , 3);
       }
     

@@ -6,7 +6,7 @@ import * as ApiTicket from '../../../Api/Ticket/index';
 import useLoading from '../../HookLoading/HookLoading';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { openNotificationSuccess } from '../../Notfication/index';
+import { openNotificationSuccess , openNotificationErorr } from '../../Notfication/index';
 import * as actionTicket from '../../../Reducer/ticketUser';
 import Modal from './Modal/ModalInfo';
 const { Content } = Layout; 
@@ -18,6 +18,7 @@ function History(props) {
     const route =  useSelector(state => state.route)
     const [ isModal , setIsModal ] = useState(false);
     const [ inforModal , setInforModal ] = useState({});
+    const date = new Date();
     const fetchTicketOfUser = async()=>{
         try{
             Display();
@@ -45,21 +46,24 @@ function History(props) {
         setInforModal(value);
     }
     const onClickCancleTicket = async(value)=>{
-        try{
-            Display();
-            const body = {
-                id : value
+        if(window.confirm("Bạn có chắc chắn hủy vé ?")){
+            try{
+                Display();
+                const body = {
+                    id : value
+                }
+                const res = await ApiTicket.cancleTicket(body);
+                Hidden();
+                if(res.data.success){
+                    openNotificationSuccess("Thành công" , "Bạn đã hủy vé thành công " , 3);
+                    dispatch(actionTicket.removeOneTicket(value))
+                }
             }
-            const res = await ApiTicket.cancleTicket(body);
-            Hidden();
-            if(res.data.success){
-                openNotificationSuccess("Thành công" , "Bạn đã hủy vé thành công " , 3);
-                dispatch(actionTicket.removeOneTicket(value))
+            catch(err){
+    
             }
         }
-        catch(err){
-
-        }
+       
     }
     let listResult = [];
     let ticketResult = [...listTicket]
@@ -67,6 +71,16 @@ function History(props) {
         ticketResult.sort((a, b)=>{
             return new Date(a.ngaydi) < new Date(b.ngaydi) ? 1 : -1
         })
+    }
+    const newDate = (ngay , gio=0)=>{
+        const n = Math.round(gio/24);
+        const m = gio%24;
+        const date1 =  new Date(ngay);
+        const year = date1.getFullYear();
+        const month = date1.getMonth();
+        const day = date1.getDate()+n;
+        
+        return new Date(Date.UTC(year , month , day , m));
     }
     if(ticketResult.length > 0 ){
         listResult = ticketResult.map((value,index)=>{
@@ -76,7 +90,7 @@ function History(props) {
                           {value._id}
                   </td>
                   <td className="table__date">
-                      {value.thoigiandat}                                      
+                      {value.thoigiandat.slice(0,10)}                                      
                   </td>
                   <td className="table__number"> 
                       {value.soghe}
@@ -100,7 +114,7 @@ function History(props) {
                       } 
                   </td>
                   <td className="table__ngaydi">
-                      {value.trip.ngaydi} 
+                      {value.trip.ngaydi.slice(0,10)} 
                   </td>
                   <td className="table__giokhoihanh">
                           {value.trip.giodi}h
@@ -112,14 +126,13 @@ function History(props) {
                   
                   </td>
                   <td>
-                      {
-                          (new Date(value.trip.ngaydi) >  new Date())  ?
-                          <span className="box" onClick={e => onClickCancleTicket(value._id)}>
-                          Hủy vé
+                      
+                           <span className="box" onClick={ new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) < newDate(value.trip.ngaydi) ? e=>onClickCancleTicket(value) : e=>openNotificationErorr('Thất bại ' , 'Xe có thể đã khởi hành hoặc kết thúc rồi. Không thể  chỉnh sửa' , 3)
+                                                    
+                        }>
+                            Hủy vé
                          </span>
-                         : 
-                         ""
-                      }
+                      
                      
                   
                   </td> 
@@ -177,7 +190,7 @@ function History(props) {
                                                     : 
                                                     <div style={{
                                                         width : '100%',
-                                                        backgroundColor : '#d6dee8',
+                                                        backgroundColor : '#f3ccc0',
                                                         height :'60px',
                                                         textAlign : 'center',
                                                         lineHeight : '60px',

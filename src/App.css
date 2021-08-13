@@ -38,3 +38,25 @@
     transform: rotate(360deg);
   }
 }
+
+.ant-btn-primary{
+  background-color: #ef5222 !important;
+  border-color: #ef5222 !important;
+}
+/* .ant-btn-primary:hover{
+  background: #fff !important;; 
+  border-color: #f56e45;
+} */
+
+/* .ant-btn:hover, .ant-btn:focus {
+  color: #f56e45;
+  border-color: #ef5222;
+} */
+
+/* .ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused , .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+  border-color: #ef5222;
+}
+
+.ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused{
+  box-shadow: none;
+} */

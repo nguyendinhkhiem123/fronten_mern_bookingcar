@@ -6,6 +6,7 @@ function Process(props) {
     useEffect(()=>{
         const process = document.querySelector('.process_load');
         const process__item = document.querySelectorAll('.process__item');
+        const process__color = document.querySelectorAll('.process__item');
         process__item.forEach(value =>{
             value.classList.remove('actived')
         })
@@ -23,19 +24,19 @@ function Process(props) {
          
             <div className="process_container">
                 <div className={isActive === 0 ?"process__item active": "process__item"}>
-                        <span className="process__header">1</span>
+                        <span className={isActive === 0 ? "process__header color" : 'process__header' }>1</span>
                         <p className={isActive === 0 ? "process__desc" : 'hidden process__desc' }>Chọn tuyến</p>
                 </div>
                 <div className={isActive ===1 ? "process__item active" :"process__item"}>
-                        <span className="process__header">2</span>
+                        <span className={isActive === 1 ? "process__header color" : 'process__header' }>2</span>
                         <p className={isActive === 1 ? "process__desc" : 'hidden process__desc' }>Chọn giờ</p>
                 </div>
                 <div className={isActive ===2 ? "process__item active" :"process__item"}>
-                        <span className="process__header">3</span>
+                        <span className={isActive === 2 ? "process__header color" : 'process__header' }>3</span>
                         <p className={isActive === 2 ? "process__desc" : 'hidden process__desc' }>Chọn ghế</p>
                 </div>
                 <div className={isActive ===3 ? "process__item active" :"process__item"}>
-                         <span className="process__header">4</span>
+                         <span className={isActive === 3 ? "process__header color" : 'process__header' }>4</span>
                         <p className={isActive === 3 ? "process__desc" : 'hidden process__desc' }>Thanh toán</p>
                 </div>
                 <div className="process_load" ></div>

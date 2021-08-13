@@ -83,6 +83,7 @@ function Pricing(props) {
                                             }
                                          }
                                         }
+                                        className="route__link"
                                     >
                                     ĐẶT VÉ
                                 </Link>
@@ -149,7 +150,7 @@ function Pricing(props) {
                                             <th>
                                               
                                             </th>
-                                           
+                                            
                                         </tr>
                                     </thead>
                                 </table>
@@ -160,7 +161,7 @@ function Pricing(props) {
                                         :
                                         <div style={{
                                             width : '100%',
-                                            backgroundColor : '#d6dee8',
+                                            backgroundColor : '#f3ccc0',
                                             height :'60px',
                                             textAlign : 'center',
                                             lineHeight : '60px',

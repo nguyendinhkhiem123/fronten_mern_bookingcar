@@ -7,3 +7,7 @@ export const createClient = (body)=>{
 export const login = (body) =>{
     return AxiosClient.post("auth/login" , body)
 }
+
+export const createEmployee = (body) =>{
+    return AxiosClient.post("auth/createemployee" , body)
+}

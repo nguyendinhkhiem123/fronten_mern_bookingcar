@@ -2,7 +2,7 @@ import React from 'react';
 import '../SidebarMenu/SidebarMenu.css'
 import { CloseOutlined , HomeOutlined ,CalendarOutlined  ,MinusSquareOutlined , PieChartOutlined  , PhoneOutlined , AuditOutlined  , ContactsOutlined } from '@ant-design/icons';
 import { List } from 'antd';
-import logo from '../../../../img/logo.png'
+import logo from '../../../../img/futas.jpeg'
 import { useSelector } from 'react-redux';
 import { useHistory , Route} from 'react-router-dom';
 
@@ -32,85 +32,48 @@ function SidebarMenu(props) {
     }
     const ListDataUser= [
         {
-            title : 'Trang chủ',
-            icon : <HomeOutlined />,
+            title : 'TRANG CHỦ',
             link : '/'
         },
         {
-            title : 'Lịch trình',
-            icon : <CalendarOutlined />,
+            title : 'LỊCH TRÌNH',
             link : '/lich-trinh'
-
         },
-        { 
-            title : 'Tin tức',
-            icon : <MinusSquareOutlined />,
+        {
+            title : 'TIN TỨC',
             link : '/tin-tuc'
-
-        }
-        , { 
-            title : 'Tuyển dụng',
-            icon : <PieChartOutlined />,
-            link : '/tuyen-dung'
-
-        }
-        , { 
-            title : 'Liện hệ',
-            icon :<PhoneOutlined />,
-            link : '/lien-he'
-
-        }
-        , { 
-            title : 'Hóa đơn',
-            icon : <AuditOutlined />,
-            link : '/hoa-don'
-        }
-        , { 
-            title : 'Về chúng tôi',
-            icon : <ContactsOutlined />,
-            link : '/ve-chung-toi'
-
-        }
+        },
+        {
+            title : 'HỎI ĐÁP',
+            link : '/binh-luan'
+        },
+       
     
     
     ]
     const ListDataAdmin= [
+  
         {
-            title : 'Trang chủ Admin',
-            icon : <HomeOutlined />,
-            link:'/admin/trang-chu'
+            title : 'Quản lý tuyến đường',
+            link : '/admin/tuyen-duong'
         },
         {
-            title : 'Lịch trình',
-            icon : <CalendarOutlined />,
-            link:'/admin/lich-trinh'
+            title : 'Quản lý lịch trình',
+            link : '/admin/lich-trinh'
         },
-        { 
-            title : 'Tin tức',
-            icon : <MinusSquareOutlined />,
-            link:'/admin/tin-tuc'
-        }
-        , { 
-            title : 'Tuyển dụng',
-            icon : <PieChartOutlined />,
-            link:'/admin/tuyen-dung'
-        }
-        , { 
-            title : 'Liện hệ',
-            icon :<PhoneOutlined />,
-            link:'/admin/lien-he'
-        }
-        , { 
-            title : 'Hóa đơn',
-            icon : <AuditOutlined />,
-            link:'/admin/hoa-don'
-        }
-        , { 
-            title : 'Về chúng tôi',
-            icon : <ContactsOutlined />,
-            link:'/admin/ve-chung-toi'
-        }
-    
+        {
+            title : 'Quản lý xe',
+            link : '/admin/xe'
+        },
+        {
+            title : 'Thống kê',
+            link : '/admin/thong-ke'
+        },
+        {
+            title : 'HỎI ĐÁP',
+            link : '/binh-luan'
+        },
+        
     
     ]
     const isAdmin = useSelector(state => state.isAdmin)

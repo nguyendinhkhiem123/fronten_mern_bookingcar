@@ -11,7 +11,7 @@
     font-size: 20px;
     font-weight: 700px;
     color: #fff;
-    background-color: #1890ff;
+    background-color:  #00603d;
 }
 
 .infomation__body{
@@ -21,8 +21,8 @@
 .body__title{
     font-size: 15px;
     font-weight: 600;
-    color: #1890ff;
-}
+    color: #f15a24;
+} 
 
 .body__detail{
     font-size: 15px;
@@ -38,4 +38,13 @@
     font-size: 14px;
     font-style: italic;
     color: #637280;
+}
+
+.ant-btn-primary{
+    background-color: #ef5222;
+    border-color: #ef5222;
+}
+.ant-btn-primary:hover{
+    background: #f56e45; 
+    border-color: #f56e45;
 }

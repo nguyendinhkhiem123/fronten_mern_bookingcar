@@ -26,14 +26,21 @@ function ModalInfo(props) {
                         <Form.Item
                            label="Tên người nhận"
                            name="hovaten"
-                            initialValue={infor? infor.nguoinhan : " "}
+                            initialValue={infor? infor.hovaten : " "}
                        >
                            <Input readOnly/>
                        </Form.Item>
                        <Form.Item
                            label="Số điện thoại"
-                           name="diachi"
+                           name="sdt"
                            initialValue={infor? infor.sdt : " "}
+                           >
+                           <Input readOnly/>
+                       </Form.Item>
+                       <Form.Item
+                           label="Email"
+                           name="email"
+                           initialValue={infor? infor.email : " "}
                            >
                            <Input readOnly/>
                        </Form.Item>
@@ -47,14 +54,14 @@ function ModalInfo(props) {
                        <Form.Item
                            label="Hình thức thanh thoán"
                            name="hinhthuc"
-                           initialValue={infor.pay.hinhthuc? infor.pay.hinhthuc: " "}
+                           initialValue={infor.hinhthucthanhtoan? infor.hinhthucthanhtoan: " "}
                            >
                            <Input readOnly/>
                        </Form.Item>
                        <Form.Item
                            label="Trạng thái"
                            name="staus"
-                           initialValue={infor.pay.trangthai  === false ? "Chưa thanh toán" : "Đã thanh toán"}
+                           initialValue={infor.trangthai  === false ? "Chưa thanh toán" : "Đã thanh toán"}
                            >
                            <Input readOnly/>
                        </Form.Item>

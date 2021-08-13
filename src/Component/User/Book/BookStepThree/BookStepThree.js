@@ -5,8 +5,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Layout , Button , Row , Col ,Select } from 'antd';
 import { RightOutlined ,LeftOutlined } from '@ant-design/icons'
 import * as ApiTicket from '../../../../Api/Ticket/index';
-import '../BookStepTwo/BookStepTwo.css';
-// import '../BookStepThree/BookStepThree.css';
+// import '../BookStepTwo/BookStepTwo.css';
+import '../BookStepThree/BookStepThree.css';
 import Process from '../../Process/Process';
 import {openNotificationErorr} from '../../../Notfication/index';
 import useLoading from '../../../HookLoading/HookLoading';
@@ -49,16 +49,18 @@ function BookStepThree(props) {
         try{
             Display();
             setOneNumberTicket(state.sovedi);
-
             let resOne = await ApiTicket.getTicketTrip({trip : state.chuyendi._id});
             console.log(resOne);
         
             if(resOne.data.success){
-                const tempOne = [...resOne.data.body]
-                
-                setOneTicket(resOne.data.body);
-                setOneListBuildOne(tempOne.splice(0,20))
-                setOneListBuildTwo(tempOne.splice(0,20))
+                const tempOne = [];
+                for(let i = 0 ; i < resOne.data.body.number ; i++){
+                    tempOne.push(i);
+                }
+                console.log(tempOne);
+                setOneTicket(resOne.data.body.listTicket);
+                setOneListBuildOne(tempOne.slice(0,resOne.data.body.number/2));
+                setOneListBuildTwo(tempOne.slice(0,resOne.data.body.number/2));
             }
          
 
@@ -68,16 +70,20 @@ function BookStepThree(props) {
                 let resTwo = await ApiTicket.getTicketTrip({trip : state.chuyenve._id});
                 console.log(resTwo);
                 if(resTwo.data.success){
-                    const tempTwo = [...resTwo.data.body]
-                    setTwoTicket(resTwo.data.body);
-                    setTwoListBuildOne(tempTwo.splice(0,20))
-                    setTwoListBuildTwo(tempTwo.splice(0,20))
+                    const tempTwo = [];
+                    for(let i = 0 ; i < resTwo.data.body.number ; i++){
+                        tempTwo.push(i);
+                    }
+                    setTwoTicket(resTwo.data.body.listTicket);
+                    setTwoListBuildOne(tempTwo.slice(0,resTwo.data.body.number/2))
+                    setTwoListBuildTwo(tempTwo.slice(0,resTwo.data.body.number/2))
                 }
             }  
+            
             Hidden();
         }
         catch(err){
-
+            console.log(err);
         }
     }
     const formatMoney=(n) =>{
@@ -198,9 +204,9 @@ function BookStepThree(props) {
                     let bodyOneResult ={
                         chuyendi : state.chuyendi._id ,
                         soghedi : numOneCar,
-                        trangthai : "PENDING"
+                   
                     }
-                    let updateResult = await ApiTicket.UpdateStatusTicket(bodyOneResult)
+                    let updateResult = await ApiTicket.insertTicket(bodyOneResult) // Tạo vé có trạng thái là đang ưu tiên
                     Hidden();
                     if(updateResult.data.success){
                         history.push({
@@ -225,17 +231,16 @@ function BookStepThree(props) {
                     let bodyOneResult ={
                         chuyendi : state.chuyendi._id ,
                         soghedi : numOneCar,
-                        trangthai : "PENDING"
+                      
                     }
-                    let updateResultOne = await ApiTicket.UpdateStatusTicket(bodyOneResult)
+                    let updateResultOne = await ApiTicket.insertTicket(bodyOneResult) // Tạo vé có trạng thái là đang ưu tiên
 
 
                     let bodyTwoResult ={
                         chuyendi : state.chuyenve._id ,
                         soghedi : numTwoCar,
-                        trangthai : "PENDING"
                     }
-                    let updateResultTwo = await ApiTicket.UpdateStatusTicket(bodyTwoResult)
+                    let updateResultTwo = await ApiTicket.insertTicket(bodyTwoResult) /// Tạo vé có trạng thái là đang ưu tiên
 
                     Hidden();
                     if(updateResultOne.data.success && updateResultTwo.data.success){
@@ -260,7 +265,44 @@ function BookStepThree(props) {
         }
     }
 
- 
+    let oneTicketOne = [];
+    let oneTicketTwo = [];
+    let twoTicketOne = [];
+    let twoTicketTwo = [];
+    console.log(oneTicket);
+    if(oneTicket.length > 0){
+        oneTicket.forEach((value,index)=>{
+            if(value.soghe > 20){
+                oneTicketTwo.push(value)
+            }
+            else{
+                oneTicketOne.push(value);
+            }
+        })
+    }
+    if(twoTicket.length > 0){
+        twoTicket.forEach((value,index)=>{
+            if(value.soghe > 20){
+                twoTicketTwo.push(value)
+            }
+            else{
+                twoTicketOne.push(value);
+            }
+        })
+    }
+    
+    const checkTicket = (arr , index)=>{
+        if(arr.length > 0){
+            for(let i = 0 ; i < arr.length ; i++){
+                if(arr[i].soghe === index ) {
+                    console.log(i);
+                    return i;
+                }
+            }
+        }
+
+        return -1
+    }
     return (
         <div>
             <Content>
@@ -269,7 +311,7 @@ function BookStepThree(props) {
                     <div className="step_two">
                            <div className="step_two--container">
                                     <div class="step__body">
-                                        <div className="step__body--header"><p>Sơ đồ ghế đi</p></div>
+                                        <div className="step__body--header"><p class="book__title">Sơ đồ ghế đi</p></div>
                                         <div className="step__body--body">
                                             <div className="body__build">
                                                 <p className="step__info--header">TẦNG 1</p>
@@ -279,20 +321,29 @@ function BookStepThree(props) {
                                                         oneListBuildOne.map((value,index)=>{
                                                             return (
                                                                 <Col span={6}>
-                                                                    <div class="body__number">{value.soghe}</div>
-                                                                    <div class={`body__number--status 
-                                                                         ${
-                                                                            value.trangthaighe === "ACTIVE" && "null"
-                                                                        }
-                                                                        ${
-                                                                            value.trangthaighe === "COMPLETE" && "active"
-                                                                        }
-                                                                        ${
-                                                                            value.trangthaighe === "PENDING" && 'pen'
-                                                                        }
-                                                                    `}
-                                                                        onClick={value.trangthaighe === "ACTIVE" ? e=>onClickOneNumber(value.soghe) : null}
-                                                                    ></div>
+                                                                    <div class="body__number">{index + 1}</div>
+                                                                    {
+                                                                        (checkTicket(oneTicketOne , index+1) > -1) ? 
+                                                                        <div class={`body__number--status 
+                        
+                                                                            ${
+                                                                                oneTicketOne[checkTicket(oneTicketOne , index+1)].trangthaive === "DADAT" && "active"
+                                                                            }
+                                                                            ${
+                                                                                oneTicketOne[checkTicket(oneTicketOne , index+1)].trangthaive  === "DANGUUTIEN" && 'pen'
+                                                                            }
+                                                                       `}
+                                                                       
+                                                                        ></div>
+                                                                        : 
+                                                                        <div class="body__number--status null"
+                                                                        
+                                                                            onClick={e=>onClickOneNumber(index+1)}
+                                                                        ></div>
+
+
+                                                                    }
+                                                                    
                                                                 </Col>
                                                             )
                                                         })
@@ -308,20 +359,26 @@ function BookStepThree(props) {
                                                         oneListBuildTwo.map((value,index)=>{
                                                             return (
                                                                 <Col span={6}>
-                                                                    <div class="body__number">{value.soghe}</div>
-                                                                    <div class={`body__number--status 
-                                                                          ${
-                                                                            value.trangthaighe === "ACTIVE" && "null"
-                                                                        }
-                                                                        ${
-                                                                            value.trangthaighe === "COMPLETE" && "active"
-                                                                        }
-                                                                        ${
-                                                                            value.trangthaighe === "PENDING" && 'pen'
-                                                                        }
-                                                                    `}
-                                                                        onClick={value.trangthaighe === "ACTIVE" ? e=>onClickOneNumber(value.soghe) : null}
-                                                                    ></div>
+                                                                    <div class="body__number">{index + 20 + 1}</div>
+                                                                   {
+                                                                       (checkTicket(oneTicketTwo , index+1) > -1) ? 
+                                                                       <div class={`body__number--status 
+                       
+                                                                           ${
+                                                                               oneTicketTwo[checkTicket(oneTicketTwo , index+1)].trangthaive === "DADAT" && "active"
+                                                                           }
+                                                                           ${
+                                                                               oneTicketTwo[checkTicket(oneTicketTwo , index+1)].trangthaive  === "DANGUUTIEN" && 'pen'
+                                                                           }
+                                                                      `}
+                                                                      
+                                                                       ></div>
+                                                                       : 
+                                                                       <div class="body__number--status null"
+                                                                       
+                                                                           onClick={e=>onClickOneNumber(index+20+1)}
+                                                                       ></div>
+                                                                   }
                                                                 </Col>
                                                             )
                                                         })
@@ -360,15 +417,15 @@ function BookStepThree(props) {
                                                 </div>
                                                 <div className="info__title">
                                                     Tổng tiền : 
-                                                    <div style={{marginTop:'10px' , textAlign:'left' , fontWeight : '700' , color:'#1890ff'}}>{ state?  formatMoney((state.sovedi*state.chuyendi.giave).toString())+'đ' : '0đ'}</div>
+                                                    <div style={{marginTop:'10px' , textAlign:'left' , fontWeight : '700' , color:'#ef5222'}}>{ state?  formatMoney((state.sovedi*state.chuyendi.giave).toString())+'đ' : '0đ'}</div>
                                                 </div>
                                         </div>
                                     </div>
                             </div> 
                             {   (state && state.loai == 2) ?
-                                 <div className="step_two--conatiner">
+                                 <div className="step_two--container">
                                         <div class="step__body">
-                                            <div className="step__body--header"><p>Sơ đồ ghế về</p></div>
+                                            <div className="step__body--header"><p class="book__title">Sơ đồ ghế về</p></div>
                                             <div className="step__body--body">
                                                 <div className="body__build">
                                                     <p className="step__info--header">TẦNG 1</p>
@@ -378,20 +435,27 @@ function BookStepThree(props) {
                                                        twoListBuildOne.map((value,index)=>{
                                                             return (
                                                                 <Col span={6}>
-                                                                    <div class="body__number">{value.soghe}</div>
-                                                                    <div class={`body__number--status 
-                                                                        ${
-                                                                            value.trangthaighe === "ACTIVE" && "null"
-                                                                        }
-                                                                        ${
-                                                                            value.trangthaighe === "COMPLETE" && "active"
-                                                                        }
-                                                                        ${
-                                                                            value.trangthaighe === "PENDING" && 'pen'
-                                                                        }
-                                                                    `}
-                                                                        onClick={value.trangthaighe === "ACTIVE" ? e=>onClickTwoNumber(value.soghe) : null}
-                                                                    ></div>
+                                                                    <div class="body__number">{index+1}</div>
+                                                                    {
+                                                                        (checkTicket(twoTicketOne , index+1) > -1) ? 
+                                                                        <div class={`body__number--status 
+                        
+                                                                            ${
+                                                                                twoTicketOne[checkTicket(twoTicketOne , index+1)].trangthaive === "DADAT" && "active"
+                                                                            }
+                                                                            ${
+                                                                                twoTicketOne[checkTicket(twoTicketOne , index+1)].trangthaive  === "DANGUUTIEN" && 'pen'
+                                                                            }
+                                                                       `}
+                                                                       
+                                                                        ></div>
+                                                                        : 
+                                                                        <div class="body__number--status null"
+                                                                        
+                                                                            onClick={e=>onClickOneNumber(index+1)}
+                                                                        ></div>
+                                                                    }
+                                            
                                                                 </Col>
                                                             )
                                                         })
@@ -407,20 +471,26 @@ function BookStepThree(props) {
                                                        twoListBuildTwo.map((value,index)=>{
                                                             return (
                                                                 <Col span={6}>
-                                                                    <div class="body__number">{value.soghe}</div>
-                                                                    <div class={`body__number--status 
-                                                                          ${
-                                                                            value.trangthaighe === "ACTIVE" && "null"
-                                                                        }
-                                                                        ${
-                                                                            value.trangthaighe === "COMPLETE" && "active"
-                                                                        }
-                                                                        ${
-                                                                            value.trangthaighe === "PENDING" && 'pen'
-                                                                        }
-                                                                    `}
-                                                                        onClick={value.trangthaighe === "ACTIVE" ? e=>onClickTwoNumber(value.soghe) : null}
-                                                                    ></div>
+                                                                    <div class="body__number">{index+20+1}</div>
+                                                                    {
+                                                                        (checkTicket(twoTicketTwo , index+1) > -1) ? 
+                                                                        <div class={`body__number--status 
+                        
+                                                                            ${
+                                                                                twoTicketTwo[checkTicket(twoTicketTwo , index+1)].trangthaive === "DADAT" && "active"
+                                                                            }
+                                                                            ${
+                                                                                twoTicketTwo[checkTicket(twoTicketTwo , index+1)].trangthaive  === "DANGUUTIEN" && 'pen'
+                                                                            }
+                                                                       `}
+                                                                       
+                                                                        ></div>
+                                                                        : 
+                                                                        <div class="body__number--status null"
+                                                                        
+                                                                            onClick={e=>onClickOneNumber(index+20+1)}
+                                                                        ></div>
+                                                                    }
                                                                 </Col>
                                                             )
                                                         })
@@ -459,7 +529,7 @@ function BookStepThree(props) {
                                                     </div>
                                                     <div className="info__title">
                                                         Tổng tiền
-                                                        <div style={{marginTop:'10px' , textAlign:'left' , fontWeight : '700' , color:'#1890ff'}}>
+                                                        <div style={{marginTop:'10px' , textAlign:'left' , fontWeight : '700' , color:'#ef5222'}}>
                                                             { (state && state.soveve)?  formatMoney((state.soveve*state.chuyenve.giave).toString())+'đ' : '0đ'}
                                                         </div>
                                                     </div>
@@ -475,7 +545,7 @@ function BookStepThree(props) {
                             {<LeftOutlined />}
                             QUAY LẠI
                         </Button>
-                        <Button type="primary" size="large" onClick={onClickNext} >
+                        <Button type="primary" size="large"  className="btn__next" onClick={onClickNext} >
                                 TIẾP TỤC
                                 {<RightOutlined />}
                         </Button>

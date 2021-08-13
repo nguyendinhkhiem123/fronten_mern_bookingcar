@@ -13,3 +13,64 @@
     }
 }
 
+.step__four{
+ 
+    padding: 16px;
+}
+
+.container__four{
+    background: #fff;
+    padding: 16px;
+}
+
+.info{
+    margin-top: 10px;
+    padding : 8px 16px;
+    border : 1px solid #ccc;
+}
+
+.null.body__number--status{
+    background-color: #eff9ff;
+}
+.active.body__number--status{
+    background-color: #f15a24;
+    cursor: not-allowed;
+}
+.chose.body__number--status{
+    background-color: #1890ff;
+    
+}
+.pen.body__number--status{
+    background: #00603d;
+    cursor: not-allowed;
+}
+
+.step__body--status{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.status{
+    width: 20px;
+    height: 20px;
+    border : 1px solid #ccc;
+    border-radius: 3px;
+    display: block;
+    margin-right: 5px;
+}
+
+.null.status{
+    background-color: #eff9ff;
+}
+.active.status{
+    background-color: #f15a24
+}
+.chose.status{
+    background-color: #1890ff; 
+}
+
+.pen.status{
+    background-color:  #00603d;
+}

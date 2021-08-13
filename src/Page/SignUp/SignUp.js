@@ -4,7 +4,7 @@ import moment from "moment";
 // import axios from '../../axios/index';
 import { Link, useHistory } from "react-router-dom";
 // import Logo from '../../img/logo.png'
-import Logo from '../../img/logo.png';
+import Logo from '../../img/futas.jpeg';
 // import {FacebookFilled , GooglePlusOutlined } from '@ant-design/icons';
 import * as ApiAuthencation from '../../Api/Authencation/index';
 import useLoading from '../../Component/HookLoading/HookLoading';
@@ -41,7 +41,6 @@ function SiginUp(props) {
                 sdt : value.sdt,
                 ngaysinh : value.ngaysinh,
                 hinhanh : '',
-                vaitro : 'user'
             }
             const res = await ApiAuthencation.createClient(body);
 

@@ -68,7 +68,7 @@
  }
 .pricing__table::-webkit-scrollbar-thumb{
    border-radius: 3px;
-   background-color: #1890ff;
+   background-color: #ef5222;
  }
 .table__frist{
     width: 1200px;
@@ -120,7 +120,7 @@ th{
     margin-right: auto;
     overflow-y: scroll;
     overflow-x: hidden;
-    max-height: 680px;
+    height: 680px;
     border : 1px solid #d5d5d5
 }
 
@@ -129,7 +129,7 @@ th{
  }
 .table__group::-webkit-scrollbar-thumb{
    border-radius: 3px;
-   background-color: #1890ff;
+   background-color: #ef5222;
    
  }
 
@@ -157,15 +157,18 @@ td{
     font-style: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #1890ff; 
+    color: #ef5222
 }
 
 .table__thead--body.title{
-    background-color:#d6dee8 ;
+    background-color:#f3ccc0
 }
 
 @media screen and (max-width : 576px) {
     .form__input{
         font-size : 14px
     }
+}
+.route__link{
+    color: #00613d;;;
 }

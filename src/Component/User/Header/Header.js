@@ -7,7 +7,7 @@ import { List, Typography, Divider } from 'antd';
 import SidebarUser from '../Sidebar/SidebarUser/SidebarUser';
 import SidebarMenu from '../Sidebar/SidebarMenu/SidebarMenu';
 import Modal from '../Modal/Modal';
-import  logo from '../../../img/logo.png';
+import  logo from '../../../img/futas.jpeg';
 import useLoading from '../../HookLoading/HookLoading';
 import { Link , useHistory ,Route , useLocation} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -85,12 +85,12 @@ function Headers(props) {
     ]
     
     const ListAdmin = [
-        {
-            title : 'adminMenu',
-            icon : <HistoryOutlined />,
-            slug : '/muave'
+        // {
+        //     title : 'adminMenu',
+        //     icon : <HistoryOutlined />,
+        //     slug : '/muave'
             
-        },
+        // },
         {
             title : 'Thông tin cá nhân',
             icon : <UserOutlined />,
@@ -123,26 +123,31 @@ function Headers(props) {
             link : '/tin-tuc'
         },
         {
-            title : 'VỀ CHÚNG TÔI',
-            link : '/ve-chung-toi'
+            title : 'HỎI ĐÁP',
+            link : '/binh-luan'
         },
+       
     ]
     const MenuAdmin = [
         {
-            title : 'TRANG CHỦ ADMIN',
-            link : '/admin'
+            title : 'QUẢN LÝ TUYẾN ĐƯỜNG',
+            link : '/admin/tuyen-duong'
         },
         {
-            title : 'LỊCH TRÌNH',
+            title : 'QUẢN LÝ LỊCH TRÌNH',
             link : '/admin/lich-trinh'
         },
         {
-            title : 'TIN TỨC',
-            link : '/admin/tin-tuc'
+            title : 'QUẢN LÝ XE',
+            link : '/admin/xe'
         },
         {
-            title : 'VỀ CHÚNG TÔI',
-            link : '/admin/ve-chung-toi'
+            title : 'THỐNG KÊ',
+            link : '/admin/thong-ke'
+        },
+        {
+            title : 'HỎI ĐÁP',
+            link : '/binh-luan'
         },
     ]
     const history = useHistory();
@@ -257,7 +262,8 @@ function Headers(props) {
 
         <div className="header__icon ">
             <div className="header__avatar" onClick={dropClick}>
-                <Avatar icon={currentUser.hinhanh ==='' ?<UserOutlined /> :currentUser.hinhanh } className="mr-5"/>
+                <Avatar icon={
+                    currentUser.hinhanh ==="" ? <UserOutlined /> :currentUser.hinhanh } className="mr-5"/>
                 <div>{currentUser.hovaten}</div>
                 {drop && dropDown}
             </div>

@@ -14,14 +14,14 @@
     cursor: pointer;
     padding: 0 16px;
     height: 46px;
-    background-color: #1890ff;
+    background-color: #ef5222;
     color: #fff;
     width: 100%;
     border-radius: 5px;
     transition: all linear 0.1s;
 }
 .header__avatar:hover{
-   background-color: #0982f3;
+   background-color: #ef5222;
 }
 
 .header__list{
@@ -65,7 +65,7 @@
 }
 
 .header__el:hover{
-    background-color: #8aabca;
+    background-color: #ee6d45;
 }
 
 .header__el:hover .header__item {
@@ -151,26 +151,48 @@
     }
    
 }
-
+.ant-menu-title-content{
+    font-size: 13px;
+    font-weight: 600;
+}
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-    /* background-color: #fff; */
-    border-bottom: 1px solid #1890ff;
+    background-color: #fff;
+    /* background-color: #e2b4a6 ; */
 }
 .ant-menu-light .ant-menu-item:hover, .ant-menu-light .ant-menu-item-active, .ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open, .ant-menu-light .ant-menu-submenu-active, .ant-menu-light .ant-menu-submenu-title:hover{
-    border-bottom: 1px solid #1890ff;
+    border-bottom: 1px solid #ef5222;
 }
 .ant-menu-vertical .ant-menu-item, .ant-menu-vertical-left .ant-menu-item, .ant-menu-vertical-right .ant-menu-item, .ant-menu-inline .ant-menu-item, .ant-menu-vertical .ant-menu-submenu-title, .ant-menu-vertical-left .ant-menu-submenu-title, .ant-menu-vertical-right .ant-menu-submenu-title, .ant-menu-inline .ant-menu-submenu-title{
     margin: 4px 2px 0 2px;
 }
-
+.ant-menu-item-selected a, .ant-menu-item-selected a:hover {
+    color   :#ef5222
+}
+.ant-menu-item a:hover{
+    color   :#ef5222
+}
 .link__active{
-    color: #1890ff;;
+    color: #ef5222 !important;
 }
 .user__active--link{
-    background-color: #8aabca;
-   
+    color: #ef5222 !important;
 
 }
 .text--user__link{
     color: #fff !important;
 }
+
+a:hover{
+    color: #ef5222;
+}
+
+.ant-radio-checked .ant-radio-inner{
+    border-color: #ef5222;
+}
+.ant-radio-checked .ant-radio-inner::after{
+    background-color: #ef5222;
+}
+span.ant-radio + * {
+    font-weight: 700;
+}
+

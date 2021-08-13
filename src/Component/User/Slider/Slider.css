@@ -12,14 +12,14 @@
     font-weight: 700;
     font-size: 24px;
     letter-spacing: 4.09px;
-    color: #1890ff;
+    color: #f15a24;
     text-transform: uppercase;
 }
 .slider__desc{
     opacity: .7;
     font-size: 20px;
     letter-spacing: .5px;
-    color: #000;
+    color: #00613d;;
 }
 .slider__body{
     margin-top: 8px;

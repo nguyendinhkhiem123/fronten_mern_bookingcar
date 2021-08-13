@@ -28,8 +28,8 @@
 }
 
 .bar__menu--logo{
-    width: 70px;
-    height: 70px;
+    width: 240px;
+    height: 100px;
 }
 
 .header__icon--menu{
@@ -51,7 +51,7 @@
     color: #fff !important;
 }
 .list--menu:hover{
-    background-color: #8aabca;
+    background-color: #ee6d45;
 }
 
 .list-menu{
@@ -64,7 +64,7 @@
     }
 }
 .user__active--link{
-    background-color: #8aabca;
+    background-color: #ee6d45;
    
 
 }

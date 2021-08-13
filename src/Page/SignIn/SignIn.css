@@ -8,8 +8,8 @@
 .header__logo{
    margin: auto;
    display: block;
-   width: 200px;
-   height: 200px;
+   width: 100%;
+   height: 100%;
    cursor: pointer;
 }
 
@@ -62,7 +62,7 @@
     font-weight: 300
 }
 .primary{
-    color: #1890ff;
+    color: #ef5222 !important;
     font-weight: 400;
     cursor: pointer;
 }
@@ -87,4 +87,13 @@
 .ant-notification-notice .ant-notification-notice-error .ant-notification-notice-closable{
     background: red !important;
     border-radius: 5px;
+}
+
+.ant-btn-primary{
+    background-color: #ef5222;
+    border-color: #ef5222;
+}
+.ant-btn-primary:hover{
+    background: #f56e45; 
+    border-color: #f56e45;
 }

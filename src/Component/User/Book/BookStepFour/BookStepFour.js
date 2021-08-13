@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Process from '../../Process/Process';
-import {LeftOutlined} from '@ant-design/icons'
+import {LeftOutlined , RightOutlined} from '@ant-design/icons'
 import { Layout , Row , Col , Form , Input , Button , Select } from 'antd';
 import { openNotificationErorr , openNotificationSuccess} from '../../../Notfication/index';
 import { useHistory, useLocation , Prompt } from 'react-router-dom';
@@ -10,7 +10,6 @@ import '../BookStepFour/BookStepFour.css';
 import Payment from '../../../Payment/Payment'
 import useLoading from '../../../HookLoading/HookLoading'
 import * as ApiTicket from '../../../../Api/Ticket/index';
-import Paypal from '../../../Payment/Payment';
 const {  Content  } = Layout;
 const { Option } = Select;
 const layout = {
@@ -28,10 +27,6 @@ function BookStepFour(props) {
     const currentUser = useSelector(state => state.currentUser);
     const [ Loading , Hidden , Display] = useLoading();
     const [ isDisplayPayment ,  setIsDisplayPayment] = useState(false);
-    const [ paymentData, setPaymentData] = useState({
-        sdt  :  currentUser.sdt ,
-        hovaten : currentUser.hovaten
-    })
     const [ time , setTime ] =  useState(true);
   
     useEffect(()=>{
@@ -42,6 +37,7 @@ function BookStepFour(props) {
         else{
             if(token){
                 console.log(currentUser);
+                // setPaymentData(currentUser);
             }
             else{
                 openNotificationErorr('Thất bại' , 'Vui lòng đăng nhập' ,3);
@@ -66,12 +62,12 @@ function BookStepFour(props) {
         
         let timeOut = setTimeout(async()=>{
             let bodyOne ={
-                trangthai : "ACTIVE",
+                trangthai : "DAHUY",
                 chuyendi : state.chuyendi._id,
                 soghedi : state.soghedi
             }
             let bodyTwo = {
-                trangthai : "ACTIVE",
+                trangthai : "DAHUY",
                 chuyendi : state.chuyenve?._id,
                 soghedi : state.sogheve
             }
@@ -79,6 +75,7 @@ function BookStepFour(props) {
             let resOne = await ChangeStatus(bodyOne);
             let resTwo = state.loai === 2 ? await ChangeStatus(bodyTwo)  : null
             if(resOne.data.success || (state.loai == 2 && !resTwo) && resTwo.data.success ) {
+                Hidden();
                 openNotificationErorr('Thất bại' , 'Đã quá thời gian thanh toán !.  Vui lòng làm lại từ đầu' ,3);
                 history.replace('/');
    
@@ -87,7 +84,7 @@ function BookStepFour(props) {
         },120000)
         return async ()=>{
             
-
+            Hidden();
           
          clearTimeout(timeOut);
                
@@ -97,18 +94,13 @@ function BookStepFour(props) {
     const formatMoney=(n) =>{
         return n.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }  
-    const onChanegPayment =(e)=>{
-        setPaymentData({
-            ...paymentData,
-            [e.target.name] : e.target.value
-        })
-    }
     const checkoutTicket = async(values)=>{
         let body = {
             loai : state.loai,
             hinhthuc : values.hinhthuc,
             sdt : values.sdt,
             hovaten :  values.hovaten,
+            email : values.email,
             soghedi : state.soghedi,
             chuyendi : state.chuyendi
 
@@ -140,8 +132,8 @@ function BookStepFour(props) {
         }
     }
     const onFinish = (values)=>{
+        console.log(values);
         if(values.hinhthuc === 'OFFLINE'){
-            console.log('hello');
             checkoutTicket(values)
         }
         else{
@@ -150,12 +142,12 @@ function BookStepFour(props) {
     }
     const onClickPrev = async()=>{
         let bodyOne ={
-            trangthai : "ACTIVE",
+            trangthai : "DAHUY",
             chuyendi : state.chuyendi._id,
             soghedi : state.soghedi
         }
         let bodyTwo = {
-            trangthai : "ACTIVE",
+            trangthai : "DAHUY",
             chuyendi : state.chuyenve?._id,
             soghedi : state.sogheve
         }
@@ -171,9 +163,23 @@ function BookStepFour(props) {
         }
        
     }
-    const onChange = (value)=>{
-        value === "OFFLINE" ? setIsDisplayPayment(false) : setIsDisplayPayment(true);
+
+    const onChangeSelect = ()=>{
+        setIsDisplayPayment(!isDisplayPayment);
     }
+    // const onClickNext = async(paymentData)=>{
+    //     console.log('hello');
+    //     if(paymentData.hinhthuc === 'OFFLINE'){
+    //         console.log('hello');
+    //         checkoutTicket(paymentData)
+    //     }
+    //     else{
+    //         checkoutTicket  (paymentData)
+    //     }   
+    // }
+    // const onChange = (value)=>{
+    //     value === "OFFLINE" ? setIsDisplayPayment(false) : setIsDisplayPayment(true);
+    // }
     const Sum =   ((state && state.sovedi) ? state.chuyendi.giave*state.sovedi : 0)
                     +
                     ((state && state.soveve) ? state.chuyenve.giave*state.soveve : 0)
@@ -184,107 +190,103 @@ function BookStepFour(props) {
             <Content>
                 <Process isActive={3}/>
                     <div className="site-layout-content" style={{overflowX:'hidden'}}>
-        
                             <div className="step_two">
-                                <div class="step_two--container">
+                                <div class="step_two--container">    
                                     <div className="step__info">
-                                        <div className="step__info--header">
-                                                <p className="header__date">BẠN ĐÃ ĐẶT CHUYẾN XE ĐI</p>
-                                                <p className="header__date">{state.loai === 2 ? "Lượt đi "+state.thogianbatdau : state.thogianbatdau }</p>
-                                                <p className="header__route">{state ? `${state.noidi} ⇒ ${state.noiden}` : 'Không xác định'}</p>
-                                        </div>
-                                        <div className="step__info--body">
-                                            <div style={{display : 'flex'  , justifyContent : 'space-between'}}>
-                                                <div>
-                                                    <p className="info__title">
-                                                        Số lượng vé đã đặt : {(state && state.sovedi) ? `${state.sovedi} vé` : 'Không xác định'}
-                                                    </p>
-                                                    <p className="info__title">
-                                                        Ghế : {(state && state.soghedi) ? 
-                                                            state.soghedi.map(value =>{
-                                                                return value+ " , "
-                                                            })
-                                                        : 'Không xác định'}
-                                                    </p>
-                                                    <p className="info__title">
-                                                       Quãng đường : {(state && state.quangduong) ? `${state.quangduong} km` : 'Không xác định'}
-                                                      </p>
-                                                </div>
-                                                <div>
-                                                    <p class="info__title">
-                                                        Giá vé : {(state && state.chuyendi.giave) ? formatMoney(state.chuyendi.giave.toString())+"đ/vé" : 'Không xác định'}
-                                                    </p>
-                                                    <p class="info__title">
-                                                        Tổng tiền : {(state && state.chuyendi.giave) ? formatMoney((state.chuyendi.giave*state.sovedi).toString())+"đ" : 'Không xác định'}
-                                                    </p>    
-                                                    <p class="info__title">
-                                                     Thời gian đến : {(state && state.thoigian) ? `${state.thoigian}h` : 'Không xác định'}
-                                                    </p>           
-                                                </div>
-                                            </div>
-                                               
-                                               
-                                              
-                                               
-                                        </div>
-                                    </div>
-                                </div>
-                                { (state && state.loai === 2) ?
-                                <div class="step_two--container">
-                                        <div className="step__info">
+                                    <div className="header__title">Loại vé : {state.loai === 2 ? "Khứ hồi"  : "Một chiều"}</div>
+                                        <div className="info">
                                             <div className="step__info--header">
-                                                     <p className="header__date">BẠN ĐÃ ĐẶT CHUYẾN XE VỀ</p>
-                                                    <p className="header__date">{state.loai === 2 ? "Lượt về "+state.thoigianve : state.thoigianve }</p>
-                                                    <p className="header__route">{state ? `${state.noiden} ⇒ ${state.noidi}` : 'Không xác định'}</p>
+                                                    <p className="header__date">{state.loai === 2 ? "Lượt đi "+state.thogianbatdau : state.thogianbatdau }</p>
+                                                    <p className="header__route">{state ? `${state.noidi} ⇒ ${state.noiden}` : 'Không xác định'}</p>
                                             </div>
                                             <div className="step__info--body">
                                                 <div style={{display : 'flex'  , justifyContent : 'space-between'}}>
                                                     <div>
                                                         <p className="info__title">
-                                                            Số lượng vé đã đặt : {(state && state.soveve) ? `${state.soveve} vé` : 'Không xác định'}
+                                                            Số lượng vé đã đặt : {(state && state.sovedi) ? `${state.sovedi} vé` : 'Không xác định'}
                                                         </p>
                                                         <p className="info__title">
-                                                            Ghế : {(state && state.sogheve) ? 
-                                                                state.sogheve.map(value =>{
+                                                            Ghế : {(state && state.soghedi) ? 
+                                                                state.soghedi.map(value =>{
                                                                     return value+ " , "
                                                                 })
                                                             : 'Không xác định'}
-                                                         </p>
-                                                            
-                                                            <p className="info__title">
-                                                            Quãng đường : {(state && state.quangduong) ? `${state.quangduong} km` : 'Không xác định'}
-                                                            </p>
+                                                        </p>
+                                                        <p className="info__title">
+                                                        Quãng đường : {(state && state.quangduong) ? `${state.quangduong} km` : 'Không xác định'}
+                                                        </p>
                                                     </div>
                                                     <div>
-                                                         <p class="info__title">
-                                                          Giá vé: {(state && state.chuyenve.giave) ? formatMoney(state.chuyenve.giave.toString())+"đ/vé": 'Không xác định'}
-                                                             </p>
-                                                             <p class="info__title">
-                                                            Tổng tiền : {(state && state.chuyenve.giave) ? formatMoney((state.chuyenve.giave*state.soveve).toString())+"đ" : 'Không xác định'}
-                                                            </p>  
-                                                            <p class="info__title">
-                                                                Thời gian đến : {(state && state.thoigian) ? `${state.thoigian}h` : 'Không xác định'}
-                                                            </p>
-                                                            
+                                                        <p class="info__title">
+                                                            Giá vé : {(state && state.chuyendi.giave) ? formatMoney(state.chuyendi.giave.toString())+"đ/vé" : 'Không xác định'}
+                                                        </p>
+                                                        <p class="info__title">
+                                                            Tổng tiền : {(state && state.chuyendi.giave) ? formatMoney((state.chuyendi.giave*state.sovedi).toString())+"đ" : 'Không xác định'}
+                                                        </p>    
+                                                        <p class="info__title">
+                                                            Khởi hành : {(state && state.chuyendi) ? `${state.chuyendi.giodi}h` : 'Không xác định'}
+                                                        </p>           
                                                     </div>
-                                                </div>
-                                                
-                                        
-                                                    
+                                                </div>  
                                             </div>
                                         </div>
+                                        {
+                                            state.loai == 2 ? 
+                                            <div className="info">
+                                                 <div className="step__info">
+                                                    <div className="step__info--header">
+                                                            <p className="header__date">{state.loai === 2 ? "Lượt về "+state.thoigianve : state.thoigianve }</p>
+                                                            <p className="header__route">{state ? `${state.noiden} ⇒ ${state.noidi}` : 'Không xác định'}</p>
+                                                    </div>
+                                                    <div className="step__info--body">
+                                                        <div style={{display : 'flex'  , justifyContent : 'space-between'}}>
+                                                            <div>
+                                                                <p className="info__title">
+                                                                    Số lượng vé đã đặt : {(state && state.soveve) ? `${state.soveve} vé` : 'Không xác định'}
+                                                                </p>
+                                                                <p className="info__title">
+                                                                    Ghế : {(state && state.sogheve) ? 
+                                                                        state.sogheve.map(value =>{
+                                                                            return value+ " , "
+                                                                        })
+                                                                    : 'Không xác định'}
+                                                                </p>
+                                                                    
+                                                                    <p className="info__title">
+                                                                    Quãng đường : {(state && state.quangduong) ? `${state.quangduong} km` : 'Không xác định'}
+                                                                    </p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="info__title">
+                                                                Giá vé: {(state && state.chuyenve.giave) ? formatMoney(state.chuyenve.giave.toString())+"đ/vé": 'Không xác định'}
+                                                                    </p>
+                                                                    <p class="info__title">
+                                                                    Tổng tiền : {(state && state.chuyenve.giave) ? formatMoney((state.chuyenve.giave*state.soveve).toString())+"đ" : 'Không xác định'}
+                                                                    </p>  
+                                                                    <p class="info__title">
+                                                                        Khởi hành : {(state && state.chuyenve) ? `${state.chuyenve.giodi}h` : 'Không xác định'}
+                                                                    </p>
+                                                                    
+                                                            </div>
+                                                        </div>      
+                                                    </div>
+                                                 </div>
+                                            </div> 
+                                            : null
+                                        }
+                                        <div style={{textAlign : 'right' , marginTop : '10px' , fontSize : '20px'}}>
+                                                Tổng tiền : <span style={{color: '#ef5222'}}>
+                                                                    {formatMoney(Sum.toString())}đ
+                                                                </span>
+                                        </div>
+                                    </div>
                                 </div>
-                                : 
-                                null        
-                                 }
                                 <div className="step_two--container">
                                                 <div className="step__info">
                                                     <div className="step__info--header">
-                                                        <p className="header__date">THÔNG TIN KHÁCH HÀNG</p>
+                                                        <p className="header__route">THÔNG TIN KHÁCH HÀNG</p>
                                                     </div>
                                                     <div className="step__info--body">
-
-                                               
                                                     <Form
                                                     {...layout}
                                                     name="basic"
@@ -305,7 +307,7 @@ function BookStepFour(props) {
                                                                 hasFeedback
                                                                 
                                                             >
-                                                                <Input onChange={onChanegPayment} allowClear/>
+                                                                <Input allowClear/>
                                                                 
                                                             </Form.Item>
                                                             <Form.Item
@@ -337,7 +339,7 @@ function BookStepFour(props) {
                                                                     hasFeedback
                                                         
                                                                 >
-                                                                <Input onChange={onChanegPayment}  allowClear/>
+                                                                <Input allowClear/>
                                                                 </Form.Item>
                                                                 <Form.Item
                                                                     label="email"
@@ -367,41 +369,43 @@ function BookStepFour(props) {
                                                                     initialValue="OFFLINE"
                                                         
                                                                 >
-                                                                <Select  onChange={onChange} defaultValue="OFFLINE">
+                                                                <Select onChange={onChangeSelect} defaultValue="OFFLINE">
                                                                     <Option value="OFFLINE">Thanh toán khi lên xe</Option>
                                                                     <Option value="ONLINE">Thanh toán qua Paypal</Option>
                                                                 </Select>
-                                                                </Form.Item>
-                                                            <div style={{textAlign : 'right' , fontWeight : 500 , fontSize : '16px'}}>
-                                                                Tổng cộng : <span style={{fontWeight : 300}}>
+                                                                </Form.Item> 
+                                                            
                                                                     {
-                                                                        formatMoney((
-                                                                          Sum
-                                                                        ).toString()+"đ")
+                                                                        !isDisplayPayment ? 
+                                                                        <div style={{width : '100%'  ,display : 'flex' , justifyContent : 'center'}}>
+                                                                              <Button type="primary" className="btn__next" size="large" htmlType="submit" style={{width : '100%' , textAlign: 'center'}}
+                                                                                // onClick={onClickNext} 
+                                                                                >
+                                                                                Đặt vé
+                                                                            </Button>
+                                                                           
+                                                                        </div>
+                                                                       : null
                                                                     }
-                                                                    </span>             
-
-                                                            </div>
-                                                            <div  className="responsive-form footer__btn">
-                                                            
-                                                                <Button type="primary" htmlType="submit" className="btn">
-                                                                        Đặt vé
-                                                                </Button>
-                                                            
-                                                                        
-                                                                        
-                                                            </div>
+                                                                 
+                                                              
                                                         </Form>   
                                                     </div>
                                                 </div>
                                               </div>
                                 </div>
-                            <div className="step_two--footer">
-                                <Button type="default" size="large" onClick={onClickPrev} >
-                                    {<LeftOutlined />}
-                                    QUAY LẠI
-                                </Button>
-                            </div>                               
+                                <div className="step_two--footer">
+                                    <Button type="default" size="large" onClick={onClickPrev} >
+                                        {<LeftOutlined />}
+                                            QUAY LẠI
+                                    </Button>
+                                    {/* <Button type="primary" className="btn__next" size="large" htmlType="submit"
+                                        // onClick={onClickNext} 
+                                        >
+                                            ĐẶT VÉ
+                                        {<RightOutlined />}
+                                    </Button> */}
+                                </div>                               
                         </div>
                         {Loading}
                       

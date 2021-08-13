@@ -1,0 +1,30 @@
+.money{
+    margin-top: 40px;
+}
+.money__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.money__form{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex : 1
+}
+.form__control{
+    padding-right: 20px;
+    width: 100%;
+}
+
+.form__label{
+    margin-bottom: 8px;
+}
+
+.money__submit{
+    margin-top: 22px;
+}
+
+.money__body{
+    margin-top: 60px;
+}

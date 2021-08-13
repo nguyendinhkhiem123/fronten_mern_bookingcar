@@ -1,10 +1,13 @@
 import React from 'react';
 import {Result , Button} from 'antd';
-import  {useHistory} from 'react-router-dom'
+import  {useHistory} from 'react-router-dom';
+import { useSelector } from 'react-redux';
 function NotFound(props) {
     const history = useHistory();
+    const isAdmin = useSelector(state => state.isAdmin);
     const onClick =()=>{
-        history.replace("/")
+        
+        isAdmin ?  history.replace("/admin/tuyen-duong") :  history.replace("/");
     }
     return (
         <Result
