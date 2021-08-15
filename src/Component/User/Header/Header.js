@@ -119,22 +119,22 @@ function Headers(props) {
             link : '/lich-trinh'
         },
         {
-            title : 'TIN TỨC',
-            link : '/tin-tuc'
-        },
-        {
             title : 'HỎI ĐÁP',
             link : '/binh-luan'
+        },
+        {
+            title : 'ĐÁNH GIÁ',
+            link : '/danh-gia'
         },
        
     ]
     const MenuAdmin = [
         {
-            title : 'QUẢN LÝ TUYẾN ĐƯỜNG',
+            title : 'TUYẾN ĐƯỜNG',
             link : '/admin/tuyen-duong'
         },
         {
-            title : 'QUẢN LÝ LỊCH TRÌNH',
+            title : 'LỊCH TRÌNH',
             link : '/admin/lich-trinh'
         },
         {
@@ -144,11 +144,20 @@ function Headers(props) {
         {
             title : 'THỐNG KÊ',
             link : '/admin/thong-ke'
+        }, 
+        {
+            title : 'NHÂN VIÊN',
+            link : '/admin/nhan-vien'
         },
         {
             title : 'HỎI ĐÁP',
             link : '/binh-luan'
         },
+        {
+            title : 'ĐÁNH GIÁ',
+            link : '/danh-gia'
+        },
+       
     ]
     const history = useHistory();
     const dispatch = useDispatch();

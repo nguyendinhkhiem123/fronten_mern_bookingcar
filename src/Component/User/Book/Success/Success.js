@@ -9,7 +9,7 @@ function Success(props) {
         history.replace("/")
     }
     return (  
-        <Result
+        <Result style={{height : '100vh' , marginTop : '30vh'}}
             status="success"
             title="Đặt vé thành công"
             subTitle="Cám ơn quý khách đã tin tưởng chúng tôi"

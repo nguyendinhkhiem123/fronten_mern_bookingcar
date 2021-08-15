@@ -14,3 +14,19 @@ export const changePassword = (body)=>{
 export const forgotPassword = (body)=>{
     return AxiosClient.post("user/forgotpassword" , body) 
 }
+
+export const getEmployee = ()=>{
+    return AxiosClient.get("user/getemployee");
+}
+
+export const updateStatusEmployee = (body)=>{
+    return AxiosClient.post("user/updatestatusemployee",body);
+}
+
+export const updateEmployee = (body)=>{
+    return AxiosClient.post("user/updateemployee",body);
+}
+
+export const insertEmployee = (body)=>{
+    return AxiosClient.post("user/insertemployee",body);
+}

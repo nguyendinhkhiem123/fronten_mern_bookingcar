@@ -180,7 +180,7 @@ function Car(props) {
                   })
     }
     return (
-        <div>
+        <div style={{height : '100vh' }}>
         <Content>
             <div className="site-layout-content" style={{overflowX:'hidden'}}>
                 <Carousels/>

@@ -1,35 +1,33 @@
-// import React, { useEffect } from "react";
-// import ReactDOM from "react-dom"
 
-// const PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
+import React from "react";
+import ReactDOM from "react-dom"
 
+const PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
 
-// function Paypal(props) {
-//   const createOrder = (data, actions) =>{
-//       console.log(data);
-//     return actions.order.create({
-//       purchase_units: [
-//         {
-//           amount: {
-//             value: "100",
-//           },
+function YourComponent(props) {
+  const createOrder = (data, actions) =>{
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: "0.01",
+          },
+        },
+      ],
+    });
+  };
 
-//         },
-//       ],  //Hóa đơn
-//     });
-//   };
-//   const onApprove = (data, actions) => {
-//      console.log(data);
-//     return actions.order.capture(); // Xử lý thành công
-//   };
+  const onApprove = (data, actions) => {
+    props.checkOutTicket(props.value)
+    return actions.order.capture();
+  };
 
- 
-//   return ( 
-//     <PayPalButton
-//       createOrder={(data, actions) => createOrder(data, actions)}
-//       onApprove={(data, actions) => onApprove(data, actions)}   
-//     />
-//   );
-// }
+  return (
+    <PayPalButton
+      createOrder={(data, actions) => createOrder(data, actions)}
+      onApprove={(data, actions) => onApprove(data, actions)}
+    />
+  );
+}
 
-// export default Paypal;
+export default YourComponent

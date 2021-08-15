@@ -10,6 +10,7 @@ import '../BookStepFour/BookStepFour.css';
 import Payment from '../../../Payment/Payment'
 import useLoading from '../../../HookLoading/HookLoading'
 import * as ApiTicket from '../../../../Api/Ticket/index';
+
 const {  Content  } = Layout;
 const { Option } = Select;
 const layout = {
@@ -27,6 +28,7 @@ function BookStepFour(props) {
     const currentUser = useSelector(state => state.currentUser);
     const [ Loading , Hidden , Display] = useLoading();
     const [ isDisplayPayment ,  setIsDisplayPayment] = useState(false);
+    const [ form , setForm ] = useState({})
     const [ time , setTime ] =  useState(true);
   
     useEffect(()=>{
@@ -37,6 +39,13 @@ function BookStepFour(props) {
         else{
             if(token){
                 console.log(currentUser);
+                setForm({
+                    hovaten : currentUser.hovaten,
+                    diachi : currentUser.diachi ,
+                    email : currentUser.email ,
+                    sdt : currentUser.sdt ,
+                    hinhthuc : 'ONLINE'
+                })
                 // setPaymentData(currentUser);
             }
             else{
@@ -58,6 +67,7 @@ function BookStepFour(props) {
         }
     }
 
+    console.log(69 ,form);
     useEffect(()=>{
         
         let timeOut = setTimeout(async()=>{
@@ -81,7 +91,7 @@ function BookStepFour(props) {
    
             }
             
-        },120000)
+        },1000)
         return async ()=>{
             
             Hidden();
@@ -164,8 +174,16 @@ function BookStepFour(props) {
        
     }
 
+    const onChange = (e)=>{
+        console.log(e.target.name);
+        setForm({
+            ...form,
+            [e.target.name] : e.target.value
+        })
+    }
     const onChangeSelect = ()=>{
         setIsDisplayPayment(!isDisplayPayment);
+       
     }
     // const onClickNext = async(paymentData)=>{
     //     console.log('hello');
@@ -186,7 +204,7 @@ function BookStepFour(props) {
 
     console.log(state);
     return (
-        <div>
+        <div style={{height : '100vh' }}>
             <Content>
                 <Process isActive={3}/>
                     <div className="site-layout-content" style={{overflowX:'hidden'}}>
@@ -307,7 +325,7 @@ function BookStepFour(props) {
                                                                 hasFeedback
                                                                 
                                                             >
-                                                                <Input allowClear/>
+                                                                <Input onChange={onChange} name="hovaten" allowClear/>
                                                                 
                                                             </Form.Item>
                                                             <Form.Item
@@ -320,7 +338,7 @@ function BookStepFour(props) {
                                                                 hasFeedback
                                                                 initialValue={currentUser.diachi}
                                                             >
-                                                                <Input allowClear/>
+                                                                <Input onChange={onChange} name="diachi"allowClear/>
                                                                 
                                                             </Form.Item>
                                                                 <Form.Item
@@ -339,7 +357,7 @@ function BookStepFour(props) {
                                                                     hasFeedback
                                                         
                                                                 >
-                                                                <Input allowClear/>
+                                                                <Input onChange={onChange} name="sdt" allowClear/>
                                                                 </Form.Item>
                                                                 <Form.Item
                                                                     label="email"
@@ -356,7 +374,7 @@ function BookStepFour(props) {
                                                                     hasFeedback
                                                         
                                                                 >
-                                                                <Input allowClear/>
+                                                                <Input onChange={onChange} name="email" allowClear/>
                                                                 </Form.Item>
                                                                 <Form.Item
                                                                     label="Hình thức thanh toán"
@@ -385,7 +403,7 @@ function BookStepFour(props) {
                                                                             </Button>
                                                                            
                                                                         </div>
-                                                                       : null
+                                                                       : <Payment checkOutTicket={checkoutTicket} value={form}></Payment>
                                                                     }
                                                                  
                                                               

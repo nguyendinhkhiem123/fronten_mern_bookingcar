@@ -235,7 +235,7 @@ function BookStepTwo(props) {
     }
     console.log(oneTrip , twoTrip);
     return (
-        <div>
+        <div style={{height : '100vh' }}>
             <Content>
                 <div className="site-layout-content" style={{overflowX:'hidden'}}>
                     <Process isActive={1}></Process>

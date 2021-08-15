@@ -10,6 +10,7 @@ import pageAdmin from './Page/Admin/Admin'
 import Logout from './Component/Logout/Logout';
 import Loading from './Component/Loading/Loading';
 import Comment from './Component/Comment/Comment';
+import Vote from './Component/Vote/Vote';
 import { useSelector } from 'react-redux';
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
                          {/* <Route path="/" render={()=>"hello"}></Route> */}
                          <Route path="/binh-luan" exact component={Comment}></Route>   
                          <Route path="/dang-xuat" exact component={Logout}></Route>   
+                         <Route path="/danh-gia" exact component={Vote}/>
                          <Route component={NotFound}></Route>   
                     </Switch>
                 </Suspense>

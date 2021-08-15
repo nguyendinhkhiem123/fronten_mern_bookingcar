@@ -10,7 +10,7 @@ function NotFound(props) {
         isAdmin ?  history.replace("/admin/tuyen-duong") :  history.replace("/");
     }
     return (
-        <Result
+        <Result style={{height : '100vh' , marginTop : '30vh'}}
         title="Trang không tồn tại"
         extra={
           <Button type="primary" key="console" onClick={onClick}>

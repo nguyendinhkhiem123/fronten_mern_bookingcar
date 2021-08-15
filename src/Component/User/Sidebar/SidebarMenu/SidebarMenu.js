@@ -40,12 +40,12 @@ function SidebarMenu(props) {
             link : '/lich-trinh'
         },
         {
-            title : 'TIN TỨC',
-            link : '/tin-tuc'
-        },
-        {
             title : 'HỎI ĐÁP',
             link : '/binh-luan'
+        },
+        {
+            title : 'ĐÁNH GIÁ',
+            link : '/danh-gia'
         },
        
     
@@ -70,8 +70,16 @@ function SidebarMenu(props) {
             link : '/admin/thong-ke'
         },
         {
+            title : 'Nhân viên',
+            link : '/admin/nhan-vien'
+        },
+        {
             title : 'HỎI ĐÁP',
             link : '/binh-luan'
+        },
+        {
+            title : 'ĐÁNH GIÁ',
+            link : '/danh-gia'
         },
         
     
