@@ -30,6 +30,9 @@ const DemoLine = () => {
         if(res.data.success){
             console.log(res);
             setData(res.data.body);
+            setTextStart(start);
+            setTextEnd(end);
+            setTextSelect(select);
         }
         else{
           openNotificationErorr('Thất bại' , res.data.message , 3);
@@ -92,9 +95,7 @@ const DemoLine = () => {
         namketthuc : end
       
       })
-      setTextStart(start);
-      setTextEnd(end);
-      setTextSelect(select);
+     
   }
   return (
       <div className="money">
@@ -139,7 +140,7 @@ const DemoLine = () => {
                     const { x, y } = evt;
                     const { xField } = plot.options;
                     const tooltipData = plot.chart.getTooltipItems({ x, y });
-                    console.log(tooltipData);
+                    console.log((tooltipData));
                     });
                 }}
                 />

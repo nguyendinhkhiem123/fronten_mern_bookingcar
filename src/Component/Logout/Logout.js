@@ -7,8 +7,8 @@ import useLoading from '../HookLoading/HookLoading';
 import { openNotificationSuccess } from '../Notfication/index';
 import { removeUser } from '../../Reducer/currentUser';
 import { defaultTicket } from '../../Reducer/ticketUser';
-import { removeCar } from '../../Reducer/car';
-import { removeRoute} from '../../Reducer/route'
+import { removeCarList } from '../../Reducer/car';
+import { removeRouteList} from '../../Reducer/route'
 function Logout(props) {
     const [Loading , Hidden, Display] = useLoading();
     const dispatch  = useDispatch();
@@ -21,8 +21,8 @@ function Logout(props) {
             dispatch(ActionIsAdmin.isUser());
             dispatch(removeUser());
             dispatch(defaultTicket());
-            dispatch(removeCar());
-            dispatch(removeRoute())
+            dispatch(removeCarList());
+            dispatch(removeRouteList())
             openNotificationSuccess('Thành công' , 'Đăng xuất thành công ', 3);
             Hidden();
             history.push("/"); 

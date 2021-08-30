@@ -16,7 +16,7 @@ function Home(props) {
     const [ search , setSearch ] = useState('');
     const [ isDisplayModal , setDisplayModal ] = useState(false);
     const [ isActive , setIsActive ] =  useState(false);  //  true là sửa , false là thêm
-    const [ values , setValues ] = useState();
+    const [ values , setValues ] = useState({});
     const dispatch = useDispatch();
     useEffect(()=>{
         getAllRoute()
@@ -37,6 +37,10 @@ function Home(props) {
         catch(err){
             console.log(err);
         }
+    }
+    
+    const setValuesNull = ()=>{
+        setValues({});
     }
     const onOpenModal = ()=>{
         setDisplayModal(true);
@@ -89,54 +93,88 @@ function Home(props) {
         onOpenModal();
         onActiveUpdate();
     }
-    const updateRoute = async(value)=>{
-        try{
-            Display();
-            const res = await ApiRoute.updateRoute(value);
-            Hidden() 
-            console.log(res);
-            if(res.data.success){
-                openNotificationSuccess('Thành công' , res.data.message ,3);
-                console.log(res.data.body);
-                dispatch(ActionRoute.updateRoute({
-                    chuyendi : res.data.body.updateOne._id,
-                    chuyenve : res.data.body.updateTwo._id,
-                    value
-                })) 
+    // const updateRoute = async(value)=>{
+    //     try{
+    //         Display();
+    //         const res = await ApiRoute.updateRoute(value);
+    //         Hidden() 
+    //         console.log(res);
+    //         if(res.data.success){
+    //             openNotificationSuccess('Thành công' , res.data.message ,3);
+    //             console.log(res.data.body);
+    //             dispatch(ActionRoute.updateRoute({
+    //                 chuyendi : res.data.body.updateOne._id,
+    //                 chuyenve : res.data.body.updateTwo._id,
+    //                 value
+    //             })) 
+    //             setValuesNull();
+    //             onCloseModal();
+    //         }
+    //         else{
+    //             openNotificationErorr('Thất bại' , res.data.message ,3)
+    //         }
+    //     }
+    //     catch(err){
+    //         console.log(err);
+    //     }
+    // }
+    // const insertRoute = async(values)=>{
+      
+    //         try{
+    //             Display();
+    //             const res = await ApiRoute.insertRoute(values);
+    //             Hidden() 
+    //             if(res.data.success){
+    //                 openNotificationSuccess('Thành công' , res.data.message ,3);
+    //                 dispatch(ActionRoute.addNewRoute({
+    //                     newRoute : res.data.body.newRoute,
+    //                     newRouteRes :res.data.body.newRouteReverse
+    //                 }))
+    //                 setValuesNull();
+    //                 onCloseModal();
+    //             }
+    //             else{
+    //                 openNotificationErorr('Thất bại' , res.data.message ,3)
+    //             }
+    //         }
+    //         catch(err){
+    //             console.log(err);
+    //         }
+        
+       
+    // }
+
+    const clickDeleteRoute = async(values)=>{
+        if(window.confirm('Bạn có chắc chắc muốn xóa ?')){
+            try{
+                Display();
+                const res = await ApiRoute.deleteRoute({
+                    id : values._id
+                });
+                Hidden() 
+                if(res.data.success){
+                   
+                    openNotificationSuccess('Thành công' , res.data.message ,3);
+                    dispatch(ActionRoute.removeRoute(res.data.body))
+                }
+                else{
+                    openNotificationErorr('Thất bại' , res.data.message ,3);
+                }
             }
-            else{
-                openNotificationErorr('Thất bại' , res.data.message ,3)
+            catch(err){
+                console.log(err);
             }
         }
-        catch(err){
-            console.log(err);
-        }
-    }
-    const insertRoute = async(values)=>{
-        try{
-            Display();
-            const res = await ApiRoute.insertRoute(values);
-            Hidden() 
-            if(res.data.success){
-                openNotificationSuccess('Thành công' , res.data.message ,3);
-                dispatch(ActionRoute.addNewRoute({
-                    newRoute : res.data.body.newRoute,
-                    newRouteRes :res.data.body.newRouteReverse
-                }))
-            }
-            else{
-                openNotificationErorr('Thất bại' , res.data.message ,3)
-            }
-        }
-        catch(err){
-            console.log(err);
-        }
+        
     }
     let result = [];
 
     if(route.length > 0){
         result = (route.filter(value=>{
-            return value?.matuyen.toLowerCase().indexOf(search.toLowerCase()) !== -1
+            return ( value?.matuyen.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1 
+                || value?.noidi.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1 
+                || value?.noiden.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1      
+            )
         })
                 )  
                         .map((value,index)=>{
@@ -163,7 +201,7 @@ function Home(props) {
                                 <td className="t__time">
                                     {value?.quangduong}km
                                 </td>
-                                <td className="t__status">
+                                <td >
                                     <span className="box" onClick={e=> changeStatus(value?._id , !value?.trangthai)}>
                                         {
                                             value.trangthai === true ? ' Hoạt động' : 'Tạm dừng'
@@ -175,13 +213,18 @@ function Home(props) {
                                             Chỉnh sửa
                                         </span>
                                 </td>
+                                <td >
+                                        <span className="box" onClick={e=>clickDeleteRoute(value)}>
+                                            Xóa
+                                        </span>
+                                </td>
                             </tr>
                         </tbody>
                     )
                   })
     }
     return (
-        <div style={{height : '100vh' }}>
+        <div >
         <Content>
             <div className="site-layout-content" style={{overflowX:'hidden'}}>
                 <Carousels/>
@@ -193,7 +236,7 @@ function Home(props) {
                             </Button>
                         </div>
                         <div className="route__search">
-                                <input placeholder="Nhập mã tuyến" className="form__input"  onChange={onChangeSearch}
+                                <input placeholder="Nhập mã tuyến , nơi đi , nơi đến" className="form__input"  onChange={onChangeSearch}
                                 //  onChange={onChangeEnd}
                                  />
                                  <SearchOutlined  className="class__icon" />
@@ -255,10 +298,10 @@ function Home(props) {
             {isDisplayModal ? <Modal
                     onCloseModal={onCloseModal}
                     isActive = {isActive}
-                    onClickInsert = {insertRoute}
+                    // onClickInsert = {insertRoute}
                     value = {values}
-                    onClickUpdate = {updateRoute}
-                   
+                    // onClickUpdate = {updateRoute}
+                    setValuesNull = {setValuesNull}
             /> : null}
             {Loading}
         </Content>

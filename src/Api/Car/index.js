@@ -16,3 +16,7 @@ export const updateCar = (body)=>{
     return AxiosClient.post("car/updatecar" ,body)
 }
 
+export const deleteCar = (body)=>{
+    return AxiosClient.post("car/deletecar" ,body)
+}
+

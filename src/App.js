@@ -50,8 +50,8 @@ function App() {
   }
   return (
       <Router>
+        <Header/>
         <Layout className="layout">
-            <Header/>
                <Suspense fallback={Loading}>
                   <Switch>
                          {/* {(isAdmin && token) ? <Redirect to="/admin" /> : null} */}
@@ -63,8 +63,8 @@ function App() {
                          <Route component={NotFound}></Route>   
                     </Switch>
                 </Suspense>
-            <Footer/>
         </Layout>
+        <Footer/>
     </Router>
   );
 }

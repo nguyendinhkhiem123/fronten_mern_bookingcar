@@ -22,6 +22,10 @@ function Trip(props) {
         setValue(0)
         onOpenModal()
     }}
+    
+    const onCloseTripValue = ()=>{
+        setTripValue(null)
+    }
     const onClickUpdate = (value)=>{
         setTripValue(value)
         setValue(1);
@@ -58,14 +62,11 @@ function Trip(props) {
     }, [])
     console.log(tripValue);
     const newDate = (ngay , gio=0)=>{
-        const n = Math.floor(gio/24);
-        const m = gio%24;
         const date1 =  new Date(ngay);
         const year = date1.getFullYear();
         const month = date1.getMonth();
-        const day = date1.getDate()+n;
-        
-        return new Date(Date.UTC(year , month , day , m));
+        const day = date1.getDate()
+        return new Date(Date.UTC(year , month , day , gio));
     }
 
 
@@ -148,6 +149,35 @@ function Trip(props) {
         }
     }
 
+    const onClickDelete = async(values)=>{
+        if(window.confirm('Bạn có chắc chắn muốn xóa chuyến này ?' )){
+            try{
+                Display();
+                const res = await ApiTrip.deleteTrip({
+                    id : values._id
+                });
+                Hidden();
+                if(res.data.success){
+                    openNotificationSuccess('Thành công' , res.data.message , 3);
+                    const listTrip = [...trip];
+                    const lastTrip = listTrip.filter((value,inde)=>{
+                        return value._id !== values._id
+                    })
+    
+                 
+                    setTrip(lastTrip);
+
+                  
+                }
+                else{
+                    openNotificationSuccess('Thất bại' , res.data.message , 3);
+                }
+            }catch(err){
+                Hidden();
+                console.log(err);
+            }
+        }
+    }
     if(trip.length> 0){
         trip.sort((a, b)=>{
             return new Date(a.ngaydi) < new Date(b.ngaydi) ? 1 : -1
@@ -156,7 +186,10 @@ function Trip(props) {
 
     if(trip.length > 0){
         result = (trip.filter(value=>{
-            return value.route?.matuyen.toLowerCase().indexOf(search.toLowerCase()) !== -1
+            return (value.route?.matuyen.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1
+             || 
+             value.route?.noidi.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1
+            )
         })
                 )  
                         .map((value,index)=>{
@@ -170,10 +203,10 @@ function Trip(props) {
                                             <td className="t__hour">
                                                 {value.giodi} giờ
                                             </td>
-                                            <td className="t__price">
+                                            {/* <td className="t__price">
                                              
                                                 {formatMoney(value.giave.toString())} đ
-                                            </td>
+                                            </td> */}
                                             <td className="t__route">
                                                 {value.route.matuyen} 
                                             </td>
@@ -209,28 +242,50 @@ function Trip(props) {
                                                  </Link>
                                             </td>
                                             <td>
-                                                <span className="box" onClick={e=> onClickUpdate(value)}>
-                                                    Chỉnh sửa
+                                                <span className="box" onClick={e=> onClickDelete(value)}>
+                                                    Xóa chuyến
                                                 </span>
                                             </td>
                                             {
-                                                value.trangthai === 'DANGDOI'?
+                                               new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) >= newDate(value.ngaydi , value.giodi) || value.trangthai !== 'DANGDOI'?
+                                               <td>
+                                                    <span className="box disable">
+                                                         Chỉnh sửa
+                                                    </span>
+                                                   
+                                                </td>:
                                                 <td>
-                                                    <span className="box" onClick={ new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) < newDate(value.ngaydi) ? e=>canelTrip(value._id) : e=>openNotificationErorr('Thất bại ' , 'Xe có thể đã khởi hành hoặc kết thúc rồi. Vui lòng cập nhật' , 3)
-                                                    
-                                                    }>
-                                                        Hủy chuyến 
-                                                      </span>
+                                                <span className="box" onClick={e=> onClickUpdate(value)}>
+                                                    Chỉnh sửa
+                                                </span>
+                                                </td> 
+                                            }
+                                          
+                                          
+                                            {
+                                                new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) >= newDate(value.ngaydi , value.giodi) || value.trangthai !== 'DANGDOI'?
+                                             
+                                                <td>
+                                                   <span className="box disable" >
+                                                       Hủy chuyến
+                                                   </span>
                                                </td>
-                                               : <td></td>
+                                               :
+                                               <td>
+                                               <span className="box" onClick={e=>canelTrip(value._id) }
+                                               >
+                                                   Hủy chuyến 
+                                                 </span>
+                                          </td>
                                             }
                             </tr>
                         </tbody>
                     )
                   })
     }
+    console.log(new Date(Date.UTC(2021,1,2,2)) > new Date(Date.UTC(2021,1,1,25)))
     return (
-        <div style={{height : '100vh' }}>
+        <div>
         <Content>
             <div className="site-layout-content" style={{overflowX:'hidden'}}>
                 <Carousels/>
@@ -242,7 +297,7 @@ function Trip(props) {
                             </Button>
                         </div>
                         <div className="route__search">
-                                <input placeholder="Nhập tuyến xe..." className="form__input"  onChange={onChangeSearch}
+                                <input placeholder="Nhập mã tuyến , nơi đi" className="form__input"  onChange={onChangeSearch}
                                 //  onChange={onChangeEnd}
                                  />
                                  <SearchOutlined  className="class__icon" />
@@ -259,9 +314,9 @@ function Trip(props) {
                                             <th className="t__hour">
                                                 Giờ đi
                                             </th>
-                                            <th className="t__price">
+                                            {/* <th className="t__price">
                                                 Giá vé
-                                            </th>
+                                            </th> */}
                                             <th className="t__route">
                                                 Tuyến 
                                             </th>
@@ -284,6 +339,8 @@ function Trip(props) {
                                             </th>
                                             <th>
 
+                                            </th>
+                                            <th>
                                             </th>
                                         </tr>
                                     </thead>
@@ -318,6 +375,7 @@ function Trip(props) {
                     value = {value}
                     tripValue = {tripValue}
                     updateTrip = {update}
+                    onCloseTripValue = {onCloseTripValue}
                     // onClickInsert = {insertCar}
                     // value = {values}
                     // onClickUpdate = {updateCar}
@@ -325,8 +383,7 @@ function Trip(props) {
             /> : null}
         
             {Loading}
-        </Content>
-        
+        </Content>    
     </div>
     );
 }

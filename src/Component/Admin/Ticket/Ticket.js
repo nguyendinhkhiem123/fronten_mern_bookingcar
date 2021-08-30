@@ -70,37 +70,43 @@ function Ticket(props) {
         list.push(value)
         setListTicket(list);
     }
-    const propsUpdateTicket =(value)=>{
+    const propsUpdateTicket =(values)=>{
         const list = [...listTicket];
         let index = -1; 
         list.forEach((value , ink)=>{
-            if(value._id === value._id) index = ink
+            if(value._id === values._id) index = ink
         } )
-
-        list[index] = value;
+     
+        list[index] = values;
         setListTicket(list);
     }
-    const onClickCancleTicket = async(value)=>{
+    const onClickCancleTicket = async(values)=>{
         if(window.confirm("Bạn có chắc chắn hủy vé ?")){
             try{
                 Display();
                 const body = {
-                    id : value
+                    id : values._id
                 }
                 const res = await ApiTicket.cancleTicket(body);
                 Hidden();
                 if(res.data.success){
-                    openNotificationSuccess("Thành công" , "Bạn đã hủy vé thành công " , 3);
-                    const newTicket =  res.data.body
-                    const list = [...listTicket];
-                    let index = -1; 
-                    list.forEach((value , ink)=>{
-                        if(value._id === newTicket._id) index = ink
-                    } )
+                    openNotificationSuccess("Thành công" , res.data.message , 3);
+        
+                     
+                        const newTicket =  res.data.body
+                        const list = [...listTicket];
+                        let index = -1; 
+                        list.forEach((value , ink)=>{
+                            if(value._id === newTicket._id) index = ink
+                        } )
+                        list[index] = newTicket;
+                        setListTicket(list);
 
-                    list[index] = newTicket;
-                    setListTicket(list);
+                   
                   
+                }
+                else{
+                    openNotificationSuccess("Thành công" , res.data.message , 3);
                 }
             }
             catch(err){
@@ -113,7 +119,7 @@ function Ticket(props) {
     let ticketResult = [...listTicket]
     if(ticketResult.length > 0){
         ticketResult.sort((a, b)=>{
-            return new Date(a.ngaydi) < new Date(b.ngaydi) ? 1 : -1
+            return new Date(a.thoigiandat) < new Date(b.thoigiandat) ? 1 : -1
         })
     }
 
@@ -135,7 +141,7 @@ function Ticket(props) {
                           {value._id}
                   </td>
                   <td className="table__date">
-                      {value.thoigiandat.slice(0,10)}                                      
+                      {value.thoigiandat?.slice(0,10)}                                      
                   </td>
                   {/* <td className="table__number"> 
                       {value.soghe}
@@ -145,7 +151,7 @@ function Ticket(props) {
                           route.length > 0 ?
                           (route.filter((valueOne)=>{
                               return valueOne._id === value.trip.route
-                          }))[0].noidi
+                          }))[0]?.noidi
                           : null
                       }
                   </td>
@@ -154,15 +160,15 @@ function Ticket(props) {
                           route.length > 0 ?
                           (route.filter((valueOne)=>{
                               return valueOne ._id === value.trip.route
-                          }))[0].noiden
+                          }))[0]?.noiden
                           : null
                       } 
                   </td>
                   <td className="table__ngaydi">
-                      {value.trip.ngaydi.slice(0,10)} 
+                      {value.trip.ngaydi.slice(0,10)}:{value.trip.giodi}h 
                   </td>
                   <td className="table__giokhoihanh">
-                          {value.trip.giodi}h
+                          {value.soghe}
                   </td>
                   <td>
                       <span className="box" onClick={e => openModalInfo(value)}> 
@@ -171,7 +177,11 @@ function Ticket(props) {
                   
                   </td>
                   <td>
-                   { value.trangthaive === "DAHUY"? "": 
+                   { value.trangthaive === "DAHUY" || value.trangthaive ==='DANGUUTIEN' ? 
+                        <span className="box disable">
+                            Chỉnh sửa
+                        </span>
+                   : 
                         <span className="box" onClick={ new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) < newDate(value.trip.ngaydi) ? e=>updateTicket(value) : e=>openNotificationErorr('Thất bại ' , 'Xe có thể đã khởi hành hoặc kết thúc rồi. Không thể  chỉnh sửa' , 3)
                                                     
                          }>
@@ -181,11 +191,15 @@ function Ticket(props) {
                   
                   </td> 
                   <td>
-                      { value.trangthaive === "DAHUY"? "": 
-                        <span className="box" onClick={ new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) < newDate(value.trip.ngaydi) ? e=>onClickCancleTicket(value._id) : e=>openNotificationErorr('Thất bại ' , 'Xe có thể đã khởi hành hoặc kết thúc rồi. Không thể hủy vé' , 3)
+                      { value.trangthaive === "DAHUY" || value.trangthaive ==='DANGUUTIEN'?
+                        <span className="box disable">
+                            Hủy vé
+                        </span>
+                      : 
+                        <span className="box" onClick={ new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) < newDate(value.trip.ngaydi) ? e=>onClickCancleTicket(value) : e=>openNotificationErorr('Thất bại ' , 'Xe có thể đã khởi hành hoặc kết thúc rồi. Không thể hủy vé' , 3)
                                                     
                          }>
-                        Hủy  
+                        Hủy vé 
                       </span>
                       }
                   </td> 
@@ -193,7 +207,7 @@ function Ticket(props) {
           </tbody>
       })
     }
- 
+    
     return (
         <div>
             <Content>
@@ -233,7 +247,7 @@ function Ticket(props) {
                                                     Ngày đi
                                                 </th>
                                                 <th className="table__giokhoihanh">
-                                                    Giờ khởi hành
+                                                    Số ghế
                                                 </th>
                                                 <th>
                                                 </th>

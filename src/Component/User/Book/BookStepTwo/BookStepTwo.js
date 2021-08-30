@@ -86,6 +86,7 @@ function BookStepTwo(props) {
             openNotificationErorr('Thất bại' , "Vui lòng đăng nhập " ,3);
             history.push('/signin');
         } 
+        console.log(state);
         if(!state){
             openNotificationErorr('Thất bại' , "Vui lòng chọn địa điểm" ,3);
             history.push('/');
@@ -160,17 +161,41 @@ function BookStepTwo(props) {
             state: state
         })
     }
+
+    console.log(state);
     const onClickNext = async()=>{
         
+
         if(!numberTicketOne){
-            openNotificationErorr("Thất bại" , `Chuyến có thể đã hết vé . Vui lòng quay lại` ,3);
-            console.log("Hello1");
+            openNotificationErorr("Thất bại" , `Chuyến đi có thể đã hết vé . Vui lòng quay lại` ,3);
             return;
             
         }
         if(state.loai == 2 && !numberTicketTwo){
-            console.log("Hello1");
-            openNotificationErorr("Thất bại" , `Chuyến có thể đã hết vé . Vui lòng quay lại` ,3);
+            openNotificationErorr("Thất bại" , `Chuyến về có thể đã hết vé . Vui lòng quay lại` ,3);
+            return;
+        }
+        let startDate = new Date(state.thogianbatdau);
+        let startEnd = new Date(state.thoigianve);
+        console.log(state.thoigianve);
+        if(new Date() > new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(), hourOne)){
+            openNotificationErorr("Thất bại" , `Chuyến về xe đi đã khởi hành không thể đặt vé . Vui lòng quay lại` ,3);
+            return;
+        }
+
+        if(state.loai === 2 &&  new Date() > new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(), hourTwo)){
+            openNotificationErorr("Thất bại" , `Chuyến về xe về đã khởi hành không thể đặt vé . Vui lòng quay lại` ,3);
+            return;
+        }
+
+    
+  
+        console.log(new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),hourOne+state.thoigian+1) , new Date(startEnd.getFullYear(),startDate.getMonth(),startDate.getDate(), hourTwo) , )
+        if(state.loai === 2 && 
+            new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),hourOne + state.thoigian + 1) > new Date(startEnd.getFullYear(),startEnd.getMonth(),startEnd.getDate(), hourTwo)
+        ){
+            // console.log( state.thoigianbatdau === state.thoigianve ,  state.thoigian , hourOne , hourTwo)
+            openNotificationErorr("Thất bại" , `Chuyến về xe khứ hồi không phù hợp thời gian . Vui lòng quay lại` ,3);
             return;
         }
         try{
@@ -233,9 +258,9 @@ function BookStepTwo(props) {
             openNotificationErorr("Thất bại" , "Lỗi hệ thống hehe" ,3);
         }
     }
-    console.log(oneTrip , twoTrip);
+    console.log(oneTrip , twoTrip , numberTicketOne);
     return (
-        <div style={{height : '100vh' }}>
+        <div>
             <Content>
                 <div className="site-layout-content" style={{overflowX:'hidden'}}>
                     <Process isActive={1}></Process>

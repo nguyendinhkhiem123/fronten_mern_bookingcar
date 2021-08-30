@@ -150,7 +150,7 @@ function Home(props) {
     console.log(employee);
     if(employee.length > 0){
         result = (employee.filter(value=>{
-            return value.hovaten.toLowerCase().indexOf(search.toLowerCase()) !== -1
+            return value.hovaten.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1
         })
                 )  
                         .map((value,index)=>{
@@ -200,7 +200,7 @@ function Home(props) {
                   })
     }
     return (
-        <div style={{height : '100vh' }}>
+        <div >
         <Content>
             <div className="site-layout-content" style={{overflowX:'hidden'}}>
                 <Carousels/>
@@ -212,7 +212,7 @@ function Home(props) {
                             </Button>
                         </div>
                         <div className="route__search">
-                                <input placeholder="Nhập họ tên nhân viên" className="form__input"  onChange={onChangeSearch}
+                                <input placeholder="Nhập họ tên nhân viên " className="form__input"  onChange={onChangeSearch}
                                 //  onChange={onChangeEnd}
                                  />
                                  <SearchOutlined  className="class__icon" />

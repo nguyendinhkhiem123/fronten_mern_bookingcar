@@ -3,6 +3,8 @@ import { Modal , Form  , Input , Button , Select} from 'antd';
 import * as ApiTicket from '../../../../Api/Ticket/index';
 import useLoading from '../../../HookLoading/HookLoading';
 import { openNotificationSuccess , openNotificationErorr } from '../../../Notfication';
+import ModalInsert from '../ChoseSlot/Insert/ChoseSlotInsert';
+import ModalUpdate from '../ChoseSlot/Update/ChoseSlotUpdate';
 const { Option , OptGroup } = Select;
 const layout = { 
     labelCol: { span: 8 },
@@ -19,47 +21,66 @@ function ModalUpIn(props) {
     // console.log(infor);
     const [ slot , setSlot ] = useState([]);
     const [ Loading , Display , Hidden] = useLoading();
+    const [ openSlot , setOpenSlot ] = useState(false);
+    const [ number , setNumber ] = useState(null);
     const infor = props.inforModal
     const onFinish =async(values)=>{
-        try{
-            if(props.value === 0 ) // thêm
-            {
-                Display();
-                values.trip = props.id
-                const res = await ApiTicket.insertTicketOfAdmin(values);
-                Hidden();
-                if(res.data.success){
-                    openNotificationSuccess('Thành công' , res.data.message , 3);
-                    props.insertTicket(res.data.body);
+        if(number === null){
+            return 
+        }
+        else{
+            try{
+                if(props.value === 0 ) 
+                {
+                    
+                    Display();
+                    values.trip = props.id
+                    values.soghe = number
+                    const res = await ApiTicket.insertTicketOfAdmin(values);
+                    Hidden();
+                    if(res.data.success){
+                        openNotificationSuccess('Thành công' , res.data.message , 3);
+                        props.insertTicket(res.data.body);
+                        props.closeModal();
+                        reset();
+                    }
+                    else{
+                        openNotificationErorr('Thất bại' , res.data.message , 3);
+                    }
+                   
+                }
+            
+                else{
+    
+                    if(infor.trangthaive === 'DANGUUTIEN'){
+                        openNotificationErorr('Thất bại' , 'Vé đang ưu tiên không thể sửa' , 3);
+                    }
+                    else{
+                        Display();
+                        values.trip = props.id
+                        values.soghe = number
+                        const res = await ApiTicket.updateTicketOfAdmin(values);
+                        Hidden();
+                        if(res.data.success){
+                            openNotificationSuccess('Thành công' , res.data.message , 3);
+                            props.propsUpdateTicket(res.data.body);
+                            props.closeModal();
+                            reset();
+                            
+                        }
+                        else{
+                            openNotificationErorr('Thất bại' , res.data.message , 3);
+                        }
+                    }
+                   
                     
                 }
-                else{
-                    openNotificationErorr('Thất bại' , res.data.message , 3);
-                }
-                props.closeModal();
             }
-        
-            else{
-
-                Display();
-                values.trip = props.id
-                const res = await ApiTicket.updateTicketOfAdmin(values);
-                Hidden();
-                if(res.data.success){
-                    openNotificationSuccess('Thành công' , res.data.message , 3);
-                    props.propsUpdateTicket(res.data.body);
-                    
-                }
-                else{
-                    openNotificationErorr('Thất bại' , res.data.message , 3);
-                }
-                props.closeModal();
-                
+            catch(err){
+                console.log(err)
             }
         }
-        catch(err){
-            console.log(err)
-        }
+       
     }
 
     useEffect(()=>{
@@ -79,14 +100,37 @@ function ModalUpIn(props) {
         getSlotCar(props.id)
     }, [])
 
-    console.log(slot)
+    const onClickOpen = ()=>{
+        setOpenSlot(true);
+    }
+    const onCloseSlot = ()=>{
+        setOpenSlot(false);
+    }
+    const setNum = (value)=>{
+        setNumber(value);
+    }
+    const reset = ()=>{
+        setNumber(null);
+    
+    }
+
+    const clickCancle = ()=>{
+        props.closeModal();
+        reset();
+    }
+
+    useEffect(()=>{
+        if(props.inforModal.soghe){
+            setNumber(props.inforModal.soghe);
+        }
+    },[props.inforModal]);
     return (
-        <Modal title={props.value === 0 ? "Thêm vé xe "  : "Chỉnh sửa vé xe"}   visible={true}  onCancel={props.closeModal} 
+        <Modal title={props.value === 0 ? "Thêm vé xe "  : "Chỉnh sửa vé xe"}   visible={true}  onCancel={clickCancle} 
         footer={[
             <Button type="primary" htmlType="submit" form="my_form">
                      Xác nhận
             </Button>,
-            <Button type="" htmlType="submit" onClick={props.closeModal}>
+            <Button type="" htmlType="submit" onClick={clickCancle}>
                     Hủy
             </Button>
             ]}
@@ -94,7 +138,7 @@ function ModalUpIn(props) {
         >   
             {
                 props.value === 0 ? 
-                         
+                <>      
                  <Form
                    id="my_form"
                    {...layout}
@@ -179,6 +223,7 @@ function ModalUpIn(props) {
                         <Option value={true}>Đã thanh toán</Option>
                     </Select>
                     </Form.Item>
+{/*                  
                     <Form.Item
                         label="Số ghế"
                         name="soghe"
@@ -187,23 +232,53 @@ function ModalUpIn(props) {
                                },
                             ]}
                         hasFeedback
+                        
             
                     >
-                    <Select>
-                        {
-                            slot.length > 0 ? 
-                            slot.map((value,index)=>{
-                                return <Option key={index} value={value}>{value}</Option>
-                            })
-                            : ""
+                
+                    <Input onClick={onClickOpen} placeholder="Ấn để chọn ghế" readOnly style={{
+                        cursor  : 'pointer'
+                    }}></Input>
+                    </Form.Item> */}
+                     <div className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success" style={{rowGap : '0px'}}>
+                        <div className="ant-col ant-col-8 ant-form-item-label">
+                            <label className="ant-form-item-required">Số ghế</label>
+                        </div>
+                        <div className="ant-col ant-col-16 ant-form-item-control">
+                            <div className="ant-form-item-control-input-content">
+                                <div className="ant-input-number" style={{width : '100%', border : 'none'}}>
+                                    <Input name="soghe" onClick readOnly value={number ? number : null}
+                                     onClick={onClickOpen} placeholder="Ấn để chọn ghế" readOnly style={{
+                                        cursor  : 'pointer'
+                                    }}
+                                    />
+                                </div>
+                            </div>
+                              {
+                                        number !== null ?  " ":
+                                        <div className="ant-form-item-explain ant-form-item-explain-error">
+                                            <div role='alert'>
+                                                Không được bỏ trống ! . Vui lòng nhập lại
+                                            </div>
+                                        </div>
+                                    }
+                        </div>
 
-                        }
-                       
-                        
-                    </Select>
-                    </Form.Item>
-                   </Form> 
-                   :         
+                    </div>
+                   </Form>
+                    {
+                        openSlot ?   <ModalInsert 
+                        id ={props.id}
+                        onCloseSlot={onCloseSlot}
+                        setNum = {setNum}
+                        num = {number}
+                      /> 
+                       : null
+                   }
+                 
+                   </>
+                   : 
+                   <>        
                    <Form
                    id="my_form"
                    {...layout}
@@ -285,35 +360,49 @@ function ModalUpIn(props) {
                             message: "Không được bỏ trống !. Vui lòng nhập lại" ,
                             
                          }]}
-                           initialValue={infor.trangthaithanhtoan  === false ? "Chưa thanh toán" : "Đã thanh toán"}
+                           initialValue={infor.trangthaithanhtoan}
                            >
                             <Select>
-                            <Option value={false}>Chưa thanh toán</Option>
-                            <Option value={true}>Đã thanh toán</Option>
+                                <Option value={false}>Chưa thanh toán</Option>
+                                <Option value={true}>Đã thanh toán</Option>
                          </Select>
                        </Form.Item>
-                       <Form.Item
-                           label="Số ghế"
-                           name="soghe"
-                           rules={[{ required: true, 
-                            message: "Không được bỏ trống !. Vui lòng nhập lại" ,
-                            
-                         }]}
-                           initialValue={infor.soghe}
-                           >
-                            <Select allowClear>
-                             {
-                                slot.length > 0 ? 
-                                slot.map((value,index)=>{
-                                    return <Option key={index} value={value}>{value}</Option>
-                                })
-                                : ""
-                          
-                              }
-                         </Select>
-                       </Form.Item>
-                      
+                       <div className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success" style={{rowGap : '0px'}}>
+                        <div className="ant-col ant-col-8 ant-form-item-label">
+                            <label className="ant-form-item-required">Số ghế</label>
+                        </div>
+                        <div className="ant-col ant-col-16 ant-form-item-control">
+                            <div className="ant-form-item-control-input-content">
+                                <div className="ant-input-number" style={{width : '100%', border : 'none'}}>
+                                    <Input name="soghe" onClick readOnly value={number ? number : null}
+                                     onClick={onClickOpen} placeholder="Ấn để chọn ghế" readOnly style={{
+                                        cursor  : 'pointer'
+                                    }}
+                                    />
+                                </div>
+                            </div>
+                              {
+                                        number !== null ?  " ":
+                                        <div className="ant-form-item-explain ant-form-item-explain-error">
+                                            <div role='alert'>
+                                                Không được bỏ trống ! . Vui lòng nhập lại
+                                            </div>
+                                        </div>
+                                    }
+                        </div>
+
+                    </div>
                    </Form>    
+                   {
+                        openSlot ?   <ModalUpdate
+                        id ={props.id}
+                        onCloseSlot={onCloseSlot}
+                        setNum = {setNum}
+                        num = {number}
+                      /> 
+                       : null
+                      }
+                    </>
                 }
                 {Loading}
       </Modal>

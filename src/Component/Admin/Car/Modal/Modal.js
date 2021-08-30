@@ -28,7 +28,7 @@ function Modals(props) {
            props.onClickUpdate(values);
           
        }
-       props.onCloseModal();
+    //    props.onCloseModal();
     }
     const onFinishFailed =()=>{
 
@@ -81,15 +81,19 @@ function Modals(props) {
                                      
                                   }]}
                            hasFeedback
-                            initialValue={40}
                        >
-                           <InputNumber style={{width : '100%'}}
+                           <Select>
+                               <Option value={16}>16</Option>
+                               <Option value={32}>32</Option>
+                               <Option value={40}>40</Option>
+                           </Select>
+                           {/* <InputNumber style={{width : '100%'}}
                                 //  defaultValue={currentUser.hovaten}
                                 //   value={currentUser.hovaten}
                                 readOnly
-                            allowClear/>
+                            allowClear/> */}
                        </Form.Item>     
-                       <Form.Item
+                       {/* <Form.Item
                            label="Tuyến hoạt động"
                            name="route"
                            rules={[{ required: true, 
@@ -110,7 +114,7 @@ function Modals(props) {
                                   null
                               }
                           </Select>
-                       </Form.Item>       
+                       </Form.Item>        */}
                     </Form>
                 : 
                 <Form
@@ -163,11 +167,16 @@ function Modals(props) {
                            hasFeedback
                            initialValue={value.soluongghe}
                        >
-                           <InputNumber style={{width : '100%'}}
+                           {/* <InputNumber style={{width : '100%'}}
                                 //  defaultValue={currentUser.hovaten}
                                 //   value={currentUser.hovaten}
                                 readOnly
-                            allowClear/>
+                            allowClear/> */}
+                            <Select>
+                               <Option value={16}>16</Option>
+                               <Option value={32}>32</Option>
+                               <Option value={40}>40</Option>
+                           </Select>
                        </Form.Item>     
                        <Form.Item
                            label="Trạng thái"

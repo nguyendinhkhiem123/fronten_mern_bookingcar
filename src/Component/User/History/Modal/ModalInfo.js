@@ -61,7 +61,7 @@ function ModalInfo(props) {
                        <Form.Item
                            label="Trạng thái"
                            name="staus"
-                           initialValue={infor.trangthai  === false ? "Chưa thanh toán" : "Đã thanh toán"}
+                           initialValue={infor.trangthaithanhtoan  === false ? "Chưa thanh toán" : "Đã thanh toán"}
                            >
                            <Input readOnly/>
                        </Form.Item>

@@ -134,7 +134,7 @@ function Headers(props) {
             link : '/admin/tuyen-duong'
         },
         {
-            title : 'LỊCH TRÌNH',
+            title : 'CHUYẾN XE',
             link : '/admin/lich-trinh'
         },
         {

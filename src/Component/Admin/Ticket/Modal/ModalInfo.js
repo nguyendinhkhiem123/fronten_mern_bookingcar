@@ -23,15 +23,48 @@ function ModalInfo(props) {
                    style={{margin :  "auto"}}
                    preserve={true}
                    >
-                        <Form.Item
+                       {
+                           infor.trangthaive === "DAHUY" ? 
+                           <Form.Item
                            label="Trạng thái vé"
                            name="trangjthaive"
                             initialValue={
-                                infor.trangthaive === "DAHUY" ? "Đã hủy"  : "Đã đặt"
+                                 "Đã hủy"    
                             }
-                       >
+                           
+                           >
                            <Input readOnly/>
-                       </Form.Item>
+                           </Form.Item>
+                            :""
+                       }
+                        {
+                           infor.trangthaive === "DANGUUTIEN" ? 
+                           <Form.Item
+                           label="Trạng thái vé"
+                           name="trangjthaive"
+                            initialValue={
+                                 "Ưu tiên"    
+                            }
+                           
+                           >
+                           <Input readOnly/>
+                           </Form.Item>
+                            :""
+                        }
+                        {
+                           infor.trangthaive === "DADAT" ? 
+                           <Form.Item
+                           label="Trạng thái vé"
+                           name="trangjthaive"
+                            initialValue={
+                                 "Đã đặt"    
+                            }
+                           
+                           >
+                           <Input readOnly/>
+                           </Form.Item>
+                            :""
+                        }
                         <Form.Item
                            label="Tên người nhận"
                            name="hovaten"

@@ -100,7 +100,7 @@ td {
     width: 1200px;
     overflow-x: hidden;
     overflow-y: scroll;
-    height: 680px;
+    max-height: 680px;
     border : 1px solid #d5d5d5
 }
 
@@ -128,4 +128,12 @@ td {
 .box:hover{
     background-color:#ef5222; ;
     color : #fff
+}
+.disable.box:hover{
+    background-color: #ccc;
+    color: #00613d;
+}
+.disable.box{
+    background-color: #ccc;
+    cursor: not-allowed;
 }

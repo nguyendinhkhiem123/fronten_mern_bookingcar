@@ -145,7 +145,7 @@ function Vote(props) {
        
     }
     return (
-        <div style={{height : '100vh' }}>
+        <div>
             <Content>
                 <div className="site-layout-content" style={{overflowX:'hidden'}}>
                     <Carousels/>
@@ -157,7 +157,7 @@ function Vote(props) {
                             </div>
                             <div className="vote__overview">
                                 <div className="vote__star">
-                                    <div><span className="text__over">{ statics.sum }</span> trên 5</div>
+                                    <div><span className="text__over">{ Math.round(statics.sum)}</span> trên 5</div>
                                     <div className="overview__star">
                                         <StarOutlined />
                                         <StarOutlined className="ml-4"/>

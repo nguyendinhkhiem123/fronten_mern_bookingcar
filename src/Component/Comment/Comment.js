@@ -226,7 +226,7 @@ function Comment(props) {
         })
     }
     return (
-        <div style={{height : '100vh' }}>
+        <div>
             <Content>
                 <div className="site-layout-content" style={{overflowX:'hidden'}}>
                     <Carousels/>

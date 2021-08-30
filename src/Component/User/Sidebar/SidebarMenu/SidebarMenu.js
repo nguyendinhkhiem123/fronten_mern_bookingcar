@@ -58,7 +58,7 @@ function SidebarMenu(props) {
             link : '/admin/tuyen-duong'
         },
         {
-            title : 'Quản lý lịch trình',
+            title : 'Quản lý chuyến xe',
             link : '/admin/lich-trinh'
         },
         {

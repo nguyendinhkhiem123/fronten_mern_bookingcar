@@ -29,13 +29,17 @@ function BookStepThree(props) {
     const [ oneListBuildTwo, setOneListBuildTwo ] = useState([]);
     const [ twoListBuildOne, setTwoListBuildOne ] = useState([]);
     const [ twoListBuildTwo, setTwoListBuildTwo ] = useState([]);
-   
+    const [ oneSlotOne , setOneSlotOne] = useState(0);
+    const [ oneSlotTwo , setOneSlotTwo] = useState(0);
+    const [ twoSlotOne , setTwoSlotOne] = useState(0);
+    const [ twoSlotTwo , setTwoSlotTwo] = useState(0);
     useEffect(()=>{
 
         if(!token){
             openNotificationErorr('Thất bại' , "Vui lòng đăng nhập" ,3);
             history.push('/signin');
         }
+        console.log(state);
         if(!state){     
             openNotificationErorr('Thất bại' , 'Vui lòng chọn đi theo trình tự' ,3);
             history.push('/');
@@ -57,10 +61,11 @@ function BookStepThree(props) {
                 for(let i = 0 ; i < resOne.data.body.number ; i++){
                     tempOne.push(i);
                 }
-                console.log(tempOne);
                 setOneTicket(resOne.data.body.listTicket);
-                setOneListBuildOne(tempOne.slice(0,resOne.data.body.number/2));
-                setOneListBuildTwo(tempOne.slice(0,resOne.data.body.number/2));
+                setOneSlotOne(Math.round(resOne.data.body.number/2))
+                setOneSlotTwo(Math.floor(resOne.data.body.number/2))
+                setOneListBuildOne(tempOne.slice(0,Math.round(resOne.data.body.number/2)));
+                setOneListBuildTwo(tempOne.slice(0,Math.floor(resOne.data.body.number/2)));
             }
          
 
@@ -74,9 +79,12 @@ function BookStepThree(props) {
                     for(let i = 0 ; i < resTwo.data.body.number ; i++){
                         tempTwo.push(i);
                     }
+                
                     setTwoTicket(resTwo.data.body.listTicket);
-                    setTwoListBuildOne(tempTwo.slice(0,resTwo.data.body.number/2))
-                    setTwoListBuildTwo(tempTwo.slice(0,resTwo.data.body.number/2))
+                    setTwoSlotOne(Math.round(resTwo.data.body.number/2))
+                    setTwoSlotTwo(Math.floor(resTwo.data.body.number/2))
+                    setTwoListBuildOne(tempTwo.slice(0,Math.round(resTwo.data.body.number/2)))
+                    setTwoListBuildTwo(tempTwo.slice(0,Math.floor(resTwo.data.body.number/2)))
                 }
             }  
             
@@ -132,7 +140,7 @@ function BookStepThree(props) {
     }
 
     const onClickTwoNumber = (values)=>{
-        
+      
         const check = checkUnque(numTwoCar,values);
         if(check)  // nếu đã chọn rồi
         {
@@ -142,8 +150,8 @@ function BookStepThree(props) {
             })
             const domCarTwo = document.querySelectorAll('.body__number--status')
 
-            domCarTwo[40+values-1].classList.remove('chose');
-            domCarTwo[40+values-1].classList.add('null');
+            domCarTwo[oneSlotOne+oneSlotTwo+values-1].classList.remove('chose');
+            domCarTwo[oneSlotOne+oneSlotTwo+values-1].classList.add('null');
             setNumTwoCar(filterNum);
         }
         else{
@@ -154,13 +162,15 @@ function BookStepThree(props) {
             else{
                 const domCarTwo = document.querySelectorAll('.body__number--status');
                 numTwoCarTemp.push(values);
-                domCarTwo[40+values-1].classList.remove('null');
-                domCarTwo[40+values-1].classList.add('chose');
+                console.log(values , domCarTwo , oneSlotOne + oneSlotTwo);
+                domCarTwo[oneSlotOne+oneSlotTwo+values-1].classList.remove('null');
+                domCarTwo[oneSlotOne+oneSlotTwo+values-1].classList.add('chose');
                 setNumTwoCar(numTwoCarTemp)
             }
         }
     }
 
+    console.log(oneSlotOne , oneSlotTwo , twoSlotOne , twoSlotTwo);
     const onClickPrev = ()=>{
         console.log('hello')
         history.push({
@@ -171,7 +181,8 @@ function BookStepThree(props) {
     }
 
     const onClickNext= async()=>{
-        if(numOneCar.length === 0 ){
+        console.log(numOneCar,numTwoCar)
+        if(numOneCar.length === 0   ){
             openNotificationErorr('Thất bại' , `Hãy chọn số ghế !` ,3)
             return;
         }
@@ -182,44 +193,56 @@ function BookStepThree(props) {
         
         try{
             Display();
+          
             let bodyOne ={
-                chuyendi : state.chuyendi._id ,
-                soghedi : numOneCar
-            }
-            let resOne = await ApiTicket.CheckNumberCar(bodyOne);
-
+                chuyendi : state.chuyendi._id,
+                sovedi : numOneCar.length
+            }     
+            let resOne = await ApiTicket.checkNumberTicket(bodyOne);
+          
             let resTwo = null
             if(state.loai === 2){
+                
                 let bodyTwo = {
-                    chuyendi : state.chuyenve._id ,
-                    soghedi : numTwoCar
-                }
-                resTwo = await ApiTicket.CheckNumberCar(bodyTwo);
+                     chuyendi : state.chuyenve._id ,
+                     sovedi :  numTwoCar.length
+                } 
+                resTwo = await ApiTicket.checkNumberTicket(bodyTwo);
             }
+           
 
             if(state.loai == 1){
                 if(resOne.data.success){
-                   
-
-                    let bodyOneResult ={
+                    let bodyOneCar ={
                         chuyendi : state.chuyendi._id ,
-                        soghedi : numOneCar,
-                   
+                        soghedi : numOneCar
                     }
-                    let updateResult = await ApiTicket.insertTicket(bodyOneResult) // Tạo vé có trạng thái là đang ưu tiên
-                    Hidden();
-                    if(updateResult.data.success){
-                        history.push({
-                            pathname: "/xac-nhan",
-                            search : "?step=4",
-                            state : {
-                                ...state,
-                                soghedi : numOneCar
-                                
-                            }
-                        })
-                    }   
-
+                    let resOneCar = await ApiTicket.CheckNumberCar(bodyOneCar);
+                    if(resOneCar.data.success){
+                        let bodyOneResult ={
+                            chuyendi : state.chuyendi._id ,
+                            soghedi : numOneCar,
+                       
+                        }
+                        let updateResult = await ApiTicket.insertTicket(bodyOneResult) // Tạo vé có trạng thái là đang ưu tiên
+                        Hidden();
+                        if(updateResult.data.success){
+                            history.push({
+                                pathname: "/xac-nhan",
+                                search : "?step=4",
+                                state : {
+                                    ...state,
+                                    soghedi : numOneCar
+                                    
+                                }
+                            })
+                        }   
+    
+                    }
+                    else{
+                        Hidden();
+                        openNotificationErorr("Thất bại" , resOneCar.data.message ,3);
+                    }
                 }
                 else{
                     Hidden();
@@ -228,41 +251,144 @@ function BookStepThree(props) {
             }
             else{
                 if(resOne.data.success &&  resTwo.data.success ){
-                    let bodyOneResult ={
+                    let bodyOneCar ={
                         chuyendi : state.chuyendi._id ,
-                        soghedi : numOneCar,
+                        soghedi : numOneCar
+                    }
+                    let resOneCar = await ApiTicket.CheckNumberCar(bodyOneCar);
+                  
+                    let bodyTwoCar = {
+                             chuyendi : state.chuyenve._id ,
+                             soghedi :  numTwoCar    
+                    }
                       
-                    }
-                    let updateResultOne = await ApiTicket.insertTicket(bodyOneResult) // Tạo vé có trạng thái là đang ưu tiên
-
-
-                    let bodyTwoResult ={
-                        chuyendi : state.chuyenve._id ,
-                        soghedi : numTwoCar,
-                    }
-                    let updateResultTwo = await ApiTicket.insertTicket(bodyTwoResult) /// Tạo vé có trạng thái là đang ưu tiên
-
-                    Hidden();
-                    if(updateResultOne.data.success && updateResultTwo.data.success){
-                        history.push({
-                            pathname: "/xac-nhan",
-                            search : "?step=4",
-                            state : {
-                                ...state,
-                                soghedi : numOneCar,
-                                sogheve : numTwoCar
-                            }
-                        })
-                    }   
-                 }
+                    let resTwoCar = await ApiTicket.CheckNumberCar(bodyTwoCar);
+                    
+                    if(resOneCar.data.success &&  resTwoCar.data.success ){
+                        let bodyOneResult ={
+                            chuyendi : state.chuyendi._id ,
+                            soghedi : numOneCar,
+                          
+                        }
+                        let updateResultOne = await ApiTicket.insertTicket(bodyOneResult) // Tạo vé có trạng thái là đang ưu tiên
+    
+    
+                        let bodyTwoResult ={
+                            chuyendi : state.chuyenve._id ,
+                            soghedi : numTwoCar,
+                        }
+                        let updateResultTwo = await ApiTicket.insertTicket(bodyTwoResult) /// Tạo vé có trạng thái là đang ưu tiên
+    
+                        Hidden();
+                        if(updateResultOne.data.success && updateResultTwo.data.success){
+                            history.push({
+                                pathname: "/xac-nhan",
+                                search : "?step=4",
+                                state : {
+                                    ...state,
+                                    soghedi : numOneCar,
+                                    sogheve : numTwoCar
+                                }
+                            })
+                        }   
+                     }
+                     else{
+                         Hidden();
+                         openNotificationErorr("Thất bại" , resOneCar.data.message + " HOẶC " + resTwoCar.data.message ,3);
+                     }
+                }
                  else{
                      Hidden();
                      openNotificationErorr("Thất bại" , resOne.data.message + " HOẶC " + resTwo.data.message ,3);
                  }
             }
-        }catch{
-            openNotificationErorr("Thất bại" , "Lỗi hệ thống" ,3);
-        }
+        }catch(err){
+            console.log(err);
+            Hidden();
+            openNotificationErorr("Thất bại" , "Lỗi hệ thống hehe" ,3);
+        }  //kIỂM TRA LẠI SỐ VÉ CÒN ĐỦ HAY KHÔNG
+
+        // try{
+        //     Display();
+        //     let bodyOne ={
+        //         chuyendi : state.chuyendi._id ,
+        //         soghedi : numOneCar
+        //     }
+        //     let resOne = await ApiTicket.CheckNumberCar(bodyOne);
+
+        //     let resTwo = null
+        //     if(state.loai === 2){
+        //         let bodyTwo = {
+        //             chuyendi : state.chuyenve._id ,
+        //             soghedi : numTwoCar
+        //         }
+        //         resTwo = await ApiTicket.CheckNumberCar(bodyTwo);
+        //     }
+
+        //     if(state.loai == 1){
+        //         if(resOne.data.success){
+        //             let bodyOneResult ={
+        //                 chuyendi : state.chuyendi._id ,
+        //                 soghedi : numOneCar,
+                   
+        //             }
+        //             let updateResult = await ApiTicket.insertTicket(bodyOneResult) // Tạo vé có trạng thái là đang ưu tiên
+        //             Hidden();
+        //             if(updateResult.data.success){
+        //                 history.push({
+        //                     pathname: "/xac-nhan",
+        //                     search : "?step=4",
+        //                     state : {
+        //                         ...state,
+        //                         soghedi : numOneCar
+                                
+        //                     }
+        //                 })
+        //             }   
+
+        //         }
+        //         else{
+        //             Hidden();
+        //             openNotificationErorr("Thất bại" , resOne.data.message ,3);
+        //         }
+        //     }
+        //     else{
+        //         if(resOne.data.success &&  resTwo.data.success ){
+        //             let bodyOneResult ={
+        //                 chuyendi : state.chuyendi._id ,
+        //                 soghedi : numOneCar,
+                      
+        //             }
+        //             let updateResultOne = await ApiTicket.insertTicket(bodyOneResult) // Tạo vé có trạng thái là đang ưu tiên
+
+
+        //             let bodyTwoResult ={
+        //                 chuyendi : state.chuyenve._id ,
+        //                 soghedi : numTwoCar,
+        //             }
+        //             let updateResultTwo = await ApiTicket.insertTicket(bodyTwoResult) /// Tạo vé có trạng thái là đang ưu tiên
+
+        //             Hidden();
+        //             if(updateResultOne.data.success && updateResultTwo.data.success){
+        //                 history.push({
+        //                     pathname: "/xac-nhan",
+        //                     search : "?step=4",
+        //                     state : {
+        //                         ...state,
+        //                         soghedi : numOneCar,
+        //                         sogheve : numTwoCar
+        //                     }
+        //                 })
+        //             }   
+        //          }
+        //          else{
+        //              Hidden();
+        //              openNotificationErorr("Thất bại" , resOne.data.message + " HOẶC " + resTwo.data.message ,3);
+        //          }
+        //     }
+        // }catch{
+        //     openNotificationErorr("Thất bại" , "Lỗi hệ thống" ,3);
+        // } // KIỂM TRA GHẾ CÓ BỊ TRÙNG HAY KHÔNG 
     }
 
     let oneTicketOne = [];
@@ -272,7 +398,7 @@ function BookStepThree(props) {
     console.log(oneTicket);
     if(oneTicket.length > 0){
         oneTicket.forEach((value,index)=>{
-            if(value.soghe > 20){
+            if(value.soghe > oneSlotOne){
                 oneTicketTwo.push(value)
             }
             else{
@@ -282,7 +408,7 @@ function BookStepThree(props) {
     }
     if(twoTicket.length > 0){
         twoTicket.forEach((value,index)=>{
-            if(value.soghe > 20){
+            if(value.soghe > twoSlotOne){
                 twoTicketTwo.push(value)
             }
             else{
@@ -295,7 +421,7 @@ function BookStepThree(props) {
         if(arr.length > 0){
             for(let i = 0 ; i < arr.length ; i++){
                 if(arr[i].soghe === index ) {
-                    console.log(i);
+                   
                     return i;
                 }
             }
@@ -304,7 +430,7 @@ function BookStepThree(props) {
         return -1
     }
     return (
-        <div style={{height : '100vh' }}>
+        <div >
             <Content>
                 <div className="site-layout-content" style={{overflowX:'hidden'}}>
                     <Process isActive={2}></Process>
@@ -359,16 +485,16 @@ function BookStepThree(props) {
                                                         oneListBuildTwo.map((value,index)=>{
                                                             return (
                                                                 <Col span={6}>
-                                                                    <div class="body__number">{index + 20 + 1}</div>
+                                                                    <div class="body__number">{index+oneSlotOne+1}</div>
                                                                    {
-                                                                       (checkTicket(oneTicketTwo , index+1) > -1) ? 
+                                                                       (checkTicket(oneTicketTwo , index+oneSlotOne+1) > -1) ? 
                                                                        <div class={`body__number--status 
                        
                                                                            ${
-                                                                               oneTicketTwo[checkTicket(oneTicketTwo , index+1)].trangthaive === "DADAT" && "active"
+                                                                               oneTicketTwo[checkTicket(oneTicketTwo , index+oneSlotOne+1)].trangthaive === "DADAT" && "active"
                                                                            }
                                                                            ${
-                                                                               oneTicketTwo[checkTicket(oneTicketTwo , index+1)].trangthaive  === "DANGUUTIEN" && 'pen'
+                                                                               oneTicketTwo[checkTicket(oneTicketTwo , index+oneSlotOne+1)].trangthaive  === "DANGUUTIEN" && 'pen'
                                                                            }
                                                                       `}
                                                                       
@@ -376,7 +502,7 @@ function BookStepThree(props) {
                                                                        : 
                                                                        <div class="body__number--status null"
                                                                        
-                                                                           onClick={e=>onClickOneNumber(index+20+1)}
+                                                                           onClick={e=>onClickOneNumber(index+oneSlotOne+1)}
                                                                        ></div>
                                                                    }
                                                                 </Col>
@@ -452,7 +578,7 @@ function BookStepThree(props) {
                                                                         : 
                                                                         <div class="body__number--status null"
                                                                         
-                                                                            onClick={e=>onClickOneNumber(index+1)}
+                                                                            onClick={e=>onClickTwoNumber(index+1)}
                                                                         ></div>
                                                                     }
                                             
@@ -471,16 +597,16 @@ function BookStepThree(props) {
                                                        twoListBuildTwo.map((value,index)=>{
                                                             return (
                                                                 <Col span={6}>
-                                                                    <div class="body__number">{index+20+1}</div>
+                                                                    <div class="body__number">{index+twoSlotOne+1}</div>
                                                                     {
-                                                                        (checkTicket(twoTicketTwo , index+1) > -1) ? 
+                                                                        (checkTicket(twoTicketTwo , index+twoSlotOne+1) > -1) ? 
                                                                         <div class={`body__number--status 
                         
                                                                             ${
-                                                                                twoTicketTwo[checkTicket(twoTicketTwo , index+1)].trangthaive === "DADAT" && "active"
+                                                                                twoTicketTwo[checkTicket(twoTicketTwo , index+twoSlotOne+1)].trangthaive === "DADAT" && "active"
                                                                             }
                                                                             ${
-                                                                                twoTicketTwo[checkTicket(twoTicketTwo , index+1)].trangthaive  === "DANGUUTIEN" && 'pen'
+                                                                                twoTicketTwo[checkTicket(twoTicketTwo , index+twoSlotOne+1)].trangthaive  === "DANGUUTIEN" && 'pen'
                                                                             }
                                                                        `}
                                                                        
@@ -488,7 +614,7 @@ function BookStepThree(props) {
                                                                         : 
                                                                         <div class="body__number--status null"
                                                                         
-                                                                            onClick={e=>onClickOneNumber(index+20+1)}
+                                                                            onClick={e=>onClickTwoNumber(index+twoSlotOne+1)}
                                                                         ></div>
                                                                     }
                                                                 </Col>

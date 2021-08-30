@@ -97,7 +97,7 @@ function SignIn(props) {
         console.log(e);
     }
     return (
-        <div>
+        <div style={{height : '100vh'}}>
         <div className="header">
                <Link to="/" style={{ display : 'block' , margin:'auto'}}>
                    <img src={Logo} className="header__logo"/>

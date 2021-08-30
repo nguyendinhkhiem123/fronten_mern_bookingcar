@@ -1,4 +1,4 @@
-import React, { useState  , useEffect} from 'react';
+import React, { useState  , useEffect, useRef} from 'react';
 import { Modal , Button  , Form , Select , DatePicker, InputNumber , Input} from 'antd';
 import moment from "moment";
 import { useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ function disabledDate(current) {
 }
 function Modals(props) {
     const route = useSelector(state => state.route);
+    
     const { trip , value , tripValue} = props;
     const [ indexRoute , setIndexRoute ] = useState('');
     const [ start , setStart ] = useState('');
@@ -39,11 +40,20 @@ function Modals(props) {
         return new Date(Date.UTC(year , month , day , m));
     }
     const handleCancel = ()=>{
-        props.onCloseModal();
+        setStart('')
+        setEnd('')
+        setIndexRoute('');
+        setDate('');
+        setHour(0);
+        props.onCloseTripValue();
+        props.onCloseModal();    
     }
     const onFinish =async(values)=>{
+          
         if(value === 0){
             try{
+                const noiden = document.getElementsByName('noiden');
+                values.noiden = noiden[0].value
                 Display();
                 const res = await ApiTrip.InsertTrip(values);
                 Hidden();
@@ -52,37 +62,57 @@ function Modals(props) {
                     console.log(res.data.body.newTrip[0])
                     props.onCloseModal();
                     props.insertTrip(res.data.body.newTrip[0]);
-                }
+                    setStart('')
+                    setEnd('')
+                    setIndexRoute('');
+                    setDate('');
+                    setHour(0);
+                    
+                } else{
+                    openNotificationErorr('Thất bại' , res.data.message , 3);
+                   
+                } 
+             
             }catch(err){
                 console.log(err);
             }
+         
         }
         else{
             try{
+                const noiden = document.getElementsByName('noiden2');
+                values.noiden = noiden[0].value
                 console.log(values);
-                Display();
                 const res = await ApiTrip.updateTrip(values);
                 console.log(res);
                 Hidden();
                 if(res.data.success){
                     openNotificationSuccess('Thành công' , res.data.message , 3);  
                     props.onCloseModal();
-                    props.updateTrip(res.data.body);
+                    props.updateTrip(res.data.body);     
+                    setStart('')
+                    setEnd('')
+                    setIndexRoute('');
+                    setDate('');
+                    setHour(0);
+                    props.onCloseTripValue();   
                 }
                 else{
                     openNotificationErorr('Thất bại' , res.data.message , 3);
-                    props.onCloseModal();
-                }
+                   
+                } 
+             
             }catch(err){
                 console.log(err);
             }
-        }
+        }      
     }
     const onFinishFailed = (err)=>{
         console.log(err);
     }
 
     const onChangeDate = (e) =>{
+         
         setDate(newDate(e).toDateString());
     }
     const onChangeRoute  = (e)=>{
@@ -92,13 +122,23 @@ function Modals(props) {
         setStart(e);
     }
     const onChangeEnd  = (e)=>{
-        setEnd(e);
+        console.log('Change end');
     }
     const onChangeHours = (e)=>{
         setHour(e);
     }
     useEffect(()=>{
-       
+        setIndexRoute(tripValue?.route.matuyen);
+        setStart(tripValue?.route.noidi)
+        setEnd(tripValue?.route.noiden);
+        setDate(tripValue?.ngaydi.slice(0,10))
+        setHour(tripValue?.giodi);
+        console.log('useOne')
+    }, [tripValue]);
+
+    useEffect(()=>{ 
+        const noiden = document.getElementsByName('noiden');
+        const noiden2 = document.getElementsByName('noiden2');
         const getCar = async(body)=>{
             try{
                 // Display();
@@ -107,6 +147,7 @@ function Modals(props) {
                 // Hidden();
                 if(res.data.success){
                     setCar(res.data.body);
+                    console.log(res.data.body)
                 }
                 
             }catch(err){
@@ -116,12 +157,16 @@ function Modals(props) {
         }
         getCar({
             noidi : start ,
-            noiden : end ,
+            noiden : value === 0 ? noiden[0].value : noiden2[0].value ,
             ngaydi : date ,
             giodi : hour
         })
     }, [start , end , date, hour]);
-    console.log(tripValue , car)
+    
+    let arrEnd = route.filter((value,index)=>{
+            return value.matuyen === indexRoute && value.noidi.indexOf(start) !== -1
+        })
+    // console.log(indexRoute , start, end );
     return (
         <Modal title= {value === 0 ? "Thêm tuyến xe" : "Chỉnh sử tuyến xe"}
         visible={true}
@@ -167,7 +212,8 @@ function Modals(props) {
                                     })
                                 }
                           </Select>
-                    </Form.Item>          
+                    </Form.Item>        
+                  
                     <Form.Item
                            label="Nơi đi"
                            name="noidi"
@@ -176,42 +222,34 @@ function Modals(props) {
                                      
                                   }]}
                            hasFeedback
-                          
                        >
                           <Select onChange={onChangeStart}>
                                 {
                                     (
                                         route.filter((value,index)=>{
-                                            return value.matuyen === indexRoute && value.noiden.toLowerCase().indexOf(end.toLowerCase()) !== -1
+                                            // return value.matuyen === indexRoute && value.noiden.toLowerCase().indexOf(end.toLowerCase()) !== -1
+                                            return value.matuyen === indexRoute
                                         })
                                     ).map((value,index)=>{
                                         return <Option value={value.noidi}>{value.noidi}</Option>
                                     })
                                 }
                           </Select>
-                    </Form.Item>    
-                    <Form.Item
-                           label="Nơi đến"
-                           name="noiden"
-                           rules={[{ required: true, 
-                                     message: "Không được bỏ trống !. Vui lòng nhập lại" ,
-                                     
-                                  }]}
-                           hasFeedback
-                          
-                       >
-                          <Select onChange={onChangeEnd}>
-                                {
-                                    (
-                                        route.filter((value,index)=>{
-                                            return value.matuyen === indexRoute && value.noidi.toLowerCase().indexOf(start.toLowerCase()) !== -1
-                                        })
-                                    ).map((value,index)=>{
-                                        return <Option value={value.noiden}>{value.noiden}</Option>
-                                    })
-                                }
-                          </Select>
-                    </Form.Item>    
+                    </Form.Item>  
+                    <div className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success" style={{rowGap : '0px'}}>
+                        <div className="ant-col ant-col-8 ant-form-item-label">
+                            <label className="ant-form-item-required" title="Nơi đến">Nơi đến</label>
+                        </div>
+                        <div className="ant-col ant-col-16 ant-form-item-control">
+                            <div className="ant-form-item-control-input-content">
+                                <div className="ant-input-number" style={{width : '100%'}}>
+                                    <Input name="noiden" readOnly value={arrEnd.length > 0 ? arrEnd[0].noiden : ""}/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+            
                     <Form.Item
                         label="Ngày đi"
                         name="ngaydi"
@@ -263,7 +301,7 @@ function Modals(props) {
                               {
                                   car.length > 0 ? 
                                   car.map( ( value , index)=>{
-                                      return   <Option key={index} value={value._id}>{value.biensoxe}</Option>
+                                      return  <Option key={index} value={value._id}>{value.biensoxe}</Option>
                                   })
                                   : null
                               }
@@ -282,7 +320,7 @@ function Modals(props) {
                        >
                           <InputNumber min="1000" style={{ width : '100%'}} step="1000"></InputNumber>
                     </Form.Item> 
-                    <Form.Item
+                    {/* <Form.Item
                            label="Số lượng vé"
                            name="soluongve"
                            rules={[{ required: true, 
@@ -293,7 +331,7 @@ function Modals(props) {
                           
                        >
                           <InputNumber min="1" style={{ width : '100%'}} step="1" max="40"></InputNumber>
-                    </Form.Item>                              
+                    </Form.Item>                               */}
                 </Form>
                 :
                 <Form
@@ -316,7 +354,7 @@ function Modals(props) {
                            hasFeedback
                            initialValue={tripValue?._id}
                        >
-                         <Input readOnly/>
+                         <Input  disabled readOnly/>
                     </Form.Item>          
                     <Form.Item
                            label="Mã tuyến"
@@ -327,9 +365,9 @@ function Modals(props) {
                                   }]}
                            hasFeedback
                            initialValue={tripValue?.route.matuyen}
-                           
+        
                        >
-                          <Select onChange={onChangeRoute}>
+                          <Select onChange={onChangeRoute} >
                                 {
                                     route.map((value,index)=>{
                                        return  index%2 === 0 ?
@@ -349,11 +387,12 @@ function Modals(props) {
                            hasFeedback
                            initialValue={tripValue?.route.noidi}
                        >
-                          <Select onChange={onChangeStart}>
+                          <Select onChange={onChangeStart} >
                                 {
                                     (
                                         route.filter((value,index)=>{
-                                            return value.matuyen === indexRoute && value.noiden.toLowerCase().indexOf(end.toLowerCase()) !== -1
+                                            return value.matuyen === indexRoute 
+                                            // && value.noiden.toLowerCase().indexOf(end.toLowerCase()) !== -1
                                         })
                                     ).map((value,index)=>{
                                         return <Option value={value.noidi}>{value.noidi}</Option>
@@ -361,7 +400,7 @@ function Modals(props) {
                                 }
                           </Select>
                     </Form.Item>    
-                    <Form.Item
+                    {/* <Form.Item
                            label="Nơi đến"
                            name="noiden"
                            rules={[{ required: true, 
@@ -382,7 +421,20 @@ function Modals(props) {
                                     })
                                 }
                           </Select>
-                    </Form.Item>    
+                    </Form.Item>     */}
+                       <div className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success" style={{rowGap : '0px'}}>
+                        <div className="ant-col ant-col-8 ant-form-item-label">
+                            <label className="ant-form-item-required">Nơi đến</label>
+                        </div>
+                        <div className="ant-col ant-col-16 ant-form-item-control">
+                            <div className="ant-form-item-control-input-content">
+                                <div className="ant-input-number" style={{width : '100%'}}>
+                                    <Input name="noiden2"  readOnly value={arrEnd.length > 0 ? arrEnd[0].noiden : ""}/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                     <Form.Item
                         label="Ngày đi"
                         name="ngaydi"
@@ -395,7 +447,7 @@ function Modals(props) {
                         initialValue={moment(tripValue?.ngaydi)}
                         
                     >
-                        <DatePicker onChange={onChangeDate} style={{width:"100%"}} placeholder="Chọn ngày" disabledDate={disabledDate}/>
+                        <DatePicker  onChange={onChangeDate} style={{width:"100%"}} placeholder="Chọn ngày" disabledDate={disabledDate}/>
                     </Form.Item>     
                     <Form.Item
                            label="Giờ đi"
@@ -407,7 +459,7 @@ function Modals(props) {
                            hasFeedback
                            initialValue={tripValue?.giodi}
                        >
-                          <Select onChange={onChangeHours}>
+                          <Select onChange={onChangeHours} >
                                 <OptGroup label="Buổi sáng">
                                     <Option value={8}>8 giờ</Option>
                                     <Option value={9}>9 giờ</Option>
@@ -431,14 +483,16 @@ function Modals(props) {
                            hasFeedback
                            initialValue={tripValue?.car._id}
                        >
-                          <Select>
+                          <Select >
+                              <Option value={tripValue?.car._id}>{tripValue?.car.biensoxe}</Option>
                               {
                                   car.length > 0 ? 
-                                  car.map( ( value , index)=>{
+                                  car.map((value , index)=>{
                                       return   <Option key={index} value={value._id}>{value.biensoxe}</Option>
                                   })
                                   : null
                               }
+                           
                 
                           </Select>
                     </Form.Item>  
@@ -454,7 +508,7 @@ function Modals(props) {
                        >
                           <InputNumber min="1000" style={{ width : '100%'}} step="1000"></InputNumber>
                     </Form.Item> 
-                    <Form.Item
+                    {/* <Form.Item
                            label="Số lượng vé"
                            name="soluongve"
                            rules={[{ required: true, 
@@ -466,7 +520,7 @@ function Modals(props) {
                           
                        >
                           <InputNumber min="1" style={{ width : '100%'}} step="1" max="40"></InputNumber>
-                    </Form.Item>                              
+                    </Form.Item>                               */}
                 </Form>
             }
                 {Loading}

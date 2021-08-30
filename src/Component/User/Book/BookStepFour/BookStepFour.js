@@ -56,10 +56,10 @@ function BookStepFour(props) {
     }, [])
 
   
-    const ChangeStatus = async(body)=>{
+    const deleteTicket = async(body)=>{
         try{
           
-            const res = await ApiTicket.UpdateStatusTicket(body);
+            const res = await ApiTicket.deleteTicket(body);
             return res; 
         }catch(err){    
             Hidden();
@@ -82,8 +82,8 @@ function BookStepFour(props) {
                 soghedi : state.sogheve
             }
             Display();
-            let resOne = await ChangeStatus(bodyOne);
-            let resTwo = state.loai === 2 ? await ChangeStatus(bodyTwo)  : null
+            let resOne = await deleteTicket(bodyOne);
+            let resTwo = state.loai === 2 ? await deleteTicket(bodyTwo)  : null
             if(resOne.data.success || (state.loai == 2 && !resTwo) && resTwo.data.success ) {
                 Hidden();
                 openNotificationErorr('Thất bại' , 'Đã quá thời gian thanh toán !.  Vui lòng làm lại từ đầu' ,3);
@@ -91,7 +91,7 @@ function BookStepFour(props) {
    
             }
             
-        },1000)
+        },120000)
         return async ()=>{
             
             Hidden();
@@ -162,8 +162,8 @@ function BookStepFour(props) {
             soghedi : state.sogheve
         }
         Display();
-        let resOne = await ChangeStatus(bodyOne);
-        let resTwo = state.loai === 2 ? await ChangeStatus(bodyTwo)  : null
+        let resOne = await deleteTicket(bodyOne);
+        let resTwo = state.loai === 2 ? await deleteTicket(bodyTwo)  : null
         if(resOne.data.success || (state.loai == 2 && !resTwo) && resTwo.data.success ) {
             history.push({
                 pathname : "/chon-ghe",
@@ -204,7 +204,7 @@ function BookStepFour(props) {
 
     console.log(state);
     return (
-        <div style={{height : '100vh' }}>
+        <div >
             <Content>
                 <Process isActive={3}/>
                     <div className="site-layout-content" style={{overflowX:'hidden'}}>

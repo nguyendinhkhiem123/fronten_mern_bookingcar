@@ -46,4 +46,6 @@ export const insertTicketOfAdmin = (body)=>{
 export const updateTicketOfAdmin = (body)=>{
     return AxiosClient.post(`ticket/updateticketofadmin`,body);
 }
-
+export const deleteTicket = (body)=>{
+    return AxiosClient.post(`ticket/deleteticket`,body);
+}

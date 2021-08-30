@@ -32,3 +32,7 @@ export const InsertTrip = (body)=>{
 export const updateTrip = (body)=>{
     return AxiosClient.post("trip/updatetrip" , body)
 }
+
+export const deleteTrip = (body)=>{
+    return AxiosClient.post("trip/deletetrip" , body)
+}

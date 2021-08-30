@@ -175,7 +175,7 @@ function BookStepOne(props) {
     })
     console.log(itemRoute );
     return (
-        <div style={{height : '100vh' }}>
+        <div >
             <Content >
             <Process isActive={0}/>
             <div className="site-layout-content" style={{overflowX:'hidden'}}>

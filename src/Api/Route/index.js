@@ -16,3 +16,11 @@ export const insertRoute = (body)=>{
 export const updateRoute = (body)=>{
     return AxiosClient.post("route/updateroute" , body);
 }
+
+export const deleteRoute = (body)=>{
+    return AxiosClient.post("route/deleteroute" , body);
+}
+
+export const checkRoute = (body)=>{
+    return AxiosClient.post("route/checkroute" , body);
+}

@@ -56,7 +56,19 @@ const route =  createSlice({
             state[j] = bodyTwo;
         },
         removeRoute : (state , action )=>{
-          return []
+             const list = [...state];
+
+             const newList = list.filter(value =>{
+                return (value._id !== action.payload.idOne) 
+             })
+
+             const resultList = newList.filter(value =>{
+              return (value._id !== action.payload.idTwo) 
+            })
+             return resultList
+        },
+        removeRouteList : (action , payload)=>{
+          return [];
         }
     }
 })
@@ -69,6 +81,6 @@ const findIndex = (state , id)=>{
 }
 const { actions  , reducer } = route;
 
-export const { addRoute ,  removeRoute , changeStatus , addNewRoute , updateRoute} = actions;
+export const { addRoute ,  removeRoute , changeStatus , addNewRoute , updateRoute ,removeRouteList} = actions;
 
 export default reducer;

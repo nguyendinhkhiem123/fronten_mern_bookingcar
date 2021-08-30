@@ -83,7 +83,7 @@ td{
 }
 
 .table__body{
-    height: 680xp;
+    max-height: 680px;
     overflow-x: hidden;
     overflow-y: scroll;
 }
@@ -113,7 +113,14 @@ td{
    color : #fff
 }
 
-
+.disable.box:hover{
+    background-color: #ccc;
+    color: #00613d;
+}
+.disable.box{
+    background-color: #ccc;
+    cursor: not-allowed;
+}
 .t__date{
     width : 200px;
 }

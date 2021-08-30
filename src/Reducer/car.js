@@ -25,16 +25,22 @@ const car =  createSlice({
         updateCar : (state , action)=>{
             let i = -1; 
             const body = {
+                _id : action.payload.id,
                 biensoxe : action.payload.biensoxe,
                 trangthai : action.payload.trangthai,
                 soluongghe : action.payload.soluongghe,
-                route : action.payload.route, 
                 hinhanh : action.payload.hinhanh? action.payload.hinhanh : ''
             }
             i = findIndex(state , action.payload.id);
             state[i] = body
         },
         removeCar : (state , action )=>{
+          const listNew =  state.filter(value =>{
+            return value._id !== action.payload
+          })
+          return listNew
+        },
+        removeCarList : (state , action)=>{
           return []
         }
     }
@@ -48,6 +54,6 @@ const findIndex = (state , id)=>{
 }
 const { actions  , reducer } = car;
 
-export const { addCar,  removeCar, changeStatus , addNewCar, updateCar} = actions;
+export const { addCar,  removeCar, changeStatus , addNewCar, updateCar , removeCarList } = actions;
 
 export default reducer;

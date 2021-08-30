@@ -55,7 +55,7 @@ function History(props) {
                 const res = await ApiTicket.cancleTicket(body);
                 Hidden();
                 if(res.data.success){
-                    openNotificationSuccess("Thành công" , "Bạn đã hủy vé thành công " , 3);
+                    openNotificationSuccess("Thành công" ,res.data.message , 3);
                     dispatch(actionTicket.removeOneTicket(value))
                 }
             }
@@ -69,18 +69,18 @@ function History(props) {
     let ticketResult = [...listTicket]
     if(ticketResult.length > 0){
         ticketResult.sort((a, b)=>{
-            return new Date(a.ngaydi) < new Date(b.ngaydi) ? 1 : -1
+            return new Date(a.thoigiandat) < new Date(b.thoigiandat) ? 1 : -1
         })
     }
+    console.log(listTicket);
     const newDate = (ngay , gio=0)=>{
-        const n = Math.round(gio/24);
-        const m = gio%24;
+       
         const date1 =  new Date(ngay);
         const year = date1.getFullYear();
         const month = date1.getMonth();
-        const day = date1.getDate()+n;
+        const day = date1.getDate();
         
-        return new Date(Date.UTC(year , month , day , m));
+        return new Date(Date.UTC(year , month , day , gio));
     }
     if(ticketResult.length > 0 ){
         listResult = ticketResult.map((value,index)=>{
@@ -125,16 +125,20 @@ function History(props) {
                       </span>
                   
                   </td>
+                
                   <td>
-                      
-                           <span className="box" onClick={ new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) < newDate(value.trip.ngaydi) ? e=>onClickCancleTicket(value) : e=>openNotificationErorr('Thất bại ' , 'Xe có thể đã khởi hành hoặc kết thúc rồi. Không thể  chỉnh sửa' , 3)
+                  {
+                      new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours() + 5 )) >= newDate(value.trip.ngaydi , value.trip.giodi) ?
+                     <span className="box disable">
+                         Hủy vé
+                     </span>
+                     :
+                     <span className="box" onClick={  e=>onClickCancleTicket(value._id)
                                                     
-                        }>
-                            Hủy vé
-                         </span>
-                      
-                     
-                  
+                     }>
+                         Hủy vé
+                      </span>
+                  }
                   </td> 
               </tr>
           </tbody>

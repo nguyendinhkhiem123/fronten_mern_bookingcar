@@ -15,16 +15,16 @@ function Tab(props) {
                 <Carousels/>
                 <div className="tab__body">
                     <Tabs defaultActiveKey="1">
-                        <TabPane tab="Thống kê doanh thu" key="1">
+                        <TabPane tab="Thống kê doanh thu nhà xe" key="1">
                             <Money/>
                         </TabPane>
-                        <TabPane tab="Thống kế chuyến xe" key="2">
+                        <TabPane tab="Biểu đồ thống kê doanh thu theo tuyến xe" key="2">
                           <Trip/>
                         
                         </TabPane>
-                        <TabPane tab="Thống kê xe" key="3">
+                        {/* <TabPane tab="Thống kê xe" key="3">
                            <Car/> 
-                        </TabPane>
+                        </TabPane> */}
                     </Tabs>
                 </div>
             </div>

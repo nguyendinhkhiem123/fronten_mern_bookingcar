@@ -105,8 +105,12 @@ function Car(props) {
             Hidden() 
             console.log(res);
             if(res.data.success){
+                const id = value.id ;
+                value._id = id;
+                console.log(value)
                 openNotificationSuccess('Thành công' , res.data.message ,3);
                 dispatch(ActionCar.updateCar(value))
+                onCloseModal();
             }
             else{
                 openNotificationErorr('Thất bại' , res.data.message ,3)
@@ -126,6 +130,7 @@ function Car(props) {
                 dispatch(ActionCar.addNewCar({
                     values : res.data.body.carOne 
                 }))
+                onCloseModal();
             }
             else{
                 openNotificationErorr('Thất bại' , res.data.message ,3)
@@ -135,11 +140,32 @@ function Car(props) {
             console.log(err);
         }
     }
+    const clickDeleteCar = async(values)=>{
+        if(window.confirm('Bạn có chắc chắn xóa ?')){
+            try{
+                Display();
+                const res = await ApiCar.deleteCar({
+                    id : values._id
+                });
+                Hidden() 
+                if(res.data.success){
+                    openNotificationSuccess('Thành công' , res.data.message ,3);
+                    dispatch(ActionCar.removeCar(values._id))
+                }
+                else{
+                    openNotificationErorr('Thất bại' , res.data.message ,3)
+                }
+            }
+            catch(err){
+                console.log(err);
+            }
+        }  
+    }
     let result = [];
 
     if(car.length > 0){
         result = (car.filter(value=>{
-            return value.biensoxe.toLowerCase().indexOf(search.toLowerCase()) !== -1
+            return value.biensoxe.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1
         })
                 )  
                         .map((value,index)=>{
@@ -152,7 +178,7 @@ function Car(props) {
                                     }
                                 </td>
                                 <td className="t__img1">
-                                    <img style={{width : '100px'}}
+                                    <img style={{width : '100px' , height : '40px'}}
                                     src={ value.hinhanh=== "" ? "http://static.vexere.com/c/i/11071/xe-phuong-trang-VeXeRe-R4uvqCH-1000x600.jpg" : value.hinhanh}>
                                     </img>
                                 </td>
@@ -162,7 +188,7 @@ function Car(props) {
                                 <td className="t__start1">
                                     {value.soluongghe} ghế
                                 </td>
-                                <td >
+                                <td>
                                     <span className="box" onClick={e=> changeStatus(value._id , !value.trangthai)}>
                                         {
                                             value.trangthai === true ? ' Hoạt động' : 'Tạm dừng'
@@ -174,13 +200,18 @@ function Car(props) {
                                             Chỉnh sửa
                                         </span>
                                 </td> 
+                                <td >
+                                        <span className="box" onClick={e=>clickDeleteCar(value)}>
+                                            Xóa
+                                        </span>
+                                </td> 
                             </tr>
                         </tbody>
                     )
                   })
     }
     return (
-        <div style={{height : '100vh' }}>
+        <div >
         <Content>
             <div className="site-layout-content" style={{overflowX:'hidden'}}>
                 <Carousels/>
@@ -192,7 +223,7 @@ function Car(props) {
                             </Button>
                         </div>
                         <div className="route__search">
-                                <input placeholder="Nhập mã tuyến" className="form__input"  onChange={onChangeSearch}
+                                <input placeholder="Nhập biển số xe" className="form__input"  onChange={onChangeSearch}
                                 //  onChange={onChangeEnd}
                                  />
                                  <SearchOutlined  className="class__icon" />
@@ -216,8 +247,11 @@ function Car(props) {
                                                 Số lượng ghế
                                             </th>
                                             
-                                            <th >
+                                            <th>
                                                
+                                            </th>
+                                            <th>
+
                                             </th>
                                             <th>
 
