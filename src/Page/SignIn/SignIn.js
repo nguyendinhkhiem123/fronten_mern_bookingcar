@@ -35,15 +35,23 @@ function SignIn(props) {
                   
                   localStorage.setItem('accessToken' , res.data.body.tokenAccess);
                   localStorage.setItem('refreshToken' , res.data.body.tokenRefresh); 
+                  localStorage.setItem('role' , res.data.body.vaitro); 
                   openNotificationSuccess('Thành công',res.data.message, 3);
                   
                   console.log(res);
                   if(res.data.body.vaitro === 0) {
+                     
                      history.replace('/');
                      dispatch(ActionToken.addToken());
+                     
                   }
                   else{
-                    history.replace('/admin/tuyen-duong');
+                    if(res.data.body.vaitro === 2){
+                        history.replace('/admin/tuyen-duong');
+                    }
+                    else{
+                        history.replace('/admin/lich-trinh');
+                    }
                     dispatch(ActionToken.addToken());
                     dispatch(ActionIsAdmin.isAdmin());
                   }

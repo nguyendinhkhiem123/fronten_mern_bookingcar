@@ -29,6 +29,7 @@ function Modals(props) {
     const [ hour , setHour] = useState(0);
     const [ car , setCar ] = useState([])
     const [ Loading , Hidden , Display ] = useLoading();
+    const [ check , setCheck ] = useState(false);
     const newDate = (ngay , gio=0)=>{
         const n = Math.floor(gio/24);
         const m = gio%24;
@@ -46,7 +47,8 @@ function Modals(props) {
         setDate('');
         setHour(0);
         props.onCloseTripValue();
-        props.onCloseModal();    
+        props.onCloseModal();   
+        setCheck(false); 
     }
     const onFinish =async(values)=>{
           
@@ -67,6 +69,7 @@ function Modals(props) {
                     setIndexRoute('');
                     setDate('');
                     setHour(0);
+                    setCheck(false);
                     
                 } else{
                     openNotificationErorr('Thất bại' , res.data.message , 3);
@@ -95,7 +98,8 @@ function Modals(props) {
                     setIndexRoute('');
                     setDate('');
                     setHour(0);
-                    props.onCloseTripValue();   
+                    props.onCloseTripValue(); 
+                    setCheck(false);  
                 }
                 else{
                     openNotificationErorr('Thất bại' , res.data.message , 3);
@@ -162,11 +166,29 @@ function Modals(props) {
             giodi : hour
         })
     }, [start , end , date, hour]);
-    
-    let arrEnd = route.filter((value,index)=>{
+    // useEffect(()=>{
+    //     setCheck(false);
+    // })
+
+    useEffect(()=>{
+        if(value !==0){
+            alert('Hướng dẫn : Nếu bạn muốn sửa các thuộc tính khác giá vé. Xin vui lòng ấn reset rồi chọn lại từ đầu')
+        }
+    },[value])
+    const onClick = ()=>{
+        setCheck(true);
+        // setStart('')
+        // setEnd('')
+        // setIndexRoute('');
+        setDate('');
+        setHour(0);
+    }
+    let arrEnd =[]
+    arrEnd = route.filter((value,index)=>{
             return value.matuyen === indexRoute && value.noidi.indexOf(start) !== -1
         })
-    // console.log(indexRoute , start, end );
+    console.log(indexRoute , start, end , arrEnd);
+;
     return (
         <Modal title= {value === 0 ? "Thêm tuyến xe" : "Chỉnh sử tuyến xe"}
         visible={true}
@@ -181,7 +203,7 @@ function Modals(props) {
             ]}
         >
             {
-                value === 0?
+                value === 0 ?
              <Form
                 id="my_form"
                 {...layout}
@@ -194,7 +216,7 @@ function Modals(props) {
                 >
 
                     <Form.Item
-                           label="Mã tuyến"
+                           label="Kí hiệu tuyến"
                            name="Tuyến"
                            rules={[{ required: true, 
                                      message: "Không được bỏ trống !. Vui lòng nhập lại" ,
@@ -243,7 +265,7 @@ function Modals(props) {
                         <div className="ant-col ant-col-16 ant-form-item-control">
                             <div className="ant-form-item-control-input-content">
                                 <div className="ant-input-number" style={{width : '100%'}}>
-                                    <Input name="noiden" readOnly value={arrEnd.length > 0 ? arrEnd[0].noiden : ""}/>
+                                    <Input name="noiden" readOnly value={arrEnd.length === 1 ? arrEnd[0].noiden : ""}/>
                                 </div>
                             </div>
                         </div>
@@ -301,7 +323,7 @@ function Modals(props) {
                               {
                                   car.length > 0 ? 
                                   car.map( ( value , index)=>{
-                                      return  <Option key={index} value={value._id}>{value.biensoxe}</Option>
+                                      return  <Option key={index} value={value._id}>{value._id}</Option>
                                   })
                                   : null
                               }
@@ -334,6 +356,10 @@ function Modals(props) {
                     </Form.Item>                               */}
                 </Form>
                 :
+               ""
+            }
+            {
+                value !== 0 && check === false  ?
                 <Form
                 id="my_form"
                 {...layout}
@@ -345,7 +371,7 @@ function Modals(props) {
                 preserve={true}
                 >
                       <Form.Item
-                           label="ID tuyến"
+                           label="Mã chuyến"
                            name="id"
                            rules={[{ required: true, 
                                      message: "Không được bỏ trống !. Vui lòng nhập lại" ,
@@ -357,7 +383,7 @@ function Modals(props) {
                          <Input  disabled readOnly/>
                     </Form.Item>          
                     <Form.Item
-                           label="Mã tuyến"
+                           label="Kí hiệu tuyến"
                            name="Tuyến"
                            rules={[{ required: true, 
                                      message: "Không được bỏ trống !. Vui lòng nhập lại" ,
@@ -367,7 +393,7 @@ function Modals(props) {
                            initialValue={tripValue?.route.matuyen}
         
                        >
-                          <Select onChange={onChangeRoute} >
+                          <Select  onChange={onChangeRoute} disabled>
                                 {
                                     route.map((value,index)=>{
                                        return  index%2 === 0 ?
@@ -386,8 +412,9 @@ function Modals(props) {
                                   }]}
                            hasFeedback
                            initialValue={tripValue?.route.noidi}
+                           
                        >
-                          <Select onChange={onChangeStart} >
+                          <Select onChange={onChangeStart} disabled>
                                 {
                                     (
                                         route.filter((value,index)=>{
@@ -429,7 +456,7 @@ function Modals(props) {
                         <div className="ant-col ant-col-16 ant-form-item-control">
                             <div className="ant-form-item-control-input-content">
                                 <div className="ant-input-number" style={{width : '100%'}}>
-                                    <Input name="noiden2"  readOnly value={arrEnd.length > 0 ? arrEnd[0].noiden : ""}/>
+                                    <Input name="noiden2"  disabled readOnly value={arrEnd.length == 1 ? arrEnd[0].noiden : ""}/>
                                 </div>
                             </div>
                         </div>
@@ -447,7 +474,7 @@ function Modals(props) {
                         initialValue={moment(tripValue?.ngaydi)}
                         
                     >
-                        <DatePicker  onChange={onChangeDate} style={{width:"100%"}} placeholder="Chọn ngày" disabledDate={disabledDate}/>
+                        <DatePicker   onClick={onClick} disabled onChange={onChangeDate} style={{width:"100%"}} placeholder="Chọn ngày" disabledDate={disabledDate}/>
                     </Form.Item>     
                     <Form.Item
                            label="Giờ đi"
@@ -459,7 +486,7 @@ function Modals(props) {
                            hasFeedback
                            initialValue={tripValue?.giodi}
                        >
-                          <Select onChange={onChangeHours} >
+                          <Select onChange={onChangeHours} disabled>
                                 <OptGroup label="Buổi sáng">
                                     <Option value={8}>8 giờ</Option>
                                     <Option value={9}>9 giờ</Option>
@@ -483,12 +510,215 @@ function Modals(props) {
                            hasFeedback
                            initialValue={tripValue?.car._id}
                        >
-                          <Select >
-                              <Option value={tripValue?.car._id}>{tripValue?.car.biensoxe}</Option>
+                          <Select  disabled onClick={onClick}>
+                              <Option value={tripValue?.car._id}>{tripValue?.car._id}</Option>
                               {
                                   car.length > 0 ? 
                                   car.map((value , index)=>{
-                                      return   <Option key={index} value={value._id}>{value.biensoxe}</Option>
+                                      return   <Option key={index} value={value._id}>{value._id}</Option>
+                                  })
+                                  : null
+                              }
+                           
+                
+                          </Select>
+                    </Form.Item>  
+                    <Form.Item
+                           label="Giá vé"
+                           name="giave"
+                           rules={[{ required: true, 
+                                     message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                     
+                                  }]}
+                           hasFeedback
+                           initialValue={tripValue?.giave}
+                       >
+                          <InputNumber min="1000" style={{ width : '100%'}} step="1000"></InputNumber>
+                    </Form.Item> 
+                    {/* <Form.Item
+                           label="Số lượng vé"
+                           name="soluongve"
+                           rules={[{ required: true, 
+                                     message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                     
+                                  }]}
+                           hasFeedback
+                           initialValue={tripValue?.soluongve}
+                          
+                       >
+                          <InputNumber min="1" style={{ width : '100%'}} step="1" max="40"></InputNumber>
+                    </Form.Item>       
+                                            */}
+                    <div style={{width : '100%' , display : 'flex',
+                        justifyContent : 'flex-end'}}>
+                         <Button type="primary" style={{
+                        
+                    }} 
+                    onClick={onClick}
+                    >
+                        Reset</Button>
+                    </div>
+                   
+                </Form>
+                :""
+            }
+            {
+                value !== 0 && check === true ?
+                <Form
+                id="my_form"
+                {...layout}
+                name="basic"
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                style={{margin :  "auto"}}
+                preserve={true}
+                >
+                      <Form.Item
+                           label="Mã chuyến"
+                           name="id"
+                           rules={[{ required: true, 
+                                     message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                     
+                                  }]}
+                           hasFeedback
+                           initialValue={tripValue?._id}
+                       >
+                         <Input  disabled readOnly/>
+                    </Form.Item>          
+                    <Form.Item
+                           label="Kí hiệu tuyến"
+                           name="Tuyến"
+                           rules={[{ required: true, 
+                                     message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                     
+                                  }]}
+                           hasFeedback
+                           initialValue={tripValue?.route.matuyen}
+                       >
+                          <Select  onChange={onChangeRoute} disabled >
+                                {
+                                    route.map((value,index)=>{
+                                       return  index%2 === 0 ?
+                                        ( <Option value={value.matuyen}>{value.matuyen}</Option>)
+                                        : null
+                                    })
+                                }
+                          </Select>
+                    </Form.Item>          
+                    <Form.Item
+                           label="Nơi đi"
+                           name="noidi"
+                           rules={[{ required: true, 
+                                     message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                     
+                                  }]}
+                           hasFeedback
+                           initialValue={tripValue?.route.noidi}
+                           
+                       >
+                          <Select onChange={onChangeStart} disabled >
+                                {
+                                    (
+                                        route.filter((value,index)=>{
+                                            return value.matuyen === indexRoute 
+                                            // && value.noiden.toLowerCase().indexOf(end.toLowerCase()) !== -1
+                                        })
+                                    ).map((value,index)=>{
+                                        return <Option value={value.noidi}>{value.noidi}</Option>
+                                    })
+                                }
+                          </Select>
+                    </Form.Item>    
+                    {/* <Form.Item
+                           label="Nơi đến"
+                           name="noiden"
+                           rules={[{ required: true, 
+                                     message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                     
+                                  }]}
+                           hasFeedback
+                           initialValue={tripValue?.route.noiden}
+                       >
+                          <Select onChange={onChangeEnd}>
+                                {
+                                    (
+                                        route.filter((value,index)=>{
+                                            return value.matuyen === indexRoute && value.noidi.toLowerCase().indexOf(start.toLowerCase()) !== -1
+                                        })
+                                    ).map((value,index)=>{
+                                        return <Option value={value.noiden}>{value.noiden}</Option>
+                                    })
+                                }
+                          </Select>
+                    </Form.Item>     */}
+                       <div className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success" style={{rowGap : '0px'}}>
+                        <div className="ant-col ant-col-8 ant-form-item-label">
+                            <label className="ant-form-item-required">Nơi đến</label>
+                        </div>
+                        <div className="ant-col ant-col-16 ant-form-item-control">
+                            <div className="ant-form-item-control-input-content">
+                                <div className="ant-input-number" style={{width : '100%'}}>
+                                    <Input name="noiden2" disabled readOnly value={arrEnd.length == 1 ? arrEnd[0].noiden : ""}/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <Form.Item
+                        label="Ngày đi"
+                        name="ngaydi"
+                        rules={[{ required: true, 
+                                  message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                  
+                               }]}
+                   
+                        hasFeedback
+                      
+                        
+                    >
+                        <DatePicker   onChange={onChangeDate} style={{width:"100%"}} placeholder="Chọn ngày" disabledDate={disabledDate}/>
+                    </Form.Item>     
+                    <Form.Item
+                           label="Giờ đi"
+                           name="giodi"
+                           rules={[{ required: true, 
+                                     message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                     
+                                  }]}
+                           hasFeedback
+                          
+                       >
+                          <Select onChange={onChangeHours} >
+                                <OptGroup label="Buổi sáng">
+                                    <Option value={8}>8 giờ</Option>
+                                    <Option value={9}>9 giờ</Option>
+                                    <Option value={10}>10 giờ</Option>
+                                </OptGroup>
+                                <OptGroup label="Buổi chiều">
+                                    <Option value={16}>16 giờ</Option>
+                                    <Option value={17}>17 giờ</Option>
+                                    <Option value={18}>18 giờ</Option>
+                                </OptGroup>
+                               
+                          </Select>
+                    </Form.Item> 
+                    <Form.Item
+                           label="Mã xe"
+                           name="car"
+                           rules={[{ required: true, 
+                                     message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                     
+                                  }]}
+                           hasFeedback
+                          
+                       >
+                          <Select  >
+                              <Option value={tripValue?.car._id}>{tripValue?.car._id}</Option>
+                              {
+                                  car.length > 0 ? 
+                                  car.map((value , index)=>{
+                                      return   <Option key={index} value={value._id}>{value._id}</Option>
                                   })
                                   : null
                               }
@@ -521,7 +751,8 @@ function Modals(props) {
                        >
                           <InputNumber min="1" style={{ width : '100%'}} step="1" max="40"></InputNumber>
                     </Form.Item>                               */}
-                </Form>
+                </Form>:
+                ""
             }
                 {Loading}
            </Modal>

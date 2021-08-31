@@ -17,6 +17,7 @@ function Trip(props) {
     const [ isDisplayModal , setIsDisplayModal] = useState(false);
     const [ value ,  setValue ] = useState(0);
     const [ tripValue , setTripValue] = useState(null);
+    
     const date = new Date();
     const onClickInsert = ()=>{{
         setValue(0)
@@ -178,6 +179,8 @@ function Trip(props) {
             }
         }
     }
+
+    
     if(trip.length> 0){
         trip.sort((a, b)=>{
             return new Date(a.ngaydi) < new Date(b.ngaydi) ? 1 : -1

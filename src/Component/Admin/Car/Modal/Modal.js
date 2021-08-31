@@ -64,18 +64,24 @@ function Modals(props) {
                            name="biensoxe"
                            rules={[{ required: true, 
                                      message: "Không được bỏ trống !. Vui lòng nhập lại" ,
-                                     
-                                  }]}
+                                
+                                  },
+                                  {
+                                      max : 10 ,
+                                      message: "Tối đa 10 kí tự" 
+                                       
+                                  }
+                                ]}
                            hasFeedback
                           
                        >
                            <Input 
-
+                            maxLength={10}
                             allowClear/>
                        </Form.Item>     
                        <Form.Item
                            label="Số lượng ghế"
-                           name="noidi"
+                           name="soluongghe"
                            rules={[{ required: true, 
                                      message: "Không được bỏ trống !. Vui lòng nhập lại" ,
                                      
@@ -138,12 +144,12 @@ function Modals(props) {
                            initialValue={value._id}
                           
                        >
-                           <Input readOnly
+                           <Input readOnly disabled
                                 //  defaultValue={currentUser.hovaten}
                                 //   value={currentUser.hovaten}
                             allowClear/>
                         </Form.Item>  
-                        <Form.Item
+                        {/* <Form.Item
                            label="Biển số xe"
                            name="biensoxe"
                            rules={[{ required: true, 
@@ -156,7 +162,7 @@ function Modals(props) {
                            <Input 
 
                             allowClear/>
-                       </Form.Item>     
+                       </Form.Item>      */}
                        <Form.Item
                            label="Số lượng ghế"
                            name="soluongghe"

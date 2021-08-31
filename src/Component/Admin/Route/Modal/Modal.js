@@ -157,7 +157,7 @@ function Modals(props) {
                     >
                            
                             <Form.Item
-                           label="Mã tuyến"
+                           label="Ký hiệu tuyến"
                            name="matuyen"
                            rules={[{ required: true, 
                                      message: "Không được bỏ trống !. Vui lòng nhập lại" ,
@@ -280,7 +280,7 @@ function Modals(props) {
                             status === false ?
                            <>
                                <Form.Item
-                                    label="Mã tuyến"
+                                    label="Ký hiệu tuyến"
                                     name="matuyen"
                                     rules={[{ required: true, 
                                                 message: "Không được bỏ trống !. Vui lòng nhập lại" ,
@@ -324,7 +324,7 @@ function Modals(props) {
 
                             <>
                                     <Form.Item
-                                    label="Mã tuyến"
+                                    label="Ký hiệu tuyến"
                                     name="matuyen"
                                     rules={[{ required: true, 
                                                 message: "Không được bỏ trống !. Vui lòng nhập lại" ,

@@ -172,18 +172,18 @@ function Car(props) {
                     return (
                         <tbody key={index}>
                             <tr className={index%2===0 ?"tr__head active" : "tr__head"}>
-                                <td className="t__ma">
+                                {/* <td className="t__ma">
                                     {
                                         value._id
                                     }
-                                </td>
+                                </td> */}
                                 <td className="t__img1">
                                     <img style={{width : '100px' , height : '40px'}}
                                     src={ value.hinhanh=== "" ? "http://static.vexere.com/c/i/11071/xe-phuong-trang-VeXeRe-R4uvqCH-1000x600.jpg" : value.hinhanh}>
                                     </img>
                                 </td>
                                 <td className="t__route1">
-                                    {value.biensoxe}
+                                    {value._id}
                                 </td>
                                 <td className="t__start1">
                                     {value.soluongghe} ghế
@@ -234,9 +234,9 @@ function Car(props) {
                                 <table style={{width : '100%'}}>
                                     <thead>
                                         <tr className="tr__head">
-                                            <th className="t__ma">
+                                            {/* <th className="t__ma">
                                                 Mã xe
-                                            </th>
+                                            </th> */}
                                             <th className="t__img1">
                                                 Hình ảnh
                                             </th>

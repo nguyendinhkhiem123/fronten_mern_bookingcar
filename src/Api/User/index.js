@@ -30,3 +30,7 @@ export const updateEmployee = (body)=>{
 export const insertEmployee = (body)=>{
     return AxiosClient.post("user/insertemployee",body);
 }
+export const getEmployeeNoAccount = ()=>{
+    return AxiosClient.get("user/getemployeenoaccount",);
+}
+

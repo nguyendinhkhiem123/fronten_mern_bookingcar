@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect , useState} from 'react';
 import '../FormModal/FormModal.css'
 
 import { Form, Input, Button, Checkbox, message ,InputNumber ,DatePicker ,Select , Modal} from "antd";
@@ -8,7 +8,9 @@ import { updateUser , changePassword } from '../../Api/User/index';
 import { openNotificationErorr , openNotificationSuccess } from '../Notfication/index'
 import { addUser  } from '../../Reducer/currentUser';
 import { useDispatch } from 'react-redux';
-
+import * as ApiUser from '../../Api/User'
+import * as ApiAuth from '../../Api/Authencation';
+const Option = {Select}
 const layout = { 
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -24,6 +26,8 @@ function FormModal(props) {
      
       const [Loading , Hidden , Display] = useLoading();
       const dispatch = useDispatch();
+      const [ employee , setEmployee] = useState([]); 
+      const { isModalVisible ,  type , currentUser } = props;
       const handleCancel = () => {
             props.onClose();
       };
@@ -38,8 +42,11 @@ function FormModal(props) {
                  res.data.body.hovaten = value.hovaten;
                  dispatch(addUser(res.data.body));
               }
-              else{
+              else if(type === "#doimatkhau"){
                  res = await changePassword(value);
+              }
+              else{
+                res = await ApiAuth.adminCreateEmployee(value);
               }
               Hidden();   
               if(res.data.success){
@@ -59,14 +66,42 @@ function FormModal(props) {
         }
          
     };
-  
+    
+    const getEmployee = async()=>{
+        try{
+            const res = await ApiUser.getEmployeeNoAccount();
+            if(res.data.success){
+                setEmployee(res.data.body)
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+    useEffect(()=>{
+        if(type === "#taotaikhoan"){
+            getEmployee();
+        }
+    } ,[type])
     const onFinishFailed = (errorInfo) => {
       console.log("Failed:", errorInfo);
     };
   
-    const { isModalVisible ,  type , currentUser } = props; 
+   
+    let title = "";
+    if(type){
+        if(type === "#canhan"){
+            title = "Thông tin cá nhân"
+        }
+        else if(type === "#doimatkhau"){
+            title = "Đổi mật khẩu"
+        }
+        else{
+            title = "Tạo tài khoản"
+        }
+    }
+    console.log(type);
     return (
-        <Modal title={type ==="#canhan" ? 'Thông tin cá nhân' : 'Đổi mật khẩu' }  
+        <Modal title={title}  
                 visible={isModalVisible} 
                 onCancel={handleCancel} 
                 footer={[
@@ -193,19 +228,86 @@ function FormModal(props) {
                        </div> */}
                    </Form> 
              : 
-             <Form
-             id="my_form"
-             {...layout}
-             name="basic"
-             initialValues={{ remember: true }}
-             onFinish={onFinish}
-             onFinishFailed={onFinishFailed}
-             style={{margin :  "auto"}}
-             preserve={true}
-             >
-                <Form.Item
-                        label="Mật khẩu cũ"
-                        name="matkhaucu"
+               " "        
+            }     
+            {
+                type === '#doimatkhau' ?
+                <Form
+                id="my_form"
+                {...layout}
+                name="basic"
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                style={{margin :  "auto"}}
+                preserve={true}
+                >
+                   <Form.Item
+                           label="Mật khẩu cũ"
+                           name="matkhaucu"
+                           
+                           rules={[{ required: true, message: "Không được bỏ trống !. Vui lòng nhập lại" }
+                               ,
+                               {
+                                   min:6 ,
+                                   message : "Phải có 6 kí tự trở lên"
+                               }
+                           ]}
+                           hasFeedback
+                       >
+                           <Input.Password allowClear />
+   
+                       </Form.Item>
+                       <Form.Item
+                           label="Mật khẩu Mới"
+                           name="matkhaumoi"
+                           
+                           rules={[{ required: true, message: "Không được bỏ trống !. Vui lòng nhập lại" }
+                               ,
+                               {
+                                   min:6 ,
+                                   message : "Phải có 6 kí tự trở lên"
+                               }
+                           ]}
+                           hasFeedback
+                       >
+                           <Input.Password allowClear />
+   
+                       </Form.Item>
+                    </Form> 
+                    :""
+            }  
+            {
+                type === "#taotaikhoan" ?
+                <Form
+                id="my_form"
+                {...layout}
+                name="basic"
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                style={{margin :  "auto"}}
+                preserve={true}
+                >
+                   <Form.Item
+                        label="Tài khoản"
+                        name="taikhoan"
+                        rules={[{ required: true, 
+                                  message: "Không được bỏ trống !. Vui lòng nhập lại" ,
+                                  
+                               },
+                              
+                            
+                            ]}
+                        hasFeedback
+            
+                    >
+                        <Input allowClear/>
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Mật khẩu"
+                        name="matkhau"
                         
                         rules={[{ required: true, message: "Không được bỏ trống !. Vui lòng nhập lại" }
                             ,
@@ -220,23 +322,27 @@ function FormModal(props) {
 
                     </Form.Item>
                     <Form.Item
-                        label="Mật khẩu Mới"
-                        name="matkhaumoi"
+                        label="Nhân viên"
+                        name="nhanvien"
                         
                         rules={[{ required: true, message: "Không được bỏ trống !. Vui lòng nhập lại" }
-                            ,
-                            {
-                                min:6 ,
-                                message : "Phải có 6 kí tự trở lên"
-                            }
                         ]}
                         hasFeedback
                     >
-                        <Input.Password allowClear />
+                       <Select>
+                            {
+                                employee.length > 0 ? 
+                                employee.map(value=>{
+                                    return   <Option value={value._id}>{value.hovaten}</Option>
+                                }) :""
+                              
+                            }
+                       </Select>
 
                     </Form.Item>
-                 </Form> 
-            }       
+                </Form> 
+                    : ""
+            }
              {Loading}
         </Modal>
     );

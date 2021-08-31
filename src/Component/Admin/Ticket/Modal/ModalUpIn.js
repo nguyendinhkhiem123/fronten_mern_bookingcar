@@ -20,7 +20,7 @@ function ModalUpIn(props) {
     // const infor = props.inforModal;
     // console.log(infor);
     const [ slot , setSlot ] = useState([]);
-    const [ Loading , Display , Hidden] = useLoading();
+    const [ Loading , Hidden , Display] = useLoading();
     const [ openSlot , setOpenSlot ] = useState(false);
     const [ number , setNumber ] = useState(null);
     const infor = props.inforModal
@@ -58,9 +58,10 @@ function ModalUpIn(props) {
                     else{
                         Display();
                         values.trip = props.id
-                        values.soghe = number
+                        values.soghe = number;
                         const res = await ApiTicket.updateTicketOfAdmin(values);
                         Hidden();
+                        console.log('Hidden');
                         if(res.data.success){
                             openNotificationSuccess('Thành công' , res.data.message , 3);
                             props.propsUpdateTicket(res.data.body);
@@ -295,7 +296,7 @@ function ModalUpIn(props) {
                                 infor._id
                             }
                        >
-                           <Input readOnly/>
+                           <Input disabled readOnly/>
                        </Form.Item>
                         <Form.Item
                            label="Tên người nhận"

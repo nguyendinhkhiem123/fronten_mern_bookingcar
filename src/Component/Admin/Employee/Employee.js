@@ -19,6 +19,8 @@ function Home(props) {
     const [ isActive , setIsActive ] =  useState(false);  //  true là sửa , false là thêm
     const [ values , setValues ] = useState();
     const [ employee , setEmployee ] = useState([]);
+    const currentUser = useSelector(state => state.currentUser)
+    const role =  localStorage.getItem('role');
     useEffect(()=>{
         if(user)
         getAllRoute()
@@ -147,7 +149,7 @@ function Home(props) {
     }
     let result = [];
 
-    console.log(employee);
+    console.log(currentUser ,role);
     if(employee.length > 0){
         result = (employee.filter(value=>{
             return value.hovaten.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1
@@ -173,25 +175,25 @@ function Home(props) {
                                     {value.ngaysinh.slice(0,10)}
                                 </td>
                                 <td className="t__status">
-                                    {value.account !== null  ? "Quản lý" :  "Nhân viên"}
+                                    { role == 2 && value.hovaten === currentUser.hovaten && value.diachi === currentUser.diachi ? "Quản lý" :  "Nhân viên"}
                                 </td>
                                 <td>
                                     {
-                                         value.account === null ?  <span className="box" onClick={e=> changeStatus(value?._id , !value?.trangthai)}>
+                                         role == 2 && value.hovaten === currentUser.hovaten && value.diachi === currentUser.diachi ? "" : <span className="box" onClick={e=> changeStatus(value?._id , !value?.trangthai)}>
                                          {
                                              value.trangthai === true ? 'Đang làm' : 'Đã nghĩ'
                                          }
-                                     </span> : ""
+                                     </span> 
                                     }
                                    
                                 </td>
                                 <td >
                                    {
-                                      value.account === null ?
+                                       role == 2 && value.hovaten === currentUser.hovaten && value.diachi === currentUser.diachi ? "" :
                                         <span className="box" onClick={e=>clickUpdateRoute(value)}>
                                                 Chỉnh sửa
                                         </span>
-                                    :''
+                                    
                                    } 
                                 </td>
                             </tr>

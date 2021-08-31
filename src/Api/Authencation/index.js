@@ -11,3 +11,8 @@ export const login = (body) =>{
 export const createEmployee = (body) =>{
     return AxiosClient.post("auth/createemployee" , body)
 }
+
+export const adminCreateEmployee = (body) =>{
+    return AxiosClient.post("auth/admincreateaccount" , body)
+}
+

@@ -17,6 +17,7 @@ function Logout(props) {
             Display()
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
+            localStorage.removeItem('role');
             dispatch(ActionToken.removeToken());
             dispatch(ActionIsAdmin.isUser());
             dispatch(removeUser());

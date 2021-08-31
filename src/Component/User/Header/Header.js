@@ -102,13 +102,42 @@ function Headers(props) {
             slug : '#doimatkhau'
         },
         {
+            title : 'Tạo tài khoản',
+            icon : <UserOutlined />,
+            slug : '#taotaikhoan'
+        },
+        {
             title : 'Đăng xuất',
             icon : <LogoutOutlined />,
             slug : '/dang-xuat'
             
         },
     ]
-
+    const ListEmployee = [
+        // {
+        //     title : 'adminMenu',
+        //     icon : <HistoryOutlined />,
+        //     slug : '/muave'
+            
+        // },
+        {
+            title : 'Thông tin cá nhân',
+            icon : <UserOutlined />,
+            slug : '#canhan'
+        },
+        {
+            title : 'Đổi mật khẩu',
+            icon : <UserOutlined />,
+            slug : '#doimatkhau'
+        },
+       
+        {
+            title : 'Đăng xuất',
+            icon : <LogoutOutlined />,
+            slug : '/dang-xuat'
+            
+        },
+    ]
     const MenuUser = [
         {
             title : 'TRANG CHỦ',
@@ -164,6 +193,7 @@ function Headers(props) {
     const token = useSelector(state => state.token);
     const isAdmin = useSelector(state => state.isAdmin)
     const currentUser =useSelector(state => state.currentUser);
+    const role = localStorage.getItem('role');
     const [drop , setDrop] =  useState(false);
     const [isModalVisible , setIsModalVisible] = useState(false);
     const [sideUser, setSideUser] = useState(false);
@@ -205,11 +235,18 @@ function Headers(props) {
                 type : "#canhan"
             })
         }
-        else{
+        else if(slug === '#doimatkhau'){
             setModalForm({
                 ...modalForm,
                 isModalVisible : true,
                 type : "#doimatkhau"
+            })
+        }
+        else{
+            setModalForm({
+                ...modalForm,
+                isModalVisible : true,
+                type : "#taotaikhoan"
             })
         }
         setIsModalVisible(false);
@@ -238,12 +275,25 @@ function Headers(props) {
         }
     }
     console.log(currentUser , modalForm);
+
+    let dataSource = [];
+    if(role && token){
+        if(role == 2 && token){
+            dataSource = ListAdmin
+        }
+        else if(role == 1) {
+            dataSource = ListEmployee
+        }
+        else {
+            dataSource = ListUser
+        }
+    }
     const dropDown = (
         <List className="header__list" 
         header={currentUser.hovaten}
         style={{textAlign: 'center'}}
         itemLayout="horizontal"
-        dataSource={isAdmin ? ListAdmin : ListUser }
+        dataSource={dataSource }
         renderItem={item => (
             item.slug.startsWith("/") ?
             <LinkCustom 

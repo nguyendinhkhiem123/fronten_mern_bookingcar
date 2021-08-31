@@ -181,16 +181,23 @@ function BookStepThree(props) {
     }
 
     const onClickNext= async()=>{
-        console.log(numOneCar,numTwoCar)
+        
         if(numOneCar.length === 0   ){
             openNotificationErorr('Thất bại' , `Hãy chọn số ghế !` ,3)
+            return;
+        }
+        if(numOneCar.length < state.sovedi){
+            openNotificationErorr('Thất bại' , `Vui lòng chọn số ghế bằng đúng số vé !` ,3)
             return;
         }
         if(state.loai === 2 && numTwoCar.length ===0){
             openNotificationErorr('Thất bại' , `Hãy chọn số ghế !` ,3)
             return;
         }
-        
+        if(state.loai === 2 && numTwoCar.length < state.soveve){
+            openNotificationErorr('Thất bại' , `Vui lòng chọn số ghế 2 bên bằng đúng số vé!` ,3)
+            return;
+        }
         try{
             Display();
           

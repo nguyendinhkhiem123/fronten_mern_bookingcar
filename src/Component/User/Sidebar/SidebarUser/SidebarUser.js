@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 
 function SidebarUser(props) {
 
+    const role = localStorage.getItem('role');
     const MenuLink  = ({label , to , activeOnLyWhenExact , icon }) =>{
         return(
           <Route path ={to} exact ={activeOnLyWhenExact} children ={({match})=>{
@@ -58,12 +59,33 @@ function SidebarUser(props) {
         
     ]    
     const ListDataAdmin = [
+        
         {
-            title : 'Menu Admin 1',
-            icon : <HistoryOutlined />,
-            link : '/menuadmin1'
+            title : 'Thông tin cá nhân',
+            icon : <UserOutlined />,
+            link : '#canhan'
             
         },
+        {
+            title : 'Đổi mật khẩu',
+            icon : <UserOutlined />,
+            link : '#doimatkhau'
+            
+        },
+        {
+            title : 'Tạo tài khoản nhân viên',
+            icon : <UserOutlined />,
+            link : '#taotaikhoan'
+            
+        },
+        {
+            title : 'Đăng xuất',
+            icon : <LogoutOutlined />,
+            link : '/dang-xuat'
+        },
+    ]
+    const ListDataEmployee = [
+     
         {
             title : 'Thông tin cá nhân',
             icon : <UserOutlined />,
@@ -109,6 +131,20 @@ function SidebarUser(props) {
     const openModalForm = (slug)=>{
         props.activeFormModal(slug);
     }
+    let dataSource = [];
+
+    if(role && token){
+        if(role == 2 && token){
+            dataSource = ListDataAdmin
+        }
+        else if(role == 1) {
+            dataSource = ListDataEmployee
+        }
+        else {
+            dataSource = ListDataUser
+        }
+    }
+    console.log(dataSource);
     const ele = token ?
     (
         <div className="body__list">
@@ -116,7 +152,8 @@ function SidebarUser(props) {
           header={currentUser.hovaten}
           style={{textAlign: 'center'}}
           itemLayout="horizontal"
-          dataSource={isAdmin ?  ListDataAdmin : ListDataUser}
+          dataSource={dataSource}
+          
           renderItem={item => (
               item.link.startsWith('/') ?
               <MenuLink to={item.link} activeOnLyWhenExact={true} label={item.title} icon={item.icon}></MenuLink>

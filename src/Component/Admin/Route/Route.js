@@ -251,7 +251,7 @@ function Home(props) {
                                                 Hình ảnh
                                             </th>
                                             <th className="t__route">
-                                                Mã tuyến
+                                                Ký hiệu tuyến
                                             </th>
                                             <th className="t__start">
                                                 Nơi đi
