@@ -72,6 +72,7 @@ function Trip(props) {
 
 
     const updateTrip  = async(e)=>{
+        console.log('hello')
         if(window.confirm('Bạn có chắc chắn đã đến giờ đã cập nhật ?')){
             try{
                 Display();
@@ -250,7 +251,7 @@ function Trip(props) {
                                                 </span>
                                             </td>
                                             {
-                                               new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) >= newDate(value.ngaydi , value.giodi) || value.trangthai !== 'DANGDOI'?
+                                               new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours() , date.getMinutes())) >= newDate(value.ngaydi , value.giodi) || value.trangthai !== 'DANGDOI'?
                                                <td>
                                                     <span className="box disable">
                                                          Chỉnh sửa
@@ -258,7 +259,13 @@ function Trip(props) {
                                                    
                                                 </td>:
                                                 <td>
-                                                <span className="box" onClick={e=> onClickUpdate(value)}>
+                                                <span className="box" onClick={
+                                                    new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours() , date.getMinutes())) >= newDate(value.ngaydi , value.giodi)?
+                                                    e=>openNotificationErorr('Thất bại' , 'Không thể chỉnh sửa chuyến xe đã khởi hành hoặc hoàn thành rồi', 3)
+                                                  
+                                                    : 
+                                                     e=> onClickUpdate(value)
+                                                }>
                                                     Chỉnh sửa
                                                 </span>
                                                 </td> 
@@ -266,7 +273,7 @@ function Trip(props) {
                                           
                                           
                                             {
-                                                new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) >= newDate(value.ngaydi , value.giodi) || value.trangthai !== 'DANGDOI'?
+                                                new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours() , date.getMinutes())) >= newDate(value.ngaydi , value.giodi) || value.trangthai !== 'DANGDOI'?
                                              
                                                 <td>
                                                    <span className="box disable" >
@@ -275,7 +282,13 @@ function Trip(props) {
                                                </td>
                                                :
                                                <td>
-                                               <span className="box" onClick={e=>canelTrip(value._id) }
+                                               <span className="box" 
+                                               onClick={
+                                                new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours() , date.getMinutes())) < newDate(value.ngaydi , value.giodi)?  
+                                                e=>canelTrip(value._id) 
+                                                :
+                                                e=>openNotificationErorr('Thất bại' , 'Không thể hủy chuyến xe đã khởi hành hoặc hoàn thành rồi', 3)
+                                            }
                                                >
                                                    Hủy chuyến 
                                                  </span>

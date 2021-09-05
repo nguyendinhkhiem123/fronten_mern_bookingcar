@@ -10,9 +10,8 @@ const ticketUser =  createSlice({
            return action.payload;
         },
         removeOneTicket : (state , action)=>{
-            let list = [...state] ;
-            let b =  list.filter((value)=>{
-                return value._id !== action.payload
+            let b = state.filter(value=>{
+               return value._id !== action.payload
             });
             return b;
         },

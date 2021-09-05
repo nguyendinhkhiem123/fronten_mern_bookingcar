@@ -42,8 +42,12 @@ function Vote(props) {
             Hidden();
             if(res.data.success){
                 let listTemp = [...listVote];
-                listTemp.push(res.data.body);
-                setListVote(listTemp);
+                let listFilter = listTemp.filter(value=>{
+                    return value.customer._id !== user._id
+                })
+                
+                listFilter.push(res.data.body);
+                setListVote(listFilter);
                 openNotificationSuccess('Thành công ', res.data.message ,3);
                 closeModal();
             }
@@ -52,12 +56,13 @@ function Vote(props) {
             console.log(err);
         }
     }
-
+    console.log(listVote);
     useEffect(()=>{
         if(!token){
             openNotificationErorr('Thất bại', 'Vui lòng đăng nhập' , 3);
             history.push('/signin');
-        }{
+        }
+        else{
             const getVote = async()=>{
                 try{
                     Display();

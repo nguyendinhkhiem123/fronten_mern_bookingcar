@@ -128,6 +128,20 @@ function ModalInfo(props) {
                            >
                            <Input readOnly/>
                        </Form.Item>
+                       <Form.Item
+                           label="Tên người đặt"
+                           name="tennguoidat"
+                           initialValue={infor.customer ? infor.customer.hovaten : ''}
+                           >
+                           <Input readOnly/>
+                       </Form.Item>
+                       <Form.Item
+                           label="Số điện thoại người đặt"
+                           name="sdt"
+                           initialValue={infor.customer ? infor.customer.sdt : ''}
+                           >
+                           <Input readOnly/>
+                       </Form.Item>
                    </Form> 
       </Modal>
     );

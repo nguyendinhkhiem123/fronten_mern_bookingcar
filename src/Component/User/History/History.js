@@ -50,13 +50,13 @@ function History(props) {
             try{
                 Display();
                 const body = {
-                    id : value
+                    id : value._id
                 }
                 const res = await ApiTicket.cancleTicket(body);
                 Hidden();
                 if(res.data.success){
                     openNotificationSuccess("Thành công" ,res.data.message , 3);
-                    dispatch(actionTicket.removeOneTicket(value))
+                    dispatch(actionTicket.removeOneTicket(value._id))
                 }
             }
             catch(err){
@@ -128,12 +128,12 @@ function History(props) {
                 
                   <td>
                   {
-                      new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours() + 5 )) >= newDate(value.trip.ngaydi , value.trip.giodi) ?
+                      new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours() + 5 , date.getMinutes() )) >= newDate(value.trip.ngaydi , value.trip.giodi) ?
                      <span className="box disable">
                          Hủy vé
                      </span>
                      :
-                     <span className="box" onClick={  e=>onClickCancleTicket(value._id)
+                     <span className="box" onClick={ new Date(Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours()+5,date.getMinutes())) < newDate(value.trip.ngaydi , value.trip.giodi) ? e=>onClickCancleTicket(value) : e=>openNotificationErorr('Thất bại ' , 'Không thể hủy vé' , 3)
                                                     
                      }>
                          Hủy vé

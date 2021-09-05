@@ -124,14 +124,13 @@ function Ticket(props) {
     }
 
     const newDate = (ngay , gio=0)=>{
-        const n = Math.round(gio/24);
-        const m = gio%24;
+        
         const date1 =  new Date(ngay);
         const year = date1.getFullYear();
         const month = date1.getMonth();
-        const day = date1.getDate()+n;
+        const day = date1.getDate()
         
-        return new Date(Date.UTC(year , month , day , m));
+        return new Date(Date.UTC(year , month , day ,gio ));
     }
     if(ticketResult.length > 0 ){
         listResult = ticketResult.map((value,index)=>{
@@ -177,12 +176,12 @@ function Ticket(props) {
                   
                   </td>
                   <td>
-                   { value.trangthaive === "DAHUY" || value.trangthaive ==='DANGUUTIEN' ? 
+                   { value.trangthaive === "DAHUY" || value.trangthaive ==='DANGUUTIEN' || new Date(Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(),date.getHours()+5,date.getMinutes())) >= newDate(value.trip.ngaydi , value.trip.giodi) ? 
                         <span className="box disable">
                             Chỉnh sửa
                         </span>
                    : 
-                        <span className="box" onClick={ new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) < newDate(value.trip.ngaydi) ? e=>updateTicket(value) : e=>openNotificationErorr('Thất bại ' , 'Xe có thể đã khởi hành hoặc kết thúc rồi. Không thể  chỉnh sửa' , 3)
+                        <span className="box" onClick={ new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) < newDate(value.trip.ngaydi, value.trip.giodi) ? e=>updateTicket(value) : e=>openNotificationErorr('Thất bại ' , 'Xe có thể đã khởi hành hoặc kết thúc rồi. Không thể  chỉnh sửa' , 3)
                                                     
                          }>
                         Chỉnh sửa  
@@ -191,12 +190,12 @@ function Ticket(props) {
                   
                   </td> 
                   <td>
-                      { value.trangthaive === "DAHUY" || value.trangthaive ==='DANGUUTIEN'?
+                      { value.trangthaive === "DAHUY" || value.trangthaive ==='DANGUUTIEN' || new Date(Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(),date.getHours()+5,date.getMinutes())) >= newDate(value.trip.ngaydi , value.trip.giodi)?
                         <span className="box disable">
                             Hủy vé
                         </span>
                       : 
-                        <span className="box" onClick={ new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours())) < newDate(value.trip.ngaydi) ? e=>onClickCancleTicket(value) : e=>openNotificationErorr('Thất bại ' , 'Xe có thể đã khởi hành hoặc kết thúc rồi. Không thể hủy vé' , 3)
+                        <span className="box" onClick={ new Date(Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(),date.getHours()+5,date.getMinutes())) < newDate(value.trip.ngaydi , value.trip.giodi) ? e=>onClickCancleTicket(value) : e=>openNotificationErorr('Thất bại ' , 'Không thể hủy vé. Có lẽ đã qua thời gian hủy vé' , 3)
                                                     
                          }>
                         Hủy vé 
