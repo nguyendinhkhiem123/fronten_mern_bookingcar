@@ -128,7 +128,7 @@ function History(props) {
                 
                   <td>
                   {
-                      new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours() + 5 , date.getMinutes() )) >= newDate(value.trip.ngaydi , value.trip.giodi) ?
+                      new Date( Date.UTC(date.getFullYear() , date.getMonth() , date.getDate(), date.getHours() + 5, date.getMinutes() )) >= newDate(value.trip.ngaydi , value.trip.giodi) || value.trangthaive === 'DAHUY'?
                      <span className="box disable">
                          Hủy vé
                      </span>

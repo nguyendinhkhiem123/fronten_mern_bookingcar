@@ -49,8 +49,9 @@ function FormModal(props) {
                 res = await ApiAuth.adminCreateEmployee(value);
               }
               Hidden();   
+              console.log(res);
               if(res.data.success){
-                  props.onClose();
+                  props.onClose()
                   openNotificationSuccess('Thành công',res.data.message, 3)
               }
               else{

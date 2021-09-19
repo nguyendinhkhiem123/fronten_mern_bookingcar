@@ -10,10 +10,13 @@ const ticketUser =  createSlice({
            return action.payload;
         },
         removeOneTicket : (state , action)=>{
-            let b = state.filter(value=>{
-               return value._id !== action.payload
-            });
-            return b;
+            let i;
+
+            for(i = 0 ; i < state.length ; i++){
+                if(state[i]._id === action.payload) break;
+            }
+            console.log(i);
+            state[i].trangthaive = 'DAHUY';
         },
         defaultTicket : (state , action )=>{
           return [];

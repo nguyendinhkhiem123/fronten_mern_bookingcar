@@ -24,6 +24,13 @@ function ModalInfo(props) {
                    preserve={true}
                    >
                         <Form.Item
+                           label="Trạng thái vé"
+                           name="trangthaive"
+                           initialValue={infor.trangthaive  === 'DAHUY' ? "Đã hủy" : "Đã đặt"}
+                           >
+                           <Input readOnly/>
+                       </Form.Item>
+                        <Form.Item
                            label="Tên người nhận"
                            name="hovaten"
                             initialValue={infor? infor.hovaten : " "}

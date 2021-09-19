@@ -192,7 +192,7 @@ function BookStepTwo(props) {
   
         console.log(new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),hourOne+state.thoigian+1) , new Date(startEnd.getFullYear(),startDate.getMonth(),startDate.getDate(), hourTwo) , )
         if(state.loai === 2 && 
-            new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),hourOne + state.thoigian + 1) > new Date(startEnd.getFullYear(),startEnd.getMonth(),startEnd.getDate(), hourTwo)
+            new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),hourOne + state.thoigian + 2) > new Date(startEnd.getFullYear(),startEnd.getMonth(),startEnd.getDate(), hourTwo)
         ){
             // console.log( state.thoigianbatdau === state.thoigianve ,  state.thoigian , hourOne , hourTwo)
             openNotificationErorr("Thất bại" , `Chuyến về xe khứ hồi không phù hợp thời gian . Vui lòng quay lại` ,3);
@@ -292,8 +292,8 @@ function BookStepTwo(props) {
                                                         </div>
                                                         <div className="mt-10">
                                                             <span class="title__option">Biển số xe :</span>
-                                                            <Select value={oneTrip ? oneTrip.car.biensoxe : null} style={{ width: '100%' , marginTop : '10px' }}>
-                                                                <Option value={oneTrip ? oneTrip.car.biensoxe : null}> {oneTrip ? oneTrip.car.biensoxe : "Không xác định"} </Option>
+                                                            <Select value={oneTrip ? oneTrip.car._id : null} style={{ width: '100%' , marginTop : '10px' }}>
+                                                                <Option value={oneTrip ? oneTrip.car._id : null}> {oneTrip ? oneTrip.car._id : "Không xác định"} </Option>
                                                             </Select>
                                                         </div>
                                                         <div className="mt-10">
@@ -353,8 +353,8 @@ function BookStepTwo(props) {
                                                         </div>
                                                         <div className="mt-10">
                                                         <span class="title__option">Biển số xe :</span>
-                                                        <Select value={ twoTrip ? twoTrip.car.biensoxe : null} style={{ width: '100%' , marginTop : '10px' }}>
-                                                            <Option value={ twoTrip ? twoTrip.car.biensoxe : null}> {twoTrip  ? twoTrip.car.biensoxe : "Không xác định"} </Option>
+                                                        <Select value={ twoTrip ? twoTrip.car._id : null} style={{ width: '100%' , marginTop : '10px' }}>
+                                                            <Option value={ twoTrip ? twoTrip.car._id : null}> {twoTrip  ? twoTrip.car._id : "Không xác định"} </Option>
                                                         </Select>
                                                         </div>
                                                         <div className="mt-10">

@@ -30,7 +30,7 @@ function BookStepFour(props) {
     const [ isDisplayPayment ,  setIsDisplayPayment] = useState(false);
     const [ form , setForm ] = useState({})
     const [ time , setTime ] =  useState(true);
-  
+    const [ sum , setSum] = useState(0);
     useEffect(()=>{
         if(!state){
             openNotificationErorr('Thất bại' , 'Vui lòng đi theo trình tự' ,3);
@@ -38,6 +38,10 @@ function BookStepFour(props) {
         }
         else{
             if(token){
+                const Sum =   ((state && state.sovedi) ? state.chuyendi.giave*state.sovedi : 0)
+                +
+                ((state && state.soveve) ? state.chuyenve.giave*state.soveve : 0)
+                setSum(Sum)
                 console.log(currentUser);
                 setForm({
                     hovaten : currentUser.hovaten,
@@ -198,9 +202,7 @@ function BookStepFour(props) {
     // const onChange = (value)=>{
     //     value === "OFFLINE" ? setIsDisplayPayment(false) : setIsDisplayPayment(true);
     // }
-    const Sum =   ((state && state.sovedi) ? state.chuyendi.giave*state.sovedi : 0)
-                    +
-                    ((state && state.soveve) ? state.chuyenve.giave*state.soveve : 0)
+   
 
     console.log(state);
     return (
@@ -294,7 +296,7 @@ function BookStepFour(props) {
                                         }
                                         <div style={{textAlign : 'right' , marginTop : '10px' , fontSize : '20px'}}>
                                                 Tổng tiền : <span style={{color: '#ef5222'}}>
-                                                                    {formatMoney(Sum.toString())}đ
+                                                                    {formatMoney(sum.toString())}đ
                                                                 </span>
                                         </div>
                                     </div>
@@ -403,7 +405,7 @@ function BookStepFour(props) {
                                                                             </Button>
                                                                            
                                                                         </div>
-                                                                       : <Payment checkOutTicket={checkoutTicket} value={form}></Payment>
+                                                                       : <Payment checkOutTicket={checkoutTicket} value={form} values={sum}></Payment>
                                                                     }
                                                                  
                                                               

@@ -281,7 +281,7 @@ function Home(props) {
                <Popular listRoute={route}/>
             </div>
           </Content>
-          <Slider/>
+          {/* <Slider/> */}
       </div>
     );
 }

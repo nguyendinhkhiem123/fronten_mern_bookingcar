@@ -134,7 +134,7 @@ function Modals(props) {
                 preserve={true}
                 >
                        <Form.Item
-                           label="id"
+                           label="Biển số xe"
                            name="id"
                            rules={[{ required: true, 
                                      message: "Không được bỏ trống !. Vui lòng nhập lại" ,

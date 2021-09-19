@@ -8,6 +8,7 @@ import * as ApiTrip from '../../../Api/Trip/index';
 import useLoading from '../../HookLoading/HookLoading';
 import Modal from '../Trip/Modal/Modal';
 import { openNotificationSuccess , openNotificationErorr } from '../../Notfication';
+import * as ApiTicket from '../../../Api/Ticket/index';
 const { Content } = Layout
 function Trip(props) {
     let result = [];
@@ -17,7 +18,7 @@ function Trip(props) {
     const [ isDisplayModal , setIsDisplayModal] = useState(false);
     const [ value ,  setValue ] = useState(0);
     const [ tripValue , setTripValue] = useState(null);
-    
+    const [ listNumberTicket , setListNumberTicket ] = useState([]);
     const date = new Date();
     const onClickInsert = ()=>{{
         setValue(0)
@@ -47,15 +48,17 @@ function Trip(props) {
     const fetchAllTrip = async()=>{
         try{
             Display()
-            const res = await ApiTrip.getAllTrip();
+            const res = await Promise.all([ApiTrip.getAllTrip(),ApiTicket.getAllTicket()]);
             Hidden();
             console.log(res)
-            if(res.data.success){
-                setTrip(res.data.body.newTrip)
+            if(res[0].data.success && res[1].data.success){
+                setTrip(res[0].data.body.newTrip)
+                setListNumberTicket(res[1].data.body.listTicket);
             }
+            
         }
         catch(err){
-            console.log(err);
+            console.log(err)
         }
     }
     useEffect(()=>{
@@ -69,10 +72,7 @@ function Trip(props) {
         const day = date1.getDate()
         return new Date(Date.UTC(year , month , day , gio));
     }
-
-
     const updateTrip  = async(e)=>{
-        console.log('hello')
         if(window.confirm('Bạn có chắc chắn đã đến giờ đã cập nhật ?')){
             try{
                 Display();
@@ -104,7 +104,7 @@ function Trip(props) {
     }
     
     const insertTrip = (values)=>{
-        console.log(values);
+        console.log('values',values);
         const letTrip = [...trip];
         letTrip.push(values);
         setTrip(letTrip);
@@ -218,10 +218,18 @@ function Trip(props) {
                                                {value.route.noidi}
                                             </td>
                                             <td className="t__car">
-                                                {value.car.biensoxe}
+                                                {value.car._id}
                                             </td>
                                             <td  className="t__numberticket">
-                                                {value.car.soluongghe} vé
+                                                {
+                                                   listNumberTicket.length > 0 ? 
+                                                    (
+                                                        listNumberTicket.filter((valuex =>{
+                                                            return valuex.trip._id === value._id
+                                                        }))
+                                                    ).length 
+                                                    : 0
+                                                }  vé
                                             </td>
                                             <td>
                                                 <span className="box" onClick={ value.trangthai === 'DAHUY' ? null : e=>updateTrip(value._id)}>
@@ -343,7 +351,7 @@ function Trip(props) {
                                                 Mã Xe 
                                             </th>
                                             <th  className="t__numberticket">
-                                                Số vé
+                                                Đã bán
                                             </th>
                                             <th>    
 
@@ -376,7 +384,7 @@ function Trip(props) {
                                         fontWeight : 500,
                                         color : '#fff'
                                     }}>
-                                        Không có tuyến xe nào
+                                        Không có chuyến xe nào
                                     </div>    
                                 }
                                 </table>

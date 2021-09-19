@@ -29,7 +29,11 @@ function Modals(props) {
     const [ Loading , Hidden , Display] = useLoading();
     const dispatch = useDispatch();
     const onFinish = async(values)=>{
-       
+        
+        if(values.noidi.toLowerCase().trim() === values.noiden.toLowerCase().trim()){
+            openNotificationErorr('Thất bại' , 'Nơi đi nơi đến phải khác nhau. Vui lòng chọn lại' ,3);
+            return
+        }
         if( isActive ){
             // props.onClickInsert(values);
             try{

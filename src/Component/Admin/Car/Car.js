@@ -165,7 +165,7 @@ function Car(props) {
 
     if(car.length > 0){
         result = (car.filter(value=>{
-            return value.biensoxe.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1
+            return value._id.trim().toLowerCase().indexOf(search.toLowerCase()) !== -1
         })
                 )  
                         .map((value,index)=>{

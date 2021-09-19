@@ -117,6 +117,7 @@ function Home(props) {
                     });    
                     listTemp[index] = res.data.body
                     setEmployee(listTemp);
+                    onCloseModal()
                
             }
             else{
@@ -138,6 +139,7 @@ function Home(props) {
                 const listTemp = [...employee];
                 listTemp.push(res.data.body);
                 setEmployee(listTemp);
+                onCloseModal()
             }
             else{
                 openNotificationErorr('Thất bại' , res.data.message ,3)

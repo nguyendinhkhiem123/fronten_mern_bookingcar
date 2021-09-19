@@ -20,15 +20,25 @@ function Pricing(props) {
              
         })
     }
-    let ResultArray  = [];
+    let routeTemp = [];
 
     if(routeStart.length > 0){
-        ResultArray  = routeStart.map((value,  index)=>{
+        routeStart.forEach(element => {
+            if(!check(routeTemp,element.noidi)){
+                routeTemp.push(element.noidi)
+            }
+        });
+    }   
+    console.log(routeTemp);
+    let ResultArray  = [];
+
+    if(routeTemp.length > 0){
+        ResultArray  = routeTemp.map((value,  index)=>{
             return (
                 <tbody key={index}>
                     <tr className="table__thead--body title">
                             <td className="table__route table__route--title">
-                                {value.noidi}
+                                {value}
                             </td>
                             <td className="table__kind">
                             
@@ -50,7 +60,7 @@ function Pricing(props) {
 
                     {
                        (route.filter((fil , index1)=>{
-                            return fil.noiden.toLowerCase().indexOf(textEnd.toLowerCase()) !== -1 && fil.noidi.toLowerCase().indexOf(value.noidi.toLowerCase()) !== -1
+                            return fil.noiden.toLowerCase().indexOf(textEnd.toLowerCase()) !== -1 && fil.noidi.toLowerCase().indexOf(value.toLowerCase()) !== -1
                         })
                        ).map((valueOne, index2)=>{
                      return    (<tr className="table__thead--body" key={index2}>
@@ -64,7 +74,7 @@ function Pricing(props) {
                                 {valueOne.quangduong}km
                             </td>
                             <td className="table__time">
-                                {value.thoigian}h
+                                {valueOne.thoigian}h
                             </td>
                             <td className="table__price">
                              
@@ -181,5 +191,18 @@ function Pricing(props) {
         </div>
     );
 }
-
+const check = (arr , values)=>{
+    let boolean = false;
+    if(arr.length > 0){
+        for(let i = 0 ; i < arr.length ; i++){
+            if(arr[i] === values){
+                boolean = true;
+                break;
+            }
+        }
+        
+    }
+    
+    return boolean;
+}
 export default Pricing;

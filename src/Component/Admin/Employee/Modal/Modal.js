@@ -27,11 +27,10 @@ function Modals(props) {
            
         }
        else{
-           console.log(values);
            props.onClickUpdate(values);
           
        }
-       props.onCloseModal();
+    //    props.onCloseModal();
     }
     const onFinishFailed =()=>{
 

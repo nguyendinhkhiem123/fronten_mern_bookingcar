@@ -49,3 +49,10 @@ export const updateTicketOfAdmin = (body)=>{
 export const deleteTicket = (body)=>{
     return AxiosClient.post(`ticket/deleteticket`,body);
 }
+
+export const getAllTicket = ()=>{
+    return AxiosClient.get(`ticket/getallticket`);
+}
+
+
+

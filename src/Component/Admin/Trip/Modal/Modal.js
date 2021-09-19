@@ -62,8 +62,9 @@ function Modals(props) {
                 if(res.data.success){
                     openNotificationSuccess('Thành công' , res.data.message , 3);
                     console.log(res.data.body.newTrip[0])
+                    let temp = res.data.body.newTrip[0];
                     props.onCloseModal();
-                    props.insertTrip(res.data.body.newTrip[0]);
+                    props.insertTrip(temp);
                     setStart('')
                     setEnd('')
                     setIndexRoute('');
@@ -190,7 +191,7 @@ function Modals(props) {
     console.log(indexRoute , start, end , arrEnd);
 ;
     return (
-        <Modal title= {value === 0 ? "Thêm tuyến xe" : "Chỉnh sử tuyến xe"}
+        <Modal title= {value === 0 ? "Thêm chuyến xe" : "Chỉnh sử chuyến xe"}
         visible={true}
         onCancel={handleCancel} 
         footer={[
@@ -200,6 +201,8 @@ function Modals(props) {
             <Button type="" htmlType="submit" onClick={handleCancel}>
                     Hủy
             </Button>
+            ,
+            
             ]}
         >
             {
@@ -714,7 +717,7 @@ function Modals(props) {
                           
                        >
                           <Select  >
-                              <Option value={tripValue?.car._id}>{tripValue?.car._id}</Option>
+                              {/* <Option value={tripValue?.car._id}>{tripValue?.car._id}</Option> */}
                               {
                                   car.length > 0 ? 
                                   car.map((value , index)=>{

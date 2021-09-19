@@ -51,6 +51,9 @@ function Vote(props) {
                 openNotificationSuccess('Thành công ', res.data.message ,3);
                 closeModal();
             }
+            else{
+                openNotificationErorr('Thất bại' , res.data.message , 3);
+            }
         }
         catch(err){
             console.log(err);
@@ -149,6 +152,7 @@ function Vote(props) {
         }
        
     }
+
     return (
         <div>
             <Content>
